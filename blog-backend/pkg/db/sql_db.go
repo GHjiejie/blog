@@ -11,9 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+type SQLDB struct {
+	db *gorm.DB
+}
 
-func ConnectDatabase() {
+func NEWSQLDB() (*SQLDB, error) {
 	var err error
 	dsn := "root:12345@tcp(127.0.0.1:3306)/" // 请替换为你的数据库信息
 	dbName := "blog"
@@ -33,7 +35,7 @@ func ConnectDatabase() {
 
 	// 连接到具体的数据库
 	dsn = fmt.Sprintf("root:12345@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbName)
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	} else {
@@ -41,9 +43,13 @@ func ConnectDatabase() {
 	}
 
 	// 设置连接池
-	if err := setupConnectionPool(DB); err != nil {
+	if err := setupConnectionPool(gormDB); err != nil {
 		log.Fatalf("failed to setup connection pool: %v", err)
 	}
+	backendDB := &SQLDB{
+		db: gormDB,
+	}
+	return backendDB, nil
 }
 
 func setupConnectionPool(db *gorm.DB) error {
