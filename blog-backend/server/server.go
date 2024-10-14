@@ -55,7 +55,19 @@ func (s *BlogServer) prepareNetServer() error {
 	// HTTP
 	httpmux := http.NewServeMux()
 	httpmux.Handle("/v1/", s.Tracing(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("v1")
+
+		w.Write([]byte("Hello, World!"))
+	})))
+	httpmux.Handle("/v2/", s.Tracing(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.Write([]byte("Hello, World!"))
+	})))
+	httpmux.Handle("/v3/", s.Tracing(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.Write([]byte("Hello, World!"))
+	})))
+	httpmux.Handle("/v4/", s.Tracing(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		w.Write([]byte("Hello, World!"))
 	})))
 	s.httpServer = &http.Server{

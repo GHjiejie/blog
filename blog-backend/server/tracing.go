@@ -9,6 +9,7 @@ import (
 var NotNeedAuthorizationPaths = map[string]bool{
 	"/v1/users/login":    true,
 	"/v1/users/register": true,
+	"/v1/captchas":       true,
 }
 
 func (s *BlogServer) Tracing(nextHandle http.Handler) http.Handler {
@@ -18,7 +19,6 @@ func (s *BlogServer) Tracing(nextHandle http.Handler) http.Handler {
 			log.Printf("当前接口需要进行鉴权验证")
 			// 进行鉴权验证
 			// TODO
-
 		} else {
 			log.Printf("当前接口无需进行鉴权验证")
 		}
