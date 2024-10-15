@@ -42,6 +42,13 @@ func NEWSQLDB() (*SQLDB, error) {
 		log.Println("连接数据库成功")
 	}
 
+	// 迁移 schema
+	if err := gormDB.AutoMigrate(&User{}); err != nil {
+		log.Fatalf("failed to migrate schema: %v", err)
+	} else {
+		log.Println("迁移 schema 成功")
+	}
+
 	// 设置连接池
 	if err := setupConnectionPool(gormDB); err != nil {
 		log.Fatalf("failed to setup connection pool: %v", err)
