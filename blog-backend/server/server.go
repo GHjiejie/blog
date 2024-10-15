@@ -1,6 +1,7 @@
 package server
 
 import (
+	"blog-backend/pkg/casbinpermit"
 	"blog-backend/pkg/db"
 	"context"
 	"log"
@@ -17,9 +18,10 @@ import (
 
 type BlogServer struct {
 	*pb.UnimplementedUserServiceServer
-	DBEngine   db.Handle
-	httpServer *http.Server
-	grpcServer *grpc.Server
+	DBEngine      db.Handler
+	casbinPerimit *casbinpermit.Permit
+	httpServer    *http.Server
+	grpcServer    *grpc.Server
 }
 
 // NewBlogServer 创建并返回一个新的 BlogServer 实例
@@ -30,10 +32,12 @@ func NewBlogServer() (*BlogServer, error) {
 		log.Printf("failed to create db engine handler with err(%s)", err.Error())
 		return nil, err
 	}
+	casbinPerimit, err := casbinpermit.NewPermit(dbEngine.GetORMDB())
 
 	// 初始化 BlogServer
 	s := &BlogServer{
 		DBEngine:                       dbEngine,
+		casbinPerimit:                  casbinPerimit,
 		UnimplementedUserServiceServer: &pb.UnimplementedUserServiceServer{},
 	}
 

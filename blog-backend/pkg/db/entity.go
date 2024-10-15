@@ -18,3 +18,8 @@ type User struct {
 func (u User) TableName() string {
 	return "users"
 }
+
+// casbin_rules 特殊处理, 因为无需额外定义 model
+func GetCasbinRuleTableName() string {
+	return "casbin_rules"
+}

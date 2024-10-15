@@ -1,8 +1,11 @@
 package db
 
-type Handle interface {
+import "gorm.io/gorm"
+
+type Handler interface {
+	GetORMDB() *gorm.DB
 }
 
-func NEWHandler() (Handle, error) {
+func NEWHandler() (Handler, error) {
 	return NEWSQLDB()
 }

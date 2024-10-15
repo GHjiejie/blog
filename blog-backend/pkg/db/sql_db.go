@@ -58,6 +58,9 @@ func NEWSQLDB() (*SQLDB, error) {
 	}
 	return backendDB, nil
 }
+func (s *SQLDB) GetORMDB() *gorm.DB {
+	return s.db
+}
 
 func setupConnectionPool(db *gorm.DB) error {
 	sqlDB, err := db.DB()
