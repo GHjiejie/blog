@@ -13,9 +13,23 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 
+message TestRequest {
+    string name = 1;
+}
 
+message TestResponse {
+    string message = 1;
+}
  
 service UserService {
+
+ rpc Test(TestRequest) returns (TestResponse) {
+        option (google.api.http) = {
+            post: "/v1/test"
+            body: "*"
+        };
+    }
+    
 // 用户注册
   rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {

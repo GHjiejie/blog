@@ -12,6 +12,38 @@
     "application/json"
   ],
   "paths": {
+    "/v1/test": {
+      "post": {
+        "operationId": "UserService_Test",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbTestResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbTestRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
     "/v1/user/login": {
       "post": {
         "summary": "User login",
@@ -529,6 +561,22 @@
       "default": "NORMAL",
       "description": "- NORMAL: 正常\n - DISABLED: 禁用",
       "title": "用户状态"
+    },
+    "pbTestRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "pbTestResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
     },
     "pbUpdateUserProfileRequest": {
       "type": "object",
