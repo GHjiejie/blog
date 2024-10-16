@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	// 设置信号量，用于优雅关闭服务
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)

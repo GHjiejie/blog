@@ -36,3 +36,8 @@ func NewPermit(db *gorm.DB) (*Permit, error) {
 
 	return &Permit{Enforcer: enforcer}, nil
 }
+
+func (p *Permit) CheckPermission(sub, obj, act string) (bool, error) {
+	log.Printf("check user permission, sub=[%s] act=[%s] obj=[%s]", sub, act, obj)
+	return p.Enforce(sub, obj, act)
+}

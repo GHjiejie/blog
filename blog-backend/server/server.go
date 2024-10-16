@@ -1,6 +1,7 @@
 package server
 
 import (
+	"blog-backend/pkg/auth"
 	"blog-backend/pkg/casbinpermit"
 	"blog-backend/pkg/db"
 	"context"
@@ -18,10 +19,11 @@ import (
 
 type BlogServer struct {
 	*pb.UnimplementedUserServiceServer
-	DBEngine      db.Handler
-	casbinPerimit *casbinpermit.Permit
-	httpServer    *http.Server
-	grpcServer    *grpc.Server
+	DBEngine     db.Handler
+	casbinPermit *casbinpermit.Permit
+	httpServer   *http.Server
+	grpcServer   *grpc.Server
+	auth         *auth.Auth
 }
 
 // NewBlogServer 创建并返回一个新的 BlogServer 实例
@@ -32,12 +34,19 @@ func NewBlogServer() (*BlogServer, error) {
 		log.Printf("failed to create db engine handler with err(%s)", err.Error())
 		return nil, err
 	}
-	casbinPerimit, err := casbinpermit.NewPermit(dbEngine.GetORMDB())
+	casbinPermit, err := casbinpermit.NewPermit(dbEngine.GetORMDB())
 
+	// 接下来就是加载策略
+	if err := casbinPermit.Enforcer.LoadPolicy(); err != nil {
+		log.Printf("failed to load policy with err(%s)", err.Error())
+		return nil, err
+	}
+	auth := auth.NewAuth(dbEngine, casbinPermit)
 	// 初始化 BlogServer
 	s := &BlogServer{
 		DBEngine:                       dbEngine,
-		casbinPerimit:                  casbinPerimit,
+		casbinPermit:                   casbinPermit,
+		auth:                           auth,
 		UnimplementedUserServiceServer: &pb.UnimplementedUserServiceServer{},
 	}
 
@@ -100,7 +109,7 @@ func (s *BlogServer) prepareServer() error {
 
 	// 创建 HTTP 多路复用器
 	httpmux := http.NewServeMux()
-	httpmux.Handle("/v1/", rmux)
+	httpmux.Handle("/v1/", s.Tracing(rmux, s.casbinPermit))
 
 	// 创建 HTTP 服务器
 	s.httpServer = &http.Server{

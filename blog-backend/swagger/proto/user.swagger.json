@@ -133,72 +133,6 @@
         },
         "parameters": [
           {
-            "name": "username",
-            "description": "用户名.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "nickname",
-            "description": "昵称.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "email",
-            "description": "邮箱.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "phone",
-            "description": "手机号.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "role",
-            "description": "用户角色.\n\n - ADMIN: 管理员\n - USER: 普通用户",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "ADMIN",
-              "USER"
-            ],
-            "default": "ADMIN"
-          },
-          {
-            "name": "status",
-            "description": "用户状态.\n\n - NORMAL: 正常\n - DISABLED: 禁用",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "NORMAL",
-              "DISABLED"
-            ],
-            "default": "NORMAL"
-          },
-          {
-            "name": "created_at",
-            "description": "创建时间.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "updated_at",
-            "description": "更新时间.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "page",
             "description": "页码.",
             "in": "query",
@@ -396,6 +330,10 @@
     "pbChangePasswordRequest": {
       "type": "object",
       "properties": {
+        "user_id": {
+          "type": "string",
+          "title": "用户ID"
+        },
         "old_password": {
           "type": "string",
           "title": "旧密码"
@@ -493,20 +431,12 @@
           "type": "string",
           "title": "密码"
         },
-        "nickname": {
-          "type": "string",
-          "title": "昵称"
-        },
-        "email": {
-          "type": "string",
-          "title": "邮箱"
-        },
-        "phone": {
-          "type": "string",
-          "title": "手机号"
+        "role": {
+          "$ref": "#/definitions/pbRole",
+          "title": "用户角色"
         }
       },
-      "title": "用户注册请求"
+      "title": "用户注册请求（或者·叫用户新增请求，只有管理员才有权限）"
     },
     "pbRegisterResponse": {
       "type": "object",
@@ -585,9 +515,9 @@
           "type": "string",
           "title": "用户ID"
         },
-        "nickname": {
+        "username": {
           "type": "string",
-          "title": "昵称"
+          "title": "用户名"
         },
         "email": {
           "type": "string",
@@ -620,14 +550,6 @@
         "username": {
           "type": "string",
           "title": "用户名"
-        },
-        "password": {
-          "type": "string",
-          "title": "密码"
-        },
-        "nickname": {
-          "type": "string",
-          "title": "昵称"
         },
         "email": {
           "type": "string",

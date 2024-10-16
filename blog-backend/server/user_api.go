@@ -22,10 +22,8 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 	newUser := &pb.User{
 		UserId:    "generated_user_id", // 您可以使用 UUID 或其他方法生成用户 ID
 		Username:  req.Username,
-		Password:  req.Password, // 注意：在实际应用中，请不要明文存储密码
-		Nickname:  req.Nickname,
-		Email:     req.Email,
-		Phone:     req.Phone,
+		Email:     "3426571530@qq.com",
+		Phone:     "18196756670",
 		Role:      pb.Role_USER,
 		Status:    pb.Status_NORMAL,
 		CreatedAt: "2023-10-15T12:00:00Z", // 使用当前时间戳
@@ -36,7 +34,48 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 	// return &pb.RegisterResponse{}, nil
 }
 
-// func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-// 	log.Printf("Received Login request: %v", req)
-// 	return &pb.LoginResponse{}, nil
-// }
+func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	log.Printf("Received Login request: %v", req)
+	username := req.GetUsername()
+	password := req.GetPassword()
+	log.Printf("username: %s", username)
+	log.Printf("password:%s", password)
+
+	// 去数据库加载策略
+	if err := s.casbinPermit.LoadPolicy(); err != nil {
+		log.Printf("failed to load policy with err(%s)", err.Error())
+		return nil, err
+	}
+	//从数据库中查询用户信息
+	user, err := s.DBEngine.UserGetByName(username)
+	if err != nil {
+		log.Printf("failed to get user by name with err(%s)", err.Error())
+		return nil, err
+	}
+	// TODO 将用户登录的密码与数据库中的密码进行对比（这个后面在支持，需要对密码进行加密与解密）
+	log.Printf("user: %v", user)
+
+	// 服务端生成token(需要用户提供用户ID、用户名、角色等信息)
+	token, err := s.auth.GenUserToken(user.ID, user.Username, user.Role.String())
+	if err != nil {
+		log.Printf("failed to generate token with err(%s)", err.Error())
+		return nil, err
+	}
+	log.Printf("输出生成的token: %s", token)
+
+	// 然后我们需要更新当前用户的token信息
+
+	err = s.DBEngine.UserUpdate(user.ID, map[string]interface{}{"token": token})
+	if err != nil {
+		log.Printf("failed to update user token with err(%s)", err.Error())
+		return nil, err
+	}
+
+	log.Printf("更新用户token成功")
+	log.Printf("登录成功")
+	// 返回登录成功的响应
+
+	return &pb.LoginResponse{
+		Token: token,
+	}, nil
+}

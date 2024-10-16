@@ -162,36 +162,29 @@ message User {
     string user_id = 1;
     // 用户名
     string username = 2;
-    // 密码
-    string password = 3;
-    // 昵称
-    string nickname = 4;
     // 邮箱
-    string email = 5;
+    string email = 3;
     // 手机号
-    string phone = 6;
+    string phone = 4;
     // 用户角色
-    Role role = 7;
+    Role role = 5;
     // 用户状态
-    Status status = 8;
+    Status status = 6;
     // 创建时间
-    string created_at = 9;
+    string created_at = 7;
     // 更新时间
-    string updated_at = 10;
+    string updated_at = 8;
 }
 
-// 用户注册请求
+// 用户注册请求（或者·叫用户新增请求，只有管理员才有权限）
 message RegisterRequest {
     // 用户名
     string username = 1;
     // 密码
     string password = 2;
-    // 昵称
-    string nickname = 3;
-    // 邮箱
-    string email = 4;
-    // 手机号
-    string phone = 5;
+    // 用户角色
+    Role role = 3;
+
 }
 
 // 用户注册响应
@@ -220,8 +213,8 @@ message LoginResponse {
 message UpdateUserProfileRequest {
     // 用户ID
      string user_id = 1;
-    // 昵称
-    string nickname = 2;
+    // 用户名
+    string username = 2;
     // 邮箱
     string email = 3;
     // 手机号
@@ -249,10 +242,12 @@ message GetUserResponse {
 // 修改密码请求
 
 message ChangePasswordRequest {
+    // 用户ID
+    string user_id = 1;
     // 旧密码
-    string old_password = 1;
+    string old_password = 2;
     // 新密码
-    string new_password = 2;
+    string new_password = 3;
 }
 
 // 修改密码响应
@@ -275,28 +270,13 @@ message ResetPasswordResponse {
     User user = 1;
 }
 
-// 获取用户列表请求
+// 获取用户列表请求(管理员)
 message ListUserRequest {
-    // 用户名
-    string username = 1;
-    // 昵称
-    string nickname = 2;
-    // 邮箱
-    string email = 3;
-    // 手机号
-    string phone = 4;
-    // 用户角色
-    Role role = 5;
-    // 用户状态
-    Status status = 6;
-    // 创建时间
-    string created_at = 7;
-    // 更新时间
-    string updated_at = 8;
+    
     // 页码
-    int32 page = 9;
+    int32 page = 1;
     // 每页数量
-    int32 page_size = 10;
+    int32 page_size = 2;
 }
 
 // 获取用户列表响应

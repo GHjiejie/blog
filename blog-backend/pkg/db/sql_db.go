@@ -72,3 +72,25 @@ func setupConnectionPool(db *gorm.DB) error {
 	sqlDB.SetConnMaxLifetime(time.Hour * 12)
 	return nil
 }
+
+// 根据用户名获取用户信息
+func (s *SQLDB) UserGetByName(username string) (*User, error) {
+	log.Printf("先检查当前用户是否在数据库里面存在: %s", username)
+	var user User
+	res := s.db.Where("username = ?", username).First(&user)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return &user, nil
+
+}
+
+// 更新用户的信息
+func (s *SQLDB) UserUpdate(userID int64, fields map[string]interface{}) error {
+	log.Printf("更新用户信息: %d", userID)
+	res := s.db.Model(&User{}).Where("id = ?", userID).Updates(fields)
+	if res.Error != nil {
+		return res.Error
+	}
+	return nil
+}
