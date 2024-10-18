@@ -1,11 +1,15 @@
 package auth
 
 import (
+	"context"
 	"log"
 	"time"
 
+	pb "blog-backend/pb/user"
+
 	jwt "github.com/golang-jwt/jwt/v5"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -39,6 +43,7 @@ func (au *Auth) GenUserToken(userId int64, username, role string) (string, error
 	return tokenString, nil
 }
 
+// 解析用户的token
 func (au *Auth) ParseUserToken(tokenStr string) (*UserClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		// SigningMethodHMAC
@@ -93,5 +98,45 @@ func (au *Auth) ParseUserToken(tokenStr string) (*UserClaims, error) {
 	}
 
 	return userClaims, nil
+}
+
+// 获取用户的声明
+func (au *Auth) getUserClaims(ctx context.Context) (*UserClaims, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "metadata is not found")
+	}
+	// log.Printf("输出获取的metadata: %v", md)
+
+	// 获取token
+	token, ok := md["authorization"]
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "token is not found")
+	}
+	// log.Printf("输出获取的token: %v", token)
+
+	// 解析token
+	claims, err := au.ParseUserToken(token[0])
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "token is invalid")
+	}
+
+	return claims, nil
+}
+
+// 判断用户是不是admin用户
+func (au *Auth) IsAdmin(ctx context.Context) error {
+	claims, err := au.getUserClaims(ctx)
+	if err != nil {
+		return err
+	}
+	log.Printf("输出获取的claims: %v", claims)
+	// 注意,我们需要从定义生成的user.pb.go文件里面去找用户的身份
+	if claims.Role != pb.Role_ADMIN.String() {
+		return status.Errorf(codes.PermissionDenied, "user is not admin")
+	} else {
+		log.Printf("用户是系统管理员,可以进行用户添加操作")
+	}
+	return nil
 
 }

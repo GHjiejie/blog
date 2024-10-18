@@ -1,6 +1,22 @@
 package casbinpermit
 
-var CasbinConf = `	
+// var CasbinConf = `
+// [request_definition]
+// r = sub, obj, act
+
+// [policy_definition]
+// p = sub, obj, act
+
+// [role_definition]
+// g = _, _
+
+// [policy_effect]
+// e = some(where (p.eft == allow))
+
+// [matchers]
+// m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+// `
+var CasbinConf = `
 [request_definition]
 r = sub, obj, act
 
@@ -14,9 +30,10 @@ g = _, _
 e = some(where (p.eft == allow))
 
 [matchers]
-m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+m = g(r.sub, p.sub) && keyMatch(r.obj, p.obj) && (r.act == p.act || p.act == "*")
 `
 
+// 需要我们注意的是上面的匹配规则,如果我们使用第一种规则,那么我们在定义策略的时候,需要将对象的值写死
 // Policy
 // 代表策略，它表示具体的权限定义的规则是什么
 

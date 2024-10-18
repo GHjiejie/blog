@@ -9,29 +9,26 @@ import (
 
 func (s *BlogServer) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestResponse, error) {
 	log.Printf("Received Test request: %v", req)
-	return &pb.TestResponse{
-		Message: "Hello, " + req.Name,
-	}, nil
+	return &pb.TestResponse{Message: "Hello, " + req.Name}, nil
 }
 
-// Register 实现用户注册逻辑
+// Register 实现用户注册逻辑(只有管理员才可以)
 func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	log.Printf("Received RegisterUser request: %v", req)
-
-	// 这里可以添加实际的注册逻辑，例如将用户信息保存到数据库
-	newUser := &pb.User{
-		UserId:    "generated_user_id", // 您可以使用 UUID 或其他方法生成用户 ID
-		Username:  req.Username,
-		Email:     "3426571530@qq.com",
-		Phone:     "18196756670",
-		Role:      pb.Role_USER,
-		Status:    pb.Status_NORMAL,
-		CreatedAt: "2023-10-15T12:00:00Z", // 使用当前时间戳
-		UpdatedAt: "2023-10-15T12:00:00Z",
+	// 输出一下这个ctx看看有什么信息
+	// log.Printf("输出ctx: %v", ctx)
+	// 获取用户名
+	username := req.GetUsername()
+	log.Printf("输出获取的用户名: %s", username)
+	// 只允许admin用户去添加新用户
+	if err := s.auth.IsAdmin(ctx); err != nil {
+		log.Printf("failed to check user is admin with err(%s)", err.Error())
+		return nil, err
 	}
+	// TODO 将前端传递过来的密码进行解密
+	// 然后对密码的有效性进行校验(前端已经校验了一次,这个是第二次(后端)校验)
+	return &pb.RegisterResponse{}, nil
 
-	return &pb.RegisterResponse{User: newUser}, nil
-	// return &pb.RegisterResponse{}, nil
 }
 
 func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
