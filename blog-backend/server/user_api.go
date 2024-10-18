@@ -40,6 +40,7 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 	password := req.GetPassword()
 	log.Printf("username: %s", username)
 	log.Printf("password:%s", password)
+	// TODO 进行验证码校验
 
 	// 去数据库加载策略
 	if err := s.casbinPermit.LoadPolicy(); err != nil {
@@ -53,7 +54,7 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		return nil, err
 	}
 	// TODO 将用户登录的密码与数据库中的密码进行对比（这个后面在支持，需要对密码进行加密与解密）
-	log.Printf("user: %v", user)
+	// log.Printf("user: %v", user)
 
 	// 服务端生成token(需要用户提供用户ID、用户名、角色等信息)
 	token, err := s.auth.GenUserToken(user.ID, user.Username, user.Role.String())
@@ -61,7 +62,7 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		log.Printf("failed to generate token with err(%s)", err.Error())
 		return nil, err
 	}
-	log.Printf("输出生成的token: %s", token)
+	// log.Printf("输出生成的token: %s", token)
 
 	// 然后我们需要更新当前用户的token信息
 
@@ -71,7 +72,7 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		return nil, err
 	}
 
-	log.Printf("更新用户token成功")
+	// log.Printf("更新用户token成功")
 	log.Printf("登录成功")
 	// 返回登录成功的响应
 
