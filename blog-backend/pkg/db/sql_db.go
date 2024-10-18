@@ -94,3 +94,13 @@ func (s *SQLDB) UserUpdate(userID int64, fields map[string]interface{}) error {
 	}
 	return nil
 }
+
+// 注册用户
+func (s *SQLDB) Register(user User) (int64, error) {
+	log.Printf("注册用户: %v", user)
+	res := s.db.Create(&user)
+	if res.Error != nil {
+		return 0, res.Error
+	}
+	return user.ID, nil
+}

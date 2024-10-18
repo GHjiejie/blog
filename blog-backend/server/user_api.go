@@ -5,6 +5,7 @@ import (
 	"log"
 
 	pb "blog-backend/pb/user"
+	"blog-backend/pkg/db"
 )
 
 func (s *BlogServer) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestResponse, error) {
@@ -25,6 +26,19 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 		log.Printf("failed to check user is admin with err(%s)", err.Error())
 		return nil, err
 	}
+	user := db.User{
+		Username: username,
+		Password: req.GetPassword(),
+		Role:     req.GetRole(),
+	}
+	log.Printf("输出user: %v", user)
+	// 将用户信息存储到数据库中
+	userID, err := s.DBEngine.Register(user)
+	if err != nil {
+		log.Printf("failed to register user with err(%s)", err.Error())
+		return nil, err
+	}
+	log.Printf("注册用户成功, 用户ID: %d", userID)
 	// TODO 将前端传递过来的密码进行解密
 	// 然后对密码的有效性进行校验(前端已经校验了一次,这个是第二次(后端)校验)
 	return &pb.RegisterResponse{}, nil
