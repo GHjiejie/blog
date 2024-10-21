@@ -4,10 +4,12 @@ import (
 	"blog-backend/pkg/auth"
 	"blog-backend/pkg/casbinpermit"
 	"blog-backend/pkg/db"
+	"blog-backend/pkg/middleware"
 	"context"
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -24,6 +26,11 @@ type BlogServer struct {
 	httpServer   *http.Server
 	grpcServer   *grpc.Server
 	auth         *auth.Auth
+}
+
+// 设置需要进行远程调用的路径
+var remotePath = []string{
+	"/v1/hello",
 }
 
 // NewBlogServer 创建并返回一个新的 BlogServer 实例
@@ -109,6 +116,15 @@ func (s *BlogServer) prepareServer() error {
 
 	// 创建 HTTP 多路复用器
 	httpmux := http.NewServeMux()
+
+	target, _ := url.Parse("http://localhost:9900")
+	engine := middleware.ReverseProxy(target)
+
+	// 判断当前接口是否需要进行远程调用
+	for _, path := range remotePath {
+		httpmux.Handle(path, engine)
+	}
+
 	httpmux.Handle("/v1/", s.Tracing(rmux, s.casbinPermit))
 
 	// 创建 HTTP 服务器
