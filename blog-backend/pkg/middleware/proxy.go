@@ -29,6 +29,7 @@ func ReverseProxy(target *url.URL) *httputil.ReverseProxy {
 
 func getRoundTripper() http.RoundTripper {
 	log.Printf("接下来要进行远程调用,我们需要设置一个默认的RoundTripper")
+	// 后面还要判断https的情况,在这里暂时不进行处理
 	var defaultTransport http.RoundTripper = &http.Transport{
 		// 设置Proxy
 		Proxy: proxyFunc, //用于设置代理的请求方式
@@ -56,6 +57,7 @@ func dialFunc(network, addr string) (net.Conn, error) {
 	}
 	return conn, nil
 }
+
 func proxyFunc(req *http.Request) (*url.URL, error) {
 	log.Printf("calling proxy,URL:%s,Method:%s", req.URL.String(), req.Method)
 	return http.ProxyFromEnvironment(req)
@@ -63,4 +65,22 @@ func proxyFunc(req *http.Request) (*url.URL, error) {
 
 type transport struct {
 	http.RoundTripper
+}
+
+// 接下来实现RoundTripper接口的RoundTrip方法,为什么要实现这个方法呢?
+// 因为我们需要在请求的时候,对请求进行一些处理,比如设置请求头,设置请求体等等
+// 这个方法是在请求的时候被调用的
+// 结果测试,我们发现这个RoundTrip方法会优先于我们的代理方法被调用,所以我们可以在这个方法里面对请求进行一些处理
+// 但是为什么会优先于代理方法被调用呢?这个是因为我们在创建ReverseProxy的时候,我们设置了Transport属性,这个属性是一个RoundTripper接口,所以在请求的时候,会优先调用这个方法
+func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	log.Printf("calling RoundTrip,URL:%s,Method:%s", req.URL.String(), req.Method)
+	// 在这里我们可以对请求进行一些处理,比如设置请求头,设置请求体等等
+	resp, err := t.RoundTripper.RoundTrip(req)
+	if err != nil {
+		log.Printf("failed to RoundTrip with err(%s)", err.Error())
+		return nil, err
+	}
+	log.Printf("输出请求的响应: %v", resp)
+
+	return resp, nil
 }
