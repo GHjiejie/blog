@@ -1,10 +1,7 @@
 <script setup></script>
 
 <template>
-  <div>
-    <h1>HelloWorld</h1>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <router-view />
 </template>
 
-<style scoped></style>
+<style scoped lang="scss"></style>
