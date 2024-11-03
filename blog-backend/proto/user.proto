@@ -33,7 +33,7 @@ service UserService {
 // 用户注册
   rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
-      post: "/v1/user/register"
+      post: "/v1/users/register"
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -47,7 +47,7 @@ service UserService {
 // 用户登录
     rpc Login(LoginRequest) returns (LoginResponse) {
         option (google.api.http) = {
-        post: "/v1/user/login"
+        post: "/v1/users/login"
         body: "*"
         };
         option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

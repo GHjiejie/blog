@@ -8,9 +8,9 @@ import (
 
 // 设置无需验证的路径
 var NotNeedAuthorizationPaths = map[string]bool{
-	"/v1/user/login":    true,
-	"/v1/user/register": true,
-	"/v1/captchas":      true,
+	"/v1/users/login":    true,
+	"/v1/users/register": true,
+	"/v1/captchas":       true,
 }
 
 const (
