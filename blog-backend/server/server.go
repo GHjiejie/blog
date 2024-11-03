@@ -6,10 +6,11 @@ import (
 	"blog-backend/pkg/db"
 	"blog-backend/pkg/middleware"
 	"context"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -38,14 +39,14 @@ func NewBlogServer() (*BlogServer, error) {
 	// 连接数据库
 	dbEngine, err := db.NEWHandler()
 	if err != nil {
-		log.Printf("failed to create db engine handler with err(%s)", err.Error())
+		log.Errorf("failed to create db engine handler with err(%s)", err.Error())
 		return nil, err
 	}
 	casbinPermit, err := casbinpermit.NewPermit(dbEngine.GetORMDB())
 
 	// 接下来就是加载策略
 	if err := casbinPermit.Enforcer.LoadPolicy(); err != nil {
-		log.Printf("failed to load policy with err(%s)", err.Error())
+		log.Infof("failed to load policy with err(%s)", err.Error())
 		return nil, err
 	}
 	auth := auth.NewAuth(dbEngine, casbinPermit)
@@ -59,7 +60,7 @@ func NewBlogServer() (*BlogServer, error) {
 
 	// 准备 gRPC 和 HTTP 服务
 	if err := s.prepareServer(); err != nil {
-		log.Printf("failed to prepare server with err(%s)", err.Error())
+		log.Errorf("failed to prepare server with err(%s)", err.Error())
 		return nil, err
 	}
 	return s, nil
@@ -67,37 +68,37 @@ func NewBlogServer() (*BlogServer, error) {
 
 // Start 启动 gRPC 和 HTTP 服务
 func (s *BlogServer) Start() error {
-	log.Printf("BlogServer starting...")
+	log.Info("BlogServer starting...")
 
 	// 启动 gRPC 服务
 	go func() {
 		lis, err := net.Listen("tcp", ":8081")
 		if err != nil {
-			log.Printf("gRPC server failed to listen: %v", err)
+			log.Errorf("gRPC server failed to listen: %v", err)
 			panic(err)
 		}
-		log.Printf("gRPC server listening on :8081")
+		log.Info("gRPC server listening on :8081")
 
 		if err := s.grpcServer.Serve(lis); err != nil {
-			log.Printf("gRPC server failed to serve: %v", err)
+			log.Errorf("gRPC server failed to serve: %v", err)
 			panic(err)
 		}
 	}()
 	// 启动 HTTP 服务
 	go func() {
 		if err := s.httpServer.ListenAndServe(); err != nil {
-			log.Printf("HTTP/JSON server failed to start: %v", err)
+			log.Errorf("HTTP/JSON server failed to start: %v", err)
 			panic(err)
 		}
 	}()
-	log.Printf("HTTP/JSON server listening on :8080")
+	log.Info("HTTP/JSON server listening on :8080")
 
 	return nil
 }
 
 // prepareServer 准备 gRPC 和 HTTP 服务器
 func (s *BlogServer) prepareServer() error {
-	log.Printf("Preparing gRPC and HTTP servers")
+	log.Info("Preparing gRPC and HTTP servers")
 
 	// 创建 gRPC 服务器
 	s.grpcServer = grpc.NewServer()
@@ -110,7 +111,7 @@ func (s *BlogServer) prepareServer() error {
 	// 注册 gRPC-Gateway，确保它能正确连接到 gRPC 服务器
 	err := pb.RegisterUserServiceHandlerFromEndpoint(context.Background(), rmux, "localhost:8081", opts)
 	if err != nil {
-		log.Printf("Failed to register user service handler from endpoint: %v", err)
+		log.Errorf("Failed to register user service handler from endpoint: %v", err)
 		return err
 	}
 
@@ -133,6 +134,6 @@ func (s *BlogServer) prepareServer() error {
 		Handler: httpmux,
 	}
 
-	log.Printf("gRPC and HTTP servers prepared successfully")
+	log.Info("gRPC and HTTP servers prepared successfully")
 	return nil
 }

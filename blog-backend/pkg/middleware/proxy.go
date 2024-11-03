@@ -1,17 +1,17 @@
 package middleware
 
 import (
-	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func ReverseProxy(target *url.URL) *httputil.ReverseProxy {
-	fmt.Printf("这个函数需要远程调用,我们接下来输出这个目标路径: %v\n", target)
+	log.Infof("这个函数需要远程调用,我们接下来输出这个目标路径: %v\n", target)
 	// return httputil.NewSingleHostReverseProxy(target)
 	defaultRoundTripper := getRoundTripper()
 	director := func(req *http.Request) {
@@ -28,7 +28,7 @@ func ReverseProxy(target *url.URL) *httputil.ReverseProxy {
 }
 
 func getRoundTripper() http.RoundTripper {
-	log.Printf("接下来要进行远程调用,我们需要设置一个默认的RoundTripper")
+	log.Infof("接下来要进行远程调用,我们需要设置一个默认的RoundTripper")
 	// 后面还要判断https的情况,在这里暂时不进行处理
 	var defaultTransport http.RoundTripper = &http.Transport{
 		// 设置Proxy
@@ -52,14 +52,14 @@ func dialFunc(network, addr string) (net.Conn, error) {
 		KeepAlive: 30 * time.Second,
 	}).Dial(network, addr)
 	if err != nil {
-		log.Printf("failed to dial with err(%s)", err.Error())
+		log.Errorf("failed to dial with err(%s)", err.Error())
 		return nil, err
 	}
 	return conn, nil
 }
 
 func proxyFunc(req *http.Request) (*url.URL, error) {
-	log.Printf("calling proxy,URL:%s,Method:%s", req.URL.String(), req.Method)
+	log.Infof("calling proxy,URL:%s,Method:%s", req.URL.String(), req.Method)
 	return http.ProxyFromEnvironment(req)
 }
 
