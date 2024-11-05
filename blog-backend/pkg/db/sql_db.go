@@ -121,7 +121,7 @@ func (s *SQLDB) UserCount() (int64, error) {
 // 获取用户列表
 func (s *SQLDB) UserList(page, pageSize int64) ([]User, error) {
 	log.Infof("获取用户列表")
-	log.Infof("page: %d, pageSize: %d", page, pageSize)
+	// log.Infof("page: %d, pageSize: %d", page, pageSize)
 	// 跳过的用户数
 	offset := (page - 1) * pageSize
 	var users []User

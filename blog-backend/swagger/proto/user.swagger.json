@@ -570,10 +570,12 @@
         },
         "created_at": {
           "type": "string",
+          "format": "date-time",
           "title": "创建时间"
         },
         "updated_at": {
           "type": "string",
+          "format": "date-time",
           "title": "更新时间"
         }
       },
