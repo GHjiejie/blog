@@ -159,7 +159,7 @@ enum Status {
 // 用户信息
 message User {
     // 用户ID
-    string user_id = 1;
+    int64 user_id = 1;
     // 用户名
     string username = 2;
     // 邮箱

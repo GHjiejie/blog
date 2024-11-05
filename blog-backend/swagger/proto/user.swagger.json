@@ -545,6 +545,7 @@
       "properties": {
         "user_id": {
           "type": "string",
+          "format": "int64",
           "title": "用户ID"
         },
         "username": {

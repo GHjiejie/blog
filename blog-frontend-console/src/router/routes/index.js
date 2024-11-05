@@ -33,6 +33,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("@/pages/Login/index.vue"),
+  },
 ];
 
 export default routes;

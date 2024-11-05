@@ -106,3 +106,38 @@ func (s *SQLDB) Register(user User) (int64, error) {
 	}
 	return user.ID, nil
 }
+
+// 获取用户总数
+func (s *SQLDB) UserCount() (int64, error) {
+	log.Infof("获取用户总数")
+	var count int64
+	res := s.db.Model(&User{}).Count(&count)
+	if res.Error != nil {
+		return 0, res.Error
+	}
+	return count, nil
+}
+
+// 获取用户列表
+func (s *SQLDB) UserList(page, pageSize int64) ([]User, error) {
+	log.Infof("获取用户列表")
+	log.Infof("page: %d, pageSize: %d", page, pageSize)
+	// 跳过的用户数
+	offset := (page - 1) * pageSize
+	var users []User
+	res := s.db.Offset(int(offset)).Limit(int(pageSize)).Find(&users)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return users, nil
+}
+
+// func (s *SQLDB) UserList(page, pageSize int) ([]User, error) {
+// 	log.Infof("获取用户列表")
+// 	var users []User
+// 	res := s.db.Find(&users)
+// 	if res.Error != nil {
+// 		return nil, res.Error
+// 	}
+// 	return users, nil
+// }

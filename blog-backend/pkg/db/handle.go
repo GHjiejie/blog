@@ -9,6 +9,10 @@ type Handler interface {
 	UserUpdate(userID int64, fields map[string]interface{}) error
 	// 注册用户
 	Register(user User) (int64, error)
+	// 获取用户总数
+	UserCount() (int64, error)
+	// 获取用户列表
+	UserList(page int64, pageSize int64) ([]User, error)
 	GetORMDB() *gorm.DB
 }
 

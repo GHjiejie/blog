@@ -46,6 +46,7 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 
 }
 
+// 用户登录
 func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	log.Infof("Received Login request: %v", req)
 	username := req.GetUsername()
@@ -90,5 +91,65 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 
 	return &pb.LoginResponse{
 		Token: token,
+		User: &pb.User{
+			Username: user.Username,
+		},
 	}, nil
 }
+
+// 用户列表获取
+
+func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserResponse, error) {
+	log.Infof("Received ListUser request: %v", req)
+
+	// 首先要获取page
+	page := req.GetPage()
+	// 再获取每页的数量(默认是2吧)
+	pageSize := req.GetPageSize()
+	log.Infof("输出获取到的page: %d", page)
+	log.Infof("输出获取到的pageSize: %d", pageSize)
+
+	// 首先我们要获取用户总数
+	userCount, err := s.DBEngine.UserCount()
+	if err != nil {
+		log.Info("获取用户总数失败！")
+		return nil, err
+	}
+	log.Infof("输出获取到的用户总数: %d", userCount)
+	users, err := s.DBEngine.UserList(int64(page), int64(pageSize))
+	if err != nil {
+		log.Info("获取用户列表失败！")
+		return nil, err
+	}
+	log.Infof("输出获取到的用户列表: %v", users)
+	// 返回数据
+	var pbUsers []*pb.User
+	for _, user := range users {
+		pbUsers = append(pbUsers, &pb.User{
+			UserId:   user.ID,
+			Username: user.Username,
+			Role:     pb.Role(user.Role),
+		})
+	}
+	log.Infof("输出转换后的用户列表: %v", pbUsers)
+	return &pb.ListUserResponse{
+		Users: pbUsers,
+		Total: int32(userCount),
+	}, nil
+}
+
+// 然后我们需要进行分页（就是跳过page*pageSize之前的数据，返回后面的最新数据）
+
+// 返回用户列表
+// var pbUsers []*pb.User
+// for _, user := range users {
+// 	pbUsers = append(pbUsers, &pb.User{
+// 		Id:       int64(user.ID),
+// 		Username: user.Username,
+// 		Role:     pb.Role(user.Role),
+// 	})
+// }
+// log.Printf("输出转换后的用户列表: %v", pbUsers)
+// return &pb.ListUserResponse{
+// 	Users: pbUsers,
+// }, nil
