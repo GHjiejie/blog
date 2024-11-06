@@ -77,7 +77,7 @@ func setupConnectionPool(db *gorm.DB) error {
 
 // 根据用户名获取用户信息
 func (s *SQLDB) UserGetByName(username string) (*User, error) {
-	log.Infof("先检查当前用户是否在数据库里面存在: %s", username)
+	// log.Infof("先检查当前用户是否在数据库里面存在: %s", username)
 	var user User
 	res := s.db.Where("username = ?", username).First(&user)
 	if res.Error != nil {
@@ -88,7 +88,7 @@ func (s *SQLDB) UserGetByName(username string) (*User, error) {
 
 // 根据用户ID获取用户信息
 func (s *SQLDB) UserGetByID(userID int64) (*User, error) {
-	log.Infof("获取用户信息: %d", userID)
+	// log.Infof("获取用户信息: %d", userID)
 	var user User
 	res := s.db.Where("id = ?", userID).First(&user)
 	if res.Error != nil {
@@ -99,7 +99,7 @@ func (s *SQLDB) UserGetByID(userID int64) (*User, error) {
 
 // 更新用户的信息
 func (s *SQLDB) UserUpdate(userID int64, fields map[string]interface{}) error {
-	log.Infof("更新用户信息: %d", userID)
+	// log.Infof("更新用户信息: %d", userID)
 	res := s.db.Model(&User{}).Where("id = ?", userID).Updates(fields)
 	if res.Error != nil {
 		return res.Error
@@ -109,7 +109,7 @@ func (s *SQLDB) UserUpdate(userID int64, fields map[string]interface{}) error {
 
 // 注册用户
 func (s *SQLDB) Register(user User) (int64, error) {
-	log.Infof("注册用户: %v", user)
+
 	res := s.db.Create(&user)
 	if res.Error != nil {
 		return 0, res.Error
@@ -119,7 +119,7 @@ func (s *SQLDB) Register(user User) (int64, error) {
 
 // 获取用户总数
 func (s *SQLDB) UserCount() (int64, error) {
-	log.Infof("获取用户总数")
+	// log.Infof("获取用户总数")
 	var count int64
 	res := s.db.Model(&User{}).Count(&count)
 	if res.Error != nil {
@@ -130,7 +130,7 @@ func (s *SQLDB) UserCount() (int64, error) {
 
 // 获取用户列表
 func (s *SQLDB) UserList(page, pageSize int64) ([]User, error) {
-	log.Infof("获取用户列表")
+	// log.Infof("获取用户列表")
 	// log.Infof("page: %d, pageSize: %d", page, pageSize)
 	// 跳过的用户数
 	offset := (page - 1) * pageSize

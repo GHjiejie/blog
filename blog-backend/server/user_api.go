@@ -19,7 +19,10 @@ func (s *BlogServer) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestRes
 
 // Register 实现用户注册逻辑(只有管理员才可以)
 func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	log.Infof("Received RegisterUser request: %v", req)
+
+	logger := log.WithFields(log.Fields{
+		"api": "Register",
+	})
 	// 输出一下这个ctx看看有什么信息
 	// log.Printf("输出ctx: %v", ctx)
 	// 获取用户名
@@ -27,8 +30,8 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 	// log.Infof("输出获取的用户名: %s", username)
 	// 只允许admin用户去添加新用户
 	if err := s.auth.IsAdmin(ctx); err != nil {
-		log.Errorf("failed to check user is admin with err(%s)", err.Error())
-		return nil, err
+		logger.Errorf("failed to check user is admin with err(%s)", err.Error())
+		return nil, status.Errorf(codes.PermissionDenied, err.Error())
 	}
 	user := db.User{
 		Username: username,
@@ -40,10 +43,10 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 	// 将用户信息存储到数据库中
 	userId, err := s.DBEngine.Register(user)
 	if err != nil {
-		log.Errorf("failed to register user with err(%s)", err.Error())
-		return nil, err
+		logger.Errorf("failed to register user with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "register user failed with err(%s)", err.Error())
 	}
-	log.Infof("注册用户成功, 用户ID: %d", userId)
+	// log.Infof("注册用户成功, 用户ID: %d", userId)
 	// TODO 将前端传递过来的密码进行解密
 	// 然后对密码的有效性进行校验(前端已经校验了一次,这个是第二次(后端)校验)
 	return &pb.RegisterResponse{
@@ -59,7 +62,10 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 
 // 用户登录
 func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	log.Infof("Received Login request: %v", req)
+	// log.Infof("Received Login request: %v", req)
+	logger := log.WithFields(log.Fields{
+		"api": "Login",
+	})
 	username := req.GetUsername()
 	password := req.GetPassword()
 	log.Infof("username: %s", username)
@@ -68,14 +74,14 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 
 	// 去数据库加载策略
 	if err := s.casbinPermit.LoadPolicy(); err != nil {
-		log.Errorf("failed to load policy with err(%s)", err.Error())
-		return nil, err
+		logger.Errorf("failed to load policy with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "load policy failed with err(%s)", err.Error())
 	}
 	//从数据库中查询用户信息
 	user, err := s.DBEngine.UserGetByName(username)
 	if err != nil {
-		log.Errorf("failed to get user by name with err(%s)", err.Error())
-		return nil, err
+		logger.Errorf("failed to get user by name with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
 	}
 	// TODO 将用户登录的密码与数据库中的密码进行对比（这个后面在支持，需要对密码进行加密与解密）
 	// log.Printf("user: %v", user)
@@ -83,8 +89,8 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 	// 服务端生成token(需要用户提供用户ID、用户名、角色等信息)
 	token, err := s.auth.GenUserToken(user.ID, user.Username, user.Role.String())
 	if err != nil {
-		log.Errorf("failed to generate token with err(%s)", err.Error())
-		return nil, err
+		logger.Errorf("failed to generate token with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "generate token failed with err(%s)", err.Error())
 	}
 	// log.Printf("输出生成的token: %s", token)
 
@@ -92,12 +98,12 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 
 	err = s.DBEngine.UserUpdate(user.ID, map[string]interface{}{"token": token})
 	if err != nil {
-		log.Errorf("failed to update user token with err(%s)", err.Error())
-		return nil, err
+		logger.Errorf("failed to update user token with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "update user token failed with err(%s)", err.Error())
 	}
 
 	// log.Printf("更新用户token成功")
-	log.Info("登录成功")
+	logger.Info("登录成功")
 	// 返回登录成功的响应
 
 	return &pb.LoginResponse{
@@ -110,28 +116,30 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 
 // 用户列表获取
 func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserResponse, error) {
-	log.Infof("Received ListUser request: %v", req)
+	// log.Infof("Received ListUser request: %v", req)
+	logger := log.WithFields(log.Fields{
+		"api": "ListUser",
+	})
 
 	// 首先要获取page
 	page := req.GetPage()
 	// 再获取每页的数量(默认是2吧)
 	pageSize := req.GetPageSize()
-	log.Infof("输出获取到的page: %d", page)
-	log.Infof("输出获取到的pageSize: %d", pageSize)
+	// log.Infof("输出获取到的page: %d", page)
+	// log.Infof("输出获取到的pageSize: %d", pageSize)
 
 	// 首先我们要获取用户总数
 	userCount, err := s.DBEngine.UserCount()
 	if err != nil {
-		log.Info("获取用户总数失败！")
+		logger.Errorf("failed to get user count with err(%s)", err.Error())
 		return nil, err
 	}
-	log.Infof("输出获取到的用户总数: %d", userCount)
+	logger.Infof("获取到的用户总数: %d", userCount)
 	users, err := s.DBEngine.UserList(int64(page), int64(pageSize))
 	if err != nil {
-		log.Info("获取用户列表失败！")
+		logger.Errorf("failed to get user list with err(%s)", err.Error())
 		return nil, err
 	}
-	log.Infof("输出获取到的用户列表: %v", users)
 	// 返回数据
 	var pbUsers []*pb.User
 	for _, user := range users {
@@ -141,7 +149,6 @@ func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 			Role:     pb.Role(user.Role),
 		})
 	}
-	log.Infof("输出转换后的用户列表: %v", pbUsers)
 	return &pb.ListUserResponse{
 		Users: pbUsers,
 		Total: int32(userCount),
