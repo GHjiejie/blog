@@ -4,9 +4,12 @@ import (
 	"context"
 
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	pb "blog-backend/pb/user"
 	"blog-backend/pkg/db"
+	"blog-backend/pkg/validate"
 )
 
 func (s *BlogServer) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestResponse, error) {
@@ -21,7 +24,7 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 	// log.Printf("输出ctx: %v", ctx)
 	// 获取用户名
 	username := req.GetUsername()
-	log.Infof("输出获取的用户名: %s", username)
+	// log.Infof("输出获取的用户名: %s", username)
 	// 只允许admin用户去添加新用户
 	if err := s.auth.IsAdmin(ctx); err != nil {
 		log.Errorf("failed to check user is admin with err(%s)", err.Error())
@@ -32,17 +35,25 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 		Password: req.GetPassword(),
 		Role:     req.GetRole(),
 	}
-	log.Infof("输出user: %v", user)
+
+	// log.Infof("输出user: %v", user)
 	// 将用户信息存储到数据库中
-	userID, err := s.DBEngine.Register(user)
+	userId, err := s.DBEngine.Register(user)
 	if err != nil {
 		log.Errorf("failed to register user with err(%s)", err.Error())
 		return nil, err
 	}
-	log.Infof("注册用户成功, 用户ID: %d", userID)
+	log.Infof("注册用户成功, 用户ID: %d", userId)
 	// TODO 将前端传递过来的密码进行解密
 	// 然后对密码的有效性进行校验(前端已经校验了一次,这个是第二次(后端)校验)
-	return &pb.RegisterResponse{}, nil
+	return &pb.RegisterResponse{
+		User: &pb.User{
+			// 这里我们可以将我们接口涉及的字段一个一个编写映射返回给前端，但是考虑到使用的场景会比较多，所以我们就将其封装成一个函数，然后在函数中进行映射返回给前端
+			UserId:   userId,
+			Username: username,
+			Role:     req.GetRole(),
+		},
+	}, nil
 
 }
 
@@ -98,7 +109,6 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 }
 
 // 用户列表获取
-
 func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserResponse, error) {
 	log.Infof("Received ListUser request: %v", req)
 
@@ -138,18 +148,48 @@ func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 	}, nil
 }
 
-// 然后我们需要进行分页（就是跳过page*pageSize之前的数据，返回后面的最新数据）
+// 删除用户（管理员）
+func (s *BlogServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+	// 在输出日志的时候我们需要提供一些关键的信息来帮助我们更好的定位问题，比如我们需要输出当前的API名称，用户ID等信息
+	logger := log.WithFields(log.Fields{
+		"api": "DeleteUser",
+	})
+	if err := validate.UserDelete(req); err != nil {
+		logger.Errorf("failed to delete user with err(%s)", err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+	userID := req.GetUserId()
 
-// 返回用户列表
-// var pbUsers []*pb.User
-// for _, user := range users {
-// 	pbUsers = append(pbUsers, &pb.User{
-// 		Id:       int64(user.ID),
-// 		Username: user.Username,
-// 		Role:     pb.Role(user.Role),
-// 	})
-// }
-// log.Printf("输出转换后的用户列表: %v", pbUsers)
-// return &pb.ListUserResponse{
-// 	Users: pbUsers,
-// }, nil
+	logger = logger.WithFields(log.Fields{
+		"UserID": userID,
+	})
+	// logger.Infof("输出获取的用户ID: %v", userID)
+
+	// 然后判断是不死admin用户
+	if err := s.auth.IsAdmin(ctx); err != nil {
+		logger.Errorf("failed to check user is admin with err(%s)", err.Error())
+		return nil, status.Errorf(codes.PermissionDenied, err.Error())
+	}
+	// logger.Info("用户是系统管理员,可以进行用户删除操作")
+
+	// 接下来就是去根据id去这个用户是否存在
+	user, err := s.DBEngine.UserGetByID(userID)
+	if err != nil {
+		logger.Errorf("failed to get user by id with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
+	}
+	// logger.Infof("输出在删除用户的时候获取到的用户信息: %v", user)
+	// 然后就进行删除操作
+	err = s.DBEngine.UserDelete(userID)
+	if err != nil {
+		logger.Errorf("failed to delete user with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "delete user failed with err(%s)", err.Error())
+	}
+
+	// logger.Info("删除用户成功")
+	return &pb.DeleteUserResponse{
+		User: &pb.User{
+			UserId: user.ID,
+		},
+	}, nil
+}

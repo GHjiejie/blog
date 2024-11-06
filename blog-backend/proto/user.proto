@@ -213,7 +213,7 @@ message LoginResponse {
 // 更新用户信息请求
 message UpdateUserProfileRequest {
     // 用户ID
-     string user_id = 1;
+     int64 user_id = 1;
     // 用户名
     string username = 2;
     // 邮箱
@@ -231,7 +231,7 @@ message UpdateUserProfileResponse {
 // 获取用户信息请求
 message GetUserRequest {
     // 用户ID
-    string user_id = 1;
+    int64 user_id = 1;
 }
 
 // 获取用户信息响应
@@ -244,7 +244,7 @@ message GetUserResponse {
 
 message ChangePasswordRequest {
     // 用户ID
-    string user_id = 1;
+    int64 user_id = 1;
     // 旧密码
     string old_password = 2;
     // 新密码
@@ -260,7 +260,7 @@ message ChangePasswordResponse {
 // 重置密码请求
 message ResetPasswordRequest {
     // 用户ID
-    string user_id = 1;
+    int64 user_id = 1;
     // 新密码
     string new_password = 2;
 }
@@ -291,7 +291,7 @@ message ListUserResponse {
 // 删除用户请求
 message DeleteUserRequest {
     // 用户ID
-    string user_id = 1;
+    int64 user_id = 1;
 }
 
 // 删除用户响应

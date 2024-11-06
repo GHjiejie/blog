@@ -49,6 +49,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 			if err != nil {
 				log.Errorf("token解析失败, err: %v", err)
 				w.WriteHeader(http.StatusInternalServerError)
+				// 返回错误消息给前端
 				return
 			}
 			if claims == nil {

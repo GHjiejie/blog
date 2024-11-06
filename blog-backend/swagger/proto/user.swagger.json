@@ -247,7 +247,8 @@
             "description": "用户ID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -278,7 +279,8 @@
             "description": "用户ID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -309,7 +311,8 @@
             "description": "用户ID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           {
             "name": "body",
@@ -332,6 +335,7 @@
       "properties": {
         "user_id": {
           "type": "string",
+          "format": "int64",
           "title": "用户ID"
         },
         "old_password": {
@@ -453,6 +457,7 @@
       "properties": {
         "user_id": {
           "type": "string",
+          "format": "int64",
           "title": "用户ID"
         },
         "new_password": {
@@ -513,6 +518,7 @@
       "properties": {
         "user_id": {
           "type": "string",
+          "format": "int64",
           "title": "用户ID"
         },
         "username": {

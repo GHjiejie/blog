@@ -84,7 +84,17 @@ func (s *SQLDB) UserGetByName(username string) (*User, error) {
 		return nil, res.Error
 	}
 	return &user, nil
+}
 
+// 根据用户ID获取用户信息
+func (s *SQLDB) UserGetByID(userID int64) (*User, error) {
+	log.Infof("获取用户信息: %d", userID)
+	var user User
+	res := s.db.Where("id = ?", userID).First(&user)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return &user, nil
 }
 
 // 更新用户的信息
@@ -132,12 +142,12 @@ func (s *SQLDB) UserList(page, pageSize int64) ([]User, error) {
 	return users, nil
 }
 
-// func (s *SQLDB) UserList(page, pageSize int) ([]User, error) {
-// 	log.Infof("获取用户列表")
-// 	var users []User
-// 	res := s.db.Find(&users)
-// 	if res.Error != nil {
-// 		return nil, res.Error
-// 	}
-// 	return users, nil
-// }
+// 删除用户（管理员）
+func (s *SQLDB) UserDelete(userID int64) error {
+	log.Infof("删除用户: %d", userID)
+	res := s.db.Where("id = ?", userID).Delete(&User{})
+	if res.Error != nil {
+		return res.Error
+	}
+	return nil
+}
