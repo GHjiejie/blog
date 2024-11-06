@@ -285,3 +285,27 @@ func (s *BlogServer) ResetPassword(ctx context.Context, req *pb.ResetPasswordReq
 		Message: "user password reset success",
 	}, nil
 }
+
+// 根据用户ID获取用户信息
+func (s *BlogServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "GetUserByID",
+	})
+	// 首先我们要获取用户ID
+	userID := req.GetUserId()
+	// logger.Infof("输出获取到的用户ID: %v", userID)
+	// 获取用户信息
+	user, err := s.DBEngine.UserGetByID(userID)
+	if err != nil {
+		logger.Errorf("failed to get user by id with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
+	}
+	// logger.Infof("输出获取到的用户信息: %v", user)
+	return &pb.GetUserResponse{
+		User: &pb.User{
+			UserId:   user.ID,
+			Username: user.Username,
+			Role:     pb.Role(user.Role),
+		},
+	}, nil
+}
