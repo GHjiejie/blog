@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	pb "blog-backend/pb/user"
+	"blog-backend/pkg/auth"
 	"blog-backend/pkg/db"
 	"blog-backend/pkg/validate"
 )
@@ -83,8 +84,12 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		logger.Errorf("failed to get user by name with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
 	}
+	log.Infof("输出从数据库获取的密码:%v", user.Password)
 	// TODO 将用户登录的密码与数据库中的密码进行对比（这个后面在支持，需要对密码进行加密与解密）
-	// log.Printf("user: %v", user)
+	if err = auth.ComparePassword(user.Password, password); err != nil {
+		logger.Errorf("failed to compare password with err(%s)", err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
 
 	// 服务端生成token(需要用户提供用户ID、用户名、角色等信息)
 	token, err := s.auth.GenUserToken(user.ID, user.Username, user.Role.String())
@@ -92,7 +97,6 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		logger.Errorf("failed to generate token with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "generate token failed with err(%s)", err.Error())
 	}
-	// log.Printf("输出生成的token: %s", token)
 
 	// 然后我们需要更新当前用户的token信息
 
@@ -170,9 +174,8 @@ func (s *BlogServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) 
 	logger = logger.WithFields(log.Fields{
 		"UserID": userID,
 	})
-	// logger.Infof("输出获取的用户ID: %v", userID)
 
-	// 然后判断是不死admin用户
+	// 然后判断是不是admin用户
 	if err := s.auth.IsAdmin(ctx); err != nil {
 		logger.Errorf("failed to check user is admin with err(%s)", err.Error())
 		return nil, status.Errorf(codes.PermissionDenied, err.Error())
@@ -198,5 +201,87 @@ func (s *BlogServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) 
 		User: &pb.User{
 			UserId: user.ID,
 		},
+	}, nil
+}
+
+// 更新用户信息
+// func (s *BlogServer) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+// 	logger := log.WithFields(log.Fields{
+// 		"api": "UpdateUser",
+// 	})
+// 	// 首先我们要判断用户是否是管理员
+// 	if err := s.auth.IsAdmin(ctx); err != nil {
+// 		logger.Errorf("failed to check user is admin with err(%s)", err.Error())
+// 		return nil, status.Errorf(codes.PermissionDenied, err.Error())
+// 	}
+// 	// logger.Info("用户是系统管理员,可以进行用户更新操作")
+// 	// 获取用户ID
+// 	userID := req.GetUserId()
+// 	// logger.Infof("输出获取到的用户ID: %v", userID)
+// 	// 获取用户信息
+// 	user, err := s.DBEngine.UserGetByID(userID)
+// 	if err != nil {
+// 		logger.Errorf("failed to get user by id with err(%s)", err.Error())
+// 		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
+// 	}
+// 	// logger.Infof("输出在更新用户的时候获取到的用户信息: %v", user)
+// 	// 更新用户信息
+// 	err = s.DBEngine.UserUpdate(userID, map[string]interface{}{
+// 		"username": req.GetUsername(),
+// 		"role":     req.GetRole(),
+// 	})
+// 	if err != nil {
+// 		logger.Errorf("failed to update user with err(%s)", err.Error())
+// 		return nil, status.Errorf(codes.Internal, "update user failed with err(%s)", err.Error())
+// 	}
+// 	// logger.Info("更新用户成功")
+// 	return &pb.UpdateUserResponse{
+// 		User: &pb.User{
+// 			UserId:   user.ID,
+// 			Username: req.GetUsername(),
+// 			Role:     req.GetRole(),
+// 		},
+// 	}, nil
+// }
+
+// 用户密码重置
+func (s *BlogServer) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest) (*pb.ResetPasswordResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "ResetPassword",
+	})
+	// 首先我们要判断用户是否是管理员
+	if err := s.auth.IsAdmin(ctx); err != nil {
+		logger.Errorf("failed to check user is admin with err(%s)", err.Error())
+		return nil, status.Errorf(codes.PermissionDenied, err.Error())
+	}
+	// 获取用户ID
+	userID := req.GetUserId()
+	// logger.Infof("输出获取到的用户ID: %v", userID)
+	// 获取用户信息
+	user, err := s.DBEngine.UserGetByID(userID)
+
+	if err != nil {
+		logger.Errorf("failed to get user by id with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
+	}
+	// 判断操作的对象的角色是否是admin（因为我们是不允许对admin进行重置密码操作的）
+	// logger.Infof("输出用户的角色: %v", user.Role)
+	// logger.Infof("输出用户的角色: %v", *pb.Role_ADMIN.Enum())
+	if user.Role == *pb.Role_ADMIN.Enum() {
+		logger.Errorf("failed to reset password with err(%s)", "admin user can not reset password")
+		return nil, status.Errorf(codes.PermissionDenied, "admin user can not reset password")
+	}
+	newPassword := "12345" //所有人的初始化密码都是12345
+	// 更新用户信息
+	err = s.DBEngine.UserUpdate(userID, map[string]interface{}{
+		"password": newPassword,
+	})
+	if err != nil {
+		logger.Errorf("failed to update user with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "update user failed with err(%s)", err.Error())
+	}
+	// logger.Info("重置用户密码成功")
+	return &pb.ResetPasswordResponse{
+		Message: "user password reset success",
 	}, nil
 }

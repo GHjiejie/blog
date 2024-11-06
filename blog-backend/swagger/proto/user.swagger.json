@@ -459,10 +459,6 @@
           "type": "string",
           "format": "int64",
           "title": "用户ID"
-        },
-        "new_password": {
-          "type": "string",
-          "title": "新密码"
         }
       },
       "title": "重置密码请求"
@@ -470,8 +466,8 @@
     "pbResetPasswordResponse": {
       "type": "object",
       "properties": {
-        "user": {
-          "$ref": "#/definitions/pbUser",
+        "message": {
+          "type": "string",
           "title": "用户信息"
         }
       },

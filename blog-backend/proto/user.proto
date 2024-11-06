@@ -261,14 +261,12 @@ message ChangePasswordResponse {
 message ResetPasswordRequest {
     // 用户ID
     int64 user_id = 1;
-    // 新密码
-    string new_password = 2;
 }
 
 // 重置密码响应
 message ResetPasswordResponse {
     // 用户信息
-    User user = 1;
+    string message = 1;
 }
 
 // 获取用户列表请求(管理员)

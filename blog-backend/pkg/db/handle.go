@@ -17,6 +17,7 @@ type Handler interface {
 	UserList(page int64, pageSize int64) ([]User, error)
 	// 删除用户（管理员）
 	UserDelete(userID int64) error
+
 	GetORMDB() *gorm.DB
 }
 
