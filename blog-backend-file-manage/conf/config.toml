@@ -1,0 +1,30 @@
+# Config with toml format
+LogLevel = "debug"
+Dev = true
+HTTPEndpoint = ":8087"
+GRPCEndpoint = ":8088"
+
+
+
+#引擎路径(这里暂时不要远程调用吧)
+
+
+[DBConfig]
+Type = "mysql"
+
+# sql parameter
+[DBConfig.SQLPara]
+#数据库的驱动，mysql,因为tiDB是兼容mysql
+DriverName = "mysql"
+User = "root:12345"
+NetMode = "tcp"
+Addr = "127.0.0.1:3306"
+DBName = "blog"
+#表示解析时间和设置事务隔离级别。
+#Para = "parseTime=true&tx_isolation='REPEATABLE-READ'"
+Para = "charset=utf8mb4&parseTime=True&loc=Local"
+
+[UserAuth]
+TokenExpireDuration = "24h"
+SecretKey = "ffff"
+

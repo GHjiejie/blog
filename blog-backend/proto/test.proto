@@ -1,0 +1,26 @@
+syntax="proto3";
+
+package testpb;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "pb/test";
+
+service TestService {
+    rpc Test(TestRequest) returns (TestResponse) {
+        option (google.api.http) = {
+            post: "/v1/test"
+            body: "*"
+        };
+    }
+}
+
+message TestRequest {
+    string name = 1;
+}
+
+message TestResponse {
+    string message = 1;
+}
+

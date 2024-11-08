@@ -1,0 +1,163 @@
+syntax = "proto3";
+
+// 设置包的名称
+package fileManage;
+
+// 导入公共的注解
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// 设置生成的pb文件的位置
+option go_package="pb/fileManage";
+
+// 设置API的消息，包括版本、描述等
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: { title: "FileManage API" description: "File management API" version: "v1.0" }
+};
+
+service fileManageService{
+  // 用户上传文件
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
+    option (google.api.http) = {
+      post: "/v1/files/uploadFile"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["FileManage"]
+      summary: "Upload file"
+      description: "Upload file"
+    };
+  }
+
+  // 文件下载
+  rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {
+    option (google.api.http) = {
+      get: "/v1/files/downloadFile/{fileId}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["FileManage"]
+      summary: "Download file"
+      description: "Download file"
+    };
+  }
+
+  // 删除文件
+  rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
+    option (google.api.http) = {
+      delete: "/v1/files/deleteFile/{fileId}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["FileManage"]
+      summary: "Delete file"
+      description: "Delete file"
+    };
+  }
+
+  // 文件的模糊查询(根据上传文件的标签、类型等)
+  rpc QueryFile(QueryFileRequest) returns (QueryFileResponse) {
+    option (google.api.http) = {
+      get: "/v1/files/queryFile"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["FileManage"]
+      summary: "Query file"
+      description: "Query file"
+    };
+  }
+
+  // 根据文件ID查询文件
+  rpc QueryFileById(QueryFileByIdRequest) returns (QueryFileByIdResponse) {
+    option (google.api.http) = {
+      get: "/v1/files/queryFileById/{fileId}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["FileManage"]
+      summary: "Query file by id"
+      description: "Query file by id"
+    };
+  }
+  
+}
+
+message FileInfo{
+  // 文件唯一标识
+  int64 fileId = 1;
+  // 文件大小
+  int64 bytes = 2;
+  // 文件名称
+  string fileName = 3;
+  // 文件类型
+  string fileType = 4;
+}
+
+// 文件上传请求
+message UploadFileRequest{
+  // 文件名称
+  string fileName = 1;
+  // 文件类型
+  string fileType = 2;
+  // 文件大小
+  int64 bytes = 3;
+  // 文件内容
+  bytes content = 4;
+}
+
+// 文件上传响应
+message UploadFileResponse{
+  // 文件信息
+  FileInfo fileInfo = 1;
+}
+
+// 文件下载请求
+message DownloadFileRequest{
+  // 文件唯一标识
+  int64 fileId = 1;
+}
+
+// 文件下载响应
+message DownloadFileResponse{
+  // 文件信息
+  FileInfo fileInfo = 1;
+  // 文件内容
+  bytes content = 2;
+}
+
+// 文件删除请求
+message DeleteFileRequest{
+  // 文件唯一标识
+  int64 fileId = 1;
+}
+
+// 文件删除响应
+message DeleteFileResponse{
+  // 文件信息
+ string message = 1;
+}
+
+// 文件查询请求
+message QueryFileRequest{
+  // 文件名称
+  string fileName = 1;
+  // 文件类型
+  string fileType = 2;
+}
+
+// 文件查询响应
+message QueryFileResponse{
+  // 文件信息
+  repeated FileInfo fileInfos = 1;
+}
+
+// 根据文件ID查询文件
+message QueryFileByIdRequest{
+  // 文件唯一标识
+   int64 fileId = 1;
+}
+
+// 根据文件ID查询文件响应
+message QueryFileByIdResponse{
+  // 文件信息
+  FileInfo fileInfo = 1;
+}
+
+
