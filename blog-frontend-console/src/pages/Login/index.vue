@@ -2,7 +2,6 @@
   <div class="login-container">
     <div class="login-card">
       <h1>Login</h1>
-
       <input type="text" v-model="userForm.username" placeholder="Username" />
       <input
         type="password"

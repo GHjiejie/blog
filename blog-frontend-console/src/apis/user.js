@@ -12,7 +12,7 @@ export function login(params) {
   });
 }
 // 用户注册接口
-export function register(params) {
+export function registerUser(params) {
   return httpRequest({
     url: "/v1/users/register",
     method: "post",
@@ -28,5 +28,21 @@ export function getUserList(params) {
   return httpRequest({
     url: `/v1/users?page=${params.page}&page_size=${params.pageSize}`,
     method: "get",
+  });
+}
+
+// 用户删除接口
+export function deleteUser(params) {
+  return httpRequest({
+    url: `/v1/users/${params.userId}`,
+    method: "delete",
+  });
+}
+
+// 用户密码重置接口
+export function resetPassword(params) {
+  return httpRequest({
+    url: `/v1/users/reset_password/${params.userId}`,
+    method: "put",
   });
 }

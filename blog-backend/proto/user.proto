@@ -101,7 +101,7 @@ service UserService {
 // 重置密码（管理员）
     rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {
         option (google.api.http) = {
-            post: "/v1/users/reset_password"
+            put: "/v1/users/reset_password/{user_id}"
             body: "*"
         };
         option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

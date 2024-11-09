@@ -3,8 +3,6 @@ import router from "@/router";
 import cache from "@/utils/cache";
 
 const token = cache.getToken();
-console.log("token", token);
-
 const service = axios.create({
   baseURL: "",
   timeout: 5000,
@@ -19,7 +17,7 @@ service.interceptors.request.use(
   function (config) {
     // 在发送请求之前我们需要进行token的检查
     const token = cache.getToken();
-    console.log("interceptors request", token);
+    // console.log("interceptors request", token);
     if (!token) {
       router.push("/login");
     } else {
@@ -39,11 +37,15 @@ service.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
+
     return response;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
+    if (error.response.status === 401) {
+      router.push("/login");
+    }
     return Promise.reject(error);
   }
 );

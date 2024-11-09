@@ -283,7 +283,7 @@ func (s *BlogServer) ResetPassword(ctx context.Context, req *pb.ResetPasswordReq
 		logger.Errorf("failed to update user with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "update user failed with err(%s)", err.Error())
 	}
-	// logger.Info("重置用户密码成功")
+	logger.Info("user password reset success")
 	return &pb.ResetPasswordResponse{
 		Message: "user password reset success",
 	}, nil

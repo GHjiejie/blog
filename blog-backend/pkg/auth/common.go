@@ -90,12 +90,12 @@ func (au *Auth) ParseUserToken(tokenStr string) (*UserClaims, error) {
 	// 判断从数据库获取的用户的消息里面是否有token
 	if user.Token == "" {
 		log.Error("token is empty")
-		return nil, err
+		return nil, status.Errorf(codes.Unauthenticated, "token is empty")
 	}
 	// 限制只可以单用户登录(这里面可以细分,比如说是开发环境还是生产环境,这个我们可以放在配置文件中)(TODO)
 	if user.Token != tokenStr {
 		log.Error("token is invalid")
-		return nil, err
+		return nil, status.Errorf(codes.Unauthenticated, "token is invalid")
 	}
 
 	return userClaims, nil

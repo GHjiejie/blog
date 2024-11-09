@@ -62,15 +62,30 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 			// claims, err := s.auth.ParseUserToken(userToken)
 			claims, err := s.auth.ParseUserToken(userToken)
 			if err != nil {
-				logger.Errorf("token解析失败, err: %v", err)
-				w.WriteHeader(http.StatusInternalServerError)
+				logger.Error("token error: ", err.Error())
+				s, ok := status.FromError(err)
+				if !ok {
+					s = status.New(codes.Unknown, err.Error())
+				}
+				body := &ErrorBody{
+					Error:   s.Err().Error(),
+					Message: s.Message(),
+					Code:    int32(s.Code()),
+					Details: s.Proto().GetDetails(),
+				}
+				msg, err := json.Marshal(body)
+				if err != nil {
+					logger.Error("marshal error body: ", err)
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusUnauthorized)
+				_, err = w.Write(msg)
+				if err != nil {
+					logger.Error("failed to write error msg: ", err.Error())
+				}
 				return
 			}
-			if claims == nil {
-				logger.Error("token解析失败, claims为空")
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
+
 			username = claims.Username
 			logger.Infof("token解析成功, 输出获取的claims: %v", claims)
 

@@ -14,10 +14,7 @@ const SessionDecode = (str) => {
   if (!str) {
     return "";
   }
-  console.log("str", str);
   const ret = Crypto.AES.decrypt(str, SECKET_KEY).toString(Crypto.enc.Utf8);
-  console.log("ret", ret);
-
   return ret;
 };
 
