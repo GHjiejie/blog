@@ -6,6 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "blog-backend/pb/user"
 	"blog-backend/pkg/auth"
@@ -148,9 +149,11 @@ func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 	var pbUsers []*pb.User
 	for _, user := range users {
 		pbUsers = append(pbUsers, &pb.User{
-			UserId:   user.ID,
-			Username: user.Username,
-			Role:     pb.Role(user.Role),
+			UserId:    user.ID,
+			Username:  user.Username,
+			Role:      pb.Role(user.Role),
+			CreatedAt: timestamppb.New(user.CreatedAt),
+			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		})
 	}
 	return &pb.ListUserResponse{
@@ -303,9 +306,11 @@ func (s *BlogServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.G
 	// logger.Infof("输出获取到的用户信息: %v", user)
 	return &pb.GetUserResponse{
 		User: &pb.User{
-			UserId:   user.ID,
-			Username: user.Username,
-			Role:     pb.Role(user.Role),
+			UserId:    user.ID,
+			Username:  user.Username,
+			Role:      pb.Role(user.Role),
+			CreatedAt: timestamppb.New(user.CreatedAt),
+			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		},
 	}, nil
 }
