@@ -63,11 +63,15 @@ func main() {
 	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 
 	// 创建并启动服务
-	_, err = server.NewFileServer(cfg)
+	svr, err := server.NewFileServer(cfg)
 	if err != nil {
 		log.Error("failed to start server:", err)
 	}
-	// log.Info("server started successfully")
 
+	if err := svr.Start(); err != nil {
+		log.Error("failed to start server:", err)
+		return
+	}
+	// log.Info("server started successfully")
 	<-shutdown
 }

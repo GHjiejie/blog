@@ -113,6 +113,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "fileTag",
+            "description": "文件标签.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -158,7 +165,7 @@
       "post": {
         "summary": "Upload file",
         "description": "Upload file",
-        "operationId": "fileManageService_UploadFile",
+        "operationId": "fileManageService_UploadFile2",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -235,6 +242,10 @@
         "fileType": {
           "type": "string",
           "title": "文件类型"
+        },
+        "fileTag": {
+          "type": "string",
+          "title": "文件标签"
         }
       }
     },
@@ -268,19 +279,14 @@
           "type": "string",
           "title": "文件名称"
         },
-        "fileType": {
+        "fileTag": {
           "type": "string",
-          "title": "文件类型"
-        },
-        "bytes": {
-          "type": "string",
-          "format": "int64",
-          "title": "文件大小"
+          "title": "文件标签"
         },
         "content": {
           "type": "string",
           "format": "byte",
-          "title": "文件内容"
+          "title": "文件内容（以字节存储）"
         }
       },
       "title": "文件上传请求"

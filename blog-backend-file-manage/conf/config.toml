@@ -1,8 +1,8 @@
 # Config with toml format
 LogLevel = "debug"
 Dev = true
-HTTPEndpoint = ":8087"
-GRPCEndpoint = ":8088"
+HTTPEndpoint = ":8090"
+GRPCEndpoint = ":8091"
 
 
 

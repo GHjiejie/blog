@@ -5,12 +5,8 @@
     "description": "User management API",
     "version": "v1.0"
   },
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/v1/test": {
       "post": {
@@ -39,9 +35,7 @@
             }
           }
         ],
-        "tags": [
-          "UserService"
-        ]
+        "tags": ["UserService"]
       }
     },
     "/v1/users": {
@@ -81,9 +75,7 @@
             "format": "int32"
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       }
     },
     "/v1/users/change_password": {
@@ -115,9 +107,7 @@
             }
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       }
     },
     "/v1/users/login": {
@@ -149,9 +139,7 @@
             }
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       }
     },
     "/v1/users/register": {
@@ -183,9 +171,7 @@
             }
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       }
     },
     "/v1/users/reset_password": {
@@ -217,9 +203,7 @@
             }
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       }
     },
     "/v1/users/{user_id}": {
@@ -251,9 +235,7 @@
             "format": "int64"
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       },
       "delete": {
         "summary": "Delete user",
@@ -283,9 +265,7 @@
             "format": "int64"
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       },
       "put": {
         "summary": "Update user information",
@@ -323,9 +303,7 @@
             }
           }
         ],
-        "tags": [
-          "User"
-        ]
+        "tags": ["User"]
       }
     }
   },
@@ -475,20 +453,14 @@
     },
     "pbRole": {
       "type": "string",
-      "enum": [
-        "ADMIN",
-        "USER"
-      ],
+      "enum": ["ADMIN", "USER"],
       "default": "ADMIN",
       "description": "- ADMIN: 管理员\n - USER: 普通用户",
       "title": "用户角色"
     },
     "pbStatus": {
       "type": "string",
-      "enum": [
-        "NORMAL",
-        "DISABLED"
-      ],
+      "enum": ["NORMAL", "DISABLED"],
       "default": "NORMAL",
       "description": "- NORMAL: 正常\n - DISABLED: 禁用",
       "title": "用户状态"
