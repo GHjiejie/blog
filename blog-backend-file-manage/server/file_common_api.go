@@ -20,7 +20,7 @@ func (s *FileServer) DeleteFile(ctx context.Context, req *filepb.DeleteFileReque
 		"api": "DeleteFile",
 	})
 	fileId := req.GetFileId()
-	logger.Infof("Received file id: %d", fileId)
+	// logger.Infof("Received file id: %d", fileId)
 
 	// 首先进行参数的校验
 	if err := validate.FileDelete(req); err != nil {

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"blog-backend/pkg/config"
 	"database/sql"
 	"fmt"
 
@@ -13,15 +14,30 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var DefaultSQLDriverName = "mysql"
+
 type SQLDB struct {
 	db *gorm.DB
 }
 
-func NEWSQLDB() (*SQLDB, error) {
-	var err error
-	dsn := "root:12345@tcp(127.0.0.1:3306)/" // 请替换为你的数据库信息
-	dbName := "blog"
-
+func NewSQLDB(c *config.SQLPara) (*SQLDB, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "NewSQLDB",
+	})
+	// dsn := "root:12345@tcp(127.0.0.1:3306)/" // 请替换为你的数据库信息
+	// dbName := "blog"
+	dsn := fmt.Sprintf("%s@%s(%s)/%s?%s",
+		c.User,
+		c.NetMode,
+		c.Addr,
+		c.DBName,
+		c.Para,
+	)
+	logger.Infof("DSN: %s", dsn)
+	driverName := c.DriverName
+	if driverName == "" {
+		driverName = DefaultSQLDriverName
+	}
 	// 连接到MySQL服务器
 	sqlDB, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -29,15 +45,16 @@ func NEWSQLDB() (*SQLDB, error) {
 	}
 	defer sqlDB.Close()
 
-	// 检查数据库是否存在，如果不存在则创建
-	_, err = sqlDB.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", dbName))
-	if err != nil {
-		log.Errorf("failed to create database: %v", err)
-	}
-
 	// 连接到具体的数据库
-	dsn = fmt.Sprintf("root:12345@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbName)
-	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	gormDB, err := gorm.Open(
+		mysql.New(mysql.Config{
+			DriverName: driverName,
+			DSN:        dsn,
+		}),
+		&gorm.Config{
+			QueryFields: true, //避免查询所有字段
+		})
 	if err != nil {
 		log.Errorf("failed to connect database: %v", err)
 	} else {

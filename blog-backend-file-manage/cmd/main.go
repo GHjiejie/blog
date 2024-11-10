@@ -31,7 +31,6 @@ func processConfig() (*config.Config, error) {
 }
 
 func main() {
-	log.Info("Hello, World!")
 	cfg, err := processConfig()
 	if err != nil {
 		log.Errorf("Failed to load config(%v) and master service is exiting with err(%v):", *configFile, err)

@@ -3,6 +3,7 @@ package server
 import (
 	"blog-backend/pkg/auth"
 	"blog-backend/pkg/casbinpermit"
+	"blog-backend/pkg/config"
 	"blog-backend/pkg/db"
 	"blog-backend/pkg/middleware"
 	"context"
@@ -23,6 +24,7 @@ import (
 type BlogServer struct {
 	*pb.UnimplementedUserServiceServer
 	DBEngine     db.Handler
+	config       *config.Config //配置信息
 	casbinPermit *casbinpermit.Permit
 	httpServer   *http.Server
 	grpcServer   *grpc.Server
@@ -35,24 +37,29 @@ var remotePath = []string{
 }
 
 // NewBlogServer 创建并返回一个新的 BlogServer 实例
-func NewBlogServer() (*BlogServer, error) {
+func NewBlogServer(c *config.Config) (*BlogServer, error) {
 	// 连接数据库
-	dbEngine, err := db.NEWHandler()
+	dbEngine, err := db.NEWHandler(c.DBConfig)
 	if err != nil {
 		log.Errorf("failed to create db engine handler with err(%s)", err.Error())
 		return nil, err
 	}
 	casbinPermit, err := casbinpermit.NewPermit(dbEngine.GetORMDB())
+	if err != nil {
+		log.Errorf("failed to create casbin permit with err(%s)", err.Error())
+		return nil, err
+	}
 
 	// 接下来就是加载策略
 	if err := casbinPermit.Enforcer.LoadPolicy(); err != nil {
 		log.Infof("failed to load policy with err(%s)", err.Error())
 		return nil, err
 	}
-	auth := auth.NewAuth(dbEngine, casbinPermit)
+	auth := auth.NewAuth(dbEngine, c, casbinPermit)
 	// 初始化 BlogServer
 	s := &BlogServer{
 		DBEngine:                       dbEngine,
+		config:                         c,
 		casbinPermit:                   casbinPermit,
 		auth:                           auth,
 		UnimplementedUserServiceServer: &pb.UnimplementedUserServiceServer{},
@@ -72,7 +79,8 @@ func (s *BlogServer) Start() error {
 
 	// 启动 gRPC 服务
 	go func() {
-		lis, err := net.Listen("tcp", ":8081")
+		lis, err := net.Listen("tcp", s.config.GRPCEndpoint)
+		// lis, err := net.Listen("tcp", s.config.GRPCEndpoint)
 		if err != nil {
 			log.Errorf("gRPC server failed to listen: %v", err)
 			panic(err)
@@ -109,7 +117,7 @@ func (s *BlogServer) prepareServer() error {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	// 注册 gRPC-Gateway，确保它能正确连接到 gRPC 服务器
-	err := pb.RegisterUserServiceHandlerFromEndpoint(context.Background(), rmux, "localhost:8081", opts)
+	err := pb.RegisterUserServiceHandlerFromEndpoint(context.Background(), rmux, s.config.GRPCEndpoint, opts)
 	if err != nil {
 		log.Errorf("Failed to register user service handler from endpoint: %v", err)
 		return err
@@ -130,7 +138,7 @@ func (s *BlogServer) prepareServer() error {
 
 	// 创建 HTTP 服务器
 	s.httpServer = &http.Server{
-		Addr:    ":8080",
+		Addr:    s.config.HTTPEndpoint,
 		Handler: httpmux,
 	}
 

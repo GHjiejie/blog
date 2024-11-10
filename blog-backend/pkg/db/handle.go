@@ -1,6 +1,12 @@
 package db
 
-import "gorm.io/gorm"
+import (
+	"blog-backend/pkg/config"
+	"fmt"
+	"strings"
+
+	"gorm.io/gorm"
+)
 
 type Handler interface {
 	// 根据用户名获取用户信息
@@ -21,6 +27,12 @@ type Handler interface {
 	GetORMDB() *gorm.DB
 }
 
-func NEWHandler() (Handler, error) {
-	return NEWSQLDB()
+func NEWHandler(c *config.DBConfig) (Handler, error) {
+	// return NEWSQLDB()
+	switch strings.ToLower(c.Type) {
+	case "mysql":
+		return NewSQLDB(c.SQLPara)
+	default:
+		return nil, fmt.Errorf("unsupported database type: %s", c.Type)
+	}
 }
