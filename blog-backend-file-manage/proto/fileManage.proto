@@ -16,22 +16,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service fileManageService {
-  // 用户上传文件
-  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
-    option (google.api.http) = {
-            post: "/v1/files/uploadFile"
-            additional_bindings {
-                post: "/v1/files/uploadFile"
-                body: "*"
-            }
-        };
-    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
-      summary: "Upload file"
-      description: "Upload file"
-      consumes: ["multipart/form-data"] // 指定接受的内容类型
-    };
-}
 
   // 文件下载
   rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {
@@ -95,21 +79,6 @@ message FileInfo {
   string fileTag = 5;
 }
 
-// 文件上传请求
-message UploadFileRequest {
-  // 文件名称
-  string fileName = 1;     // 表示表单字段中的filename
-  // 文件标签
-  string fileTag = 2;      // 表示表单字段中的filetag
-  // 文件内容（以字节存储）
-  bytes content = 3;       // 实际的文件内容，应该从表单中读取
-}
-
-// 文件上传响应
-message UploadFileResponse {
-  // 文件信息
-  FileInfo fileInfo = 1;
-}
 
 // 文件下载请求
 message DownloadFileRequest {

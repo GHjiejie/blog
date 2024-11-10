@@ -11,6 +11,19 @@ export function login(params) {
     },
   });
 }
+
+// 用户登出接口
+export function logout(params) {
+  console.log(params);
+  return httpRequest({
+    url: "/v1/users/logout",
+    method: "post",
+    data: {
+      ...params,
+    },
+  });
+}
+
 // 用户注册接口
 export function registerUser(params) {
   return httpRequest({

@@ -160,40 +160,6 @@
           "FileManage"
         ]
       }
-    },
-    "/v1/files/uploadFile": {
-      "post": {
-        "summary": "Upload file",
-        "description": "Upload file",
-        "operationId": "fileManageService_UploadFile2",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/fileManageUploadFileResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/fileManageUploadFileRequest"
-            }
-          }
-        ],
-        "tags": [
-          "FileManage"
-        ]
-      }
     }
   },
   "definitions": {
@@ -271,35 +237,6 @@
         }
       },
       "title": "文件查询响应"
-    },
-    "fileManageUploadFileRequest": {
-      "type": "object",
-      "properties": {
-        "fileName": {
-          "type": "string",
-          "title": "文件名称"
-        },
-        "fileTag": {
-          "type": "string",
-          "title": "文件标签"
-        },
-        "content": {
-          "type": "string",
-          "format": "byte",
-          "title": "文件内容（以字节存储）"
-        }
-      },
-      "title": "文件上传请求"
-    },
-    "fileManageUploadFileResponse": {
-      "type": "object",
-      "properties": {
-        "fileInfo": {
-          "$ref": "#/definitions/fileManageFileInfo",
-          "title": "文件信息"
-        }
-      },
-      "title": "文件上传响应"
     },
     "protobufAny": {
       "type": "object",

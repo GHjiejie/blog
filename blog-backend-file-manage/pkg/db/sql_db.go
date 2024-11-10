@@ -79,3 +79,14 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 	}
 	return fileBackend, nil
 }
+
+// 上传文件
+func (s *SQLDB) UploadFile(fileInfo UploadFile) (UploadFile, error) {
+	log.Info("现在进行文件上传操作")
+	// 创建文件
+	if err := s.db.Create(&fileInfo).Error; err != nil {
+		log.Errorf("failed to create file: %v", err)
+		return UploadFile{}, err
+	}
+	return fileInfo, nil
+}

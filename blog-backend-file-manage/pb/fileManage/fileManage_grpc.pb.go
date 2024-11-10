@@ -21,7 +21,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FileManageService_UploadFile_FullMethodName    = "/fileManage.fileManageService/UploadFile"
 	FileManageService_DownloadFile_FullMethodName  = "/fileManage.fileManageService/DownloadFile"
 	FileManageService_DeleteFile_FullMethodName    = "/fileManage.fileManageService/DeleteFile"
 	FileManageService_QueryFile_FullMethodName     = "/fileManage.fileManageService/QueryFile"
@@ -32,8 +31,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileManageServiceClient interface {
-	// 用户上传文件
-	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
 	// 文件下载
 	DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error)
 	// 删除文件
@@ -50,16 +47,6 @@ type fileManageServiceClient struct {
 
 func NewFileManageServiceClient(cc grpc.ClientConnInterface) FileManageServiceClient {
 	return &fileManageServiceClient{cc}
-}
-
-func (c *fileManageServiceClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadFileResponse)
-	err := c.cc.Invoke(ctx, FileManageService_UploadFile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *fileManageServiceClient) DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error) {
@@ -106,8 +93,6 @@ func (c *fileManageServiceClient) QueryFileById(ctx context.Context, in *QueryFi
 // All implementations must embed UnimplementedFileManageServiceServer
 // for forward compatibility.
 type FileManageServiceServer interface {
-	// 用户上传文件
-	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
 	// 文件下载
 	DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error)
 	// 删除文件
@@ -126,9 +111,6 @@ type FileManageServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFileManageServiceServer struct{}
 
-func (UnimplementedFileManageServiceServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
-}
 func (UnimplementedFileManageServiceServer) DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
 }
@@ -160,24 +142,6 @@ func RegisterFileManageServiceServer(s grpc.ServiceRegistrar, srv FileManageServ
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&FileManageService_ServiceDesc, srv)
-}
-
-func _FileManageService_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadFileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileManageServiceServer).UploadFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FileManageService_UploadFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileManageServiceServer).UploadFile(ctx, req.(*UploadFileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _FileManageService_DownloadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -259,10 +223,6 @@ var FileManageService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "fileManage.fileManageService",
 	HandlerType: (*FileManageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "UploadFile",
-			Handler:    _FileManageService_UploadFile_Handler,
-		},
 		{
 			MethodName: "DownloadFile",
 			Handler:    _FileManageService_DownloadFile_Handler,

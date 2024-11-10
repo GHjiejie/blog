@@ -103,6 +103,8 @@ func (s *FileServer) prepareNetServer() error {
 	}
 
 	httpmux := http.NewServeMux()
+	// 对于特殊的接口不需要进行grpc调用，直接在httpmux中注册
+	httpmux.HandleFunc("/v1/files/upload", s.uploadFileHandler)
 	httpmux.Handle("/v1/", rmux)
 
 	s.httpServer = &http.Server{

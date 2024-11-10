@@ -154,6 +154,40 @@
         ]
       }
     },
+    "/v1/users/logout": {
+      "post": {
+        "summary": "User logout",
+        "description": "User logout",
+        "operationId": "UserService_Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbLogoutResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbLogoutRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
     "/v1/users/register": {
       "post": {
         "summary": "User registration",
@@ -431,6 +465,26 @@
         }
       },
       "title": "用户登录响应"
+    },
+    "pbLogoutRequest": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "用户ID"
+        }
+      },
+      "title": "用户登出请求"
+    },
+    "pbLogoutResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "用户登出响应"
     },
     "pbRegisterRequest": {
       "type": "object",

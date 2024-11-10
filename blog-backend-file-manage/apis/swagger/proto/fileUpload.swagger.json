@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "File Upload API",
+    "version": "1.0.0",
+    "description": "An API to upload files with tags"
+  },
+  "paths": {
+    "/v1/files/upload": {
+      "post": {
+        "description": "Upload a file to the server with an optional tag",
+        "operationId": "uploadFileWithTag",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to be uploaded"
+                  },
+                  "tag": {
+                    "type": "string",
+                    "description": "An optional tag associated with the file"
+                  },
+                  "uploaderId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The ID of the user who uploaded the file"
+                  }
+                },
+                "required": ["file", "tag", "uploaderId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fileName": {
+                      "type": "string",
+                      "description": "The name of the uploaded file"
+                    },
+                    "fileAddr": {
+                      "type": "string",
+                      "description": "The address of the uploaded file"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "The size of the uploaded file in bytes"
+                    },
+                    "tag": {
+                      "type": "string",
+                      "description": "The tag associated with the file"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "File uploaded successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid file or tag format"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -58,6 +58,19 @@ service UserService {
         };
     }
 
+//用户登出
+    rpc Logout(LogoutRequest) returns (LogoutResponse) {
+        option (google.api.http) = {
+        post: "/v1/users/logout"
+        body: "*"
+        };
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        tags: ["User"]
+        summary: "User logout"
+        description: "User logout"
+        };
+    }
+
 // 更新用户信息
      rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse) {
         option (google.api.http) = {
@@ -208,6 +221,17 @@ message LoginResponse {
     User user = 1;
     // token
     string token = 2;
+}
+
+// 用户登出请求
+message LogoutRequest {
+    // 用户ID
+    int64 user_id = 1;
+}
+
+// 用户登出响应
+message LogoutResponse {
+   string message = 1;
 }
 
 // 更新用户信息请求

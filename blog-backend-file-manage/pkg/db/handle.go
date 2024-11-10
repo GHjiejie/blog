@@ -7,6 +7,8 @@ import (
 )
 
 type Handle interface {
+	// 上传文件
+	UploadFile(fileInfo UploadFile) (UploadFile, error)
 }
 
 func NewHandler(c *config.DBConfig) (Handle, error) {

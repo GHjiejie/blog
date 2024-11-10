@@ -1,14 +1,15 @@
 // app整个背景的颜色
 $--color-background: #1a7ee1;
 
-$--bg-color: #000000;
+$--bg-color: #30363e;
+
 $--bg-color-hover: red;
 $--color-primary: #1DB998;
 $--color-primary-opacity7: rgba(29, 185, 152, 0.7);
 $--color-primary-opacity3: rgba(29, 185, 152, 0.3);
 $--el-color-primary-light-9-1: rgba(29, 185, 152, 0.1);
 $--color-text: #ffffff;
-$--color-text2: #5177FF;
+$--color-text2: #1DB998;
 $--color-text3: #333333;
 $--color-text4: #666666;
 $--color-text5: #999999;
@@ -16,3 +17,5 @@ $--color-text6: #8F9AAF;
 $--color-text7: #797D8B;
 $--color-text8: #DADEE2;
 $--color-gradient-azue-lane: inear-gradient(to right, rgb(127, 127, 213), rgb(134, 168, 231), rgb(145, 234, 228));
+
+$--color-box-shadow: 9px 9px 33px -19px rgba(0,0,0,1);

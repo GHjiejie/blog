@@ -50,6 +50,11 @@ const cache = {
     window.sessionStorage.setItem(key, encodeObj);
   },
 
+  sessionRemove(key) {
+    console.log("remove", key);
+    window.sessionStorage.removeItem(key);
+  },
+
   // 获取token
   getToken() {
     return this.sessionGet(TOKEN_KEY) || "";
@@ -60,6 +65,7 @@ const cache = {
   },
   // 移除token
   removeToken() {
+    console.log("removeToken");
     this.sessionRemove(TOKEN_KEY);
   },
 };

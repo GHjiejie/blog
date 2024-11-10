@@ -119,6 +119,34 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 	}, nil
 }
 
+// 用户登出
+func (s *BlogServer) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "Logout",
+	})
+	// 首先我们要获取用户ID
+	userID := req.GetUserId()
+	// log.Infof("输出获取到的用户ID: %v", userID)
+	// 然后我们需要去数据库中获取用户信息
+	user, err := s.DBEngine.UserGetByID(userID)
+	if err != nil {
+		logger.Errorf("failed to get user by id with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
+	}
+	log.Infof("输出获取到的用户信息: %v", user)
+	// 然后我们需要去更新用户的token信息
+	err = s.DBEngine.UserUpdate(userID, map[string]interface{}{"token": ""})
+	if err != nil {
+		logger.Errorf("failed to update user token with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "update user token failed with err(%s)", err.Error())
+	}
+	// log.Info("用户登出成功")
+	logger.Info("logout success")
+	return &pb.LogoutResponse{
+		Message: "logout success",
+	}, nil
+}
+
 // 用户列表获取
 func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserResponse, error) {
 	// log.Infof("Received ListUser request: %v", req)

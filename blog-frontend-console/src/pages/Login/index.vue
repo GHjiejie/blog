@@ -36,13 +36,14 @@ const handleLogin = async () => {
     const res = await login(userForm);
     if (res.status == 200) {
       cache.setToken(res.data.token);
+      cache.sessionSet("userId", res.data.user.userId);
+      cache.sessionSet("user", userForm.username);
       ElMessage.success("登录成功");
       // 跳转到根目录
       router.push("/");
     } else {
       ElMessage.error("账号或者密码错误");
     }
-    console.log("输出res", res);
     // cache.setToken(res.data.token);
     // setTimeout(() => {
     //   router.push("/");

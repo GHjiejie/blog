@@ -9,7 +9,7 @@
       <el-table
         :data="filterTableData"
         size="large"
-        max-height="100%"
+        :height="maxHeight"
         :highlight-current-row="true"
       >
         <el-table-column fixed prop="userId" label="用户ID" width="120" />
@@ -88,12 +88,16 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 
 let page = ref(1);
-let pageSize = ref(15);
+let pageSize = ref(20);
 let UserListData = ref([]);
 const search = ref("");
 let addUserRef = ref(null);
 const userId = ref("");
 const userCount = ref(0);
+const maxHeight = window.innerHeight - 100;
+console.log("当前视口高度dsf:", maxHeight);
+const viewportHeight = window.innerHeight;
+console.log("当前视口高度:", viewportHeight);
 onMounted(async () => {
   await getUserListData();
 });
@@ -232,7 +236,7 @@ const handleNextPage = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0;
+    height: 50px;
     transition: all 0.3s;
     .el-button {
       &:hover {

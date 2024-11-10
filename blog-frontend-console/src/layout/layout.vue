@@ -23,16 +23,19 @@ import Header from "@/components/Header/index.vue";
 .el-main {
   padding: 0;
 }
+.layout {
+  display: flex;
+}
 
 .el-header {
-  height: 5vh;
+  height: 50px;
   border-bottom: 1px solid var(--el-border-color);
 }
-.el-aside {
-  height: 95vh;
-  width: 15vw;
-}
-.el-main {
-  height: 95vh;
+.el-container {
+  flex: 1;
+  .el-aside {
+    width: 200px;
+    // border-right: 1px solid var(--el-border-color);
+  }
 }
 </style>
