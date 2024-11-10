@@ -9,16 +9,43 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 //	func (UnimplementedFileManageServiceServer) DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error) {
 //		return nil, status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
 //	}
-//
-//	func (UnimplementedFileManageServiceServer) DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error) {
-//		return nil, status.Errorf(codes.Unimplemented, "method DeleteFile not implemented")
-//	}
-//
+func (s *FileServer) DeleteFile(ctx context.Context, req *filepb.DeleteFileRequest) (*filepb.DeleteFileResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "DeleteFile",
+	})
+	fileId := req.GetFileId()
+	logger.Infof("Received file id: %d", fileId)
+
+	// 首先进行参数的校验
+	if err := validate.FileDelete(req); err != nil {
+		logger.Errorf("Failed to validate file id: %v", err)
+		return nil, status.Error(codes.InvalidArgument, "invalid fileId")
+	}
+
+	// 然后验证这个文件是否存在
+	_, err := s.DBEngine.GetFileByID(fileId)
+	if err != nil {
+		logger.Errorf("Failed to query file by id: %v", err)
+		return nil, status.Error(codes.Internal, "failed to query file by id")
+	}
+
+	// 接下来进行文件的删除操作
+	if err := s.DBEngine.DeleteFile(fileId); err != nil {
+		logger.Errorf("Failed to delete file by id: %v", err)
+		return nil, status.Error(codes.Internal, "failed to delete file by id")
+	}
+
+	return &filepb.DeleteFileResponse{
+		Message: "Delete file successfully",
+	}, nil
+}
+
 // // 文件模糊查询
 //
 //	func (UnimplementedFileManageServiceServer) QueryFile(context.Context, *QueryFileRequest) (*QueryFileResponse, error) {
@@ -44,12 +71,14 @@ func (s *FileServer) QueryFileById(ctx context.Context, req *filepb.QueryFileByI
 	}
 
 	fileInfoProto := &filepb.FileInfo{
-		FileId:   file.ID,
-		FileName: file.FileName,
-		Bytes:    file.FileSize,
-		FileType: file.FileType,
-		Tag:      file.Tag,
-		Content:  file.FileContent,
+		FileId:    file.ID,
+		FileName:  file.FileName,
+		Bytes:     file.FileSize,
+		FileType:  file.FileType,
+		Tag:       file.Tag,
+		Content:   file.FileContent,
+		CreatedAt: timestamppb.New(file.CreatedAt),
+		UpdatedAt: timestamppb.New(file.UpdatedAt),
 	}
 	// 将获取的文件信息转换为 proto 格式
 	return &filepb.QueryFileByIdResponse{

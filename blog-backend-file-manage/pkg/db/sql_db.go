@@ -102,3 +102,14 @@ func (s *SQLDB) GetFileByID(fileID int64) (UploadFile, error) {
 	}
 	return fileInfo, nil
 }
+
+// 删除文件
+func (s *SQLDB) DeleteFile(fileID int64) error {
+	// log.Info("现在进行文件删除操作")
+	log.Infof("fileID: %d", fileID)
+	if err := s.db.Where("id = ?", fileID).Delete(&UploadFile{}).Error; err != nil {
+		log.Errorf("failed to delete file by id: %v", err)
+		return err
+	}
+	return nil
+}

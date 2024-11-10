@@ -11,6 +11,8 @@ type Handle interface {
 	UploadFile(fileInfo UploadFile) (UploadFile, error)
 	// 根据文件ID获取文件信息
 	GetFileByID(fileID int64) (UploadFile, error)
+	// 删除文件
+	DeleteFile(fileID int64) error
 }
 
 func NewHandler(c *config.DBConfig) (Handle, error) {
