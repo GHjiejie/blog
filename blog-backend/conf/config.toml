@@ -14,6 +14,7 @@ EnginePaths = [
     "/v1/files/queryFileById/{fileId}",
     "/v1/files/deleteFile/{fileId}",
     "/v1/files/downloadFile/{fileId}",
+    "/v1/files/getFileList"
 ]
 
 [DBConfig]

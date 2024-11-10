@@ -12,7 +12,12 @@
         :height="maxHeight"
         :highlight-current-row="true"
       >
-        <el-table-column fixed="left" prop="userId" label="用户ID" width="120" />
+        <el-table-column
+          fixed="left"
+          prop="userId"
+          label="用户ID"
+          width="120"
+        />
         <el-table-column prop="username" label="用户名" width="200" />
         <el-table-column prop="role" label="角色" width="150">
           <template #default="{ row }">
@@ -95,9 +100,7 @@ let addUserRef = ref(null);
 const userId = ref("");
 const userCount = ref(0);
 const maxHeight = window.innerHeight - 100;
-console.log("当前视口高度dsf:", maxHeight);
-const viewportHeight = window.innerHeight;
-console.log("当前视口高度:", viewportHeight);
+
 onMounted(async () => {
   await getUserListData();
 });

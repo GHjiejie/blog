@@ -40,8 +40,7 @@ func (s *FileServer) uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tag := r.FormValue("tag") // 获取文件标签
-	logger.Infof("Received file tag: %s", tag)
+	tag := r.FormValue("tag")                  // 获取文件标签
 	uploaderIdStr := r.FormValue("uploaderId") // 获取上传者ID
 
 	// 转换 uploaderIdStr 为 int64
@@ -67,6 +66,7 @@ func (s *FileServer) uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to upload file", http.StatusInternalServerError)
 		return
 	}
+
 	// 自定义响应，返回上传成功的文件信息
 	response := map[string]interface{}{
 		"fileName": uploadedFile.FileName,

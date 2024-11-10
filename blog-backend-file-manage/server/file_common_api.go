@@ -94,8 +94,9 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 	})
 	// 获取请求参数
 	page := req.GetPage()
+	logger.Infof("Received page: %d", page)
 	pageSize := req.GetPageSize()
-	logger.Infof("Received page: %d, pageSize: %d", page, pageSize)
+	logger.Infof("Received pageSize: %d", pageSize)
 
 	// 先获取文件总数
 	total, err := s.DBEngine.GetFileTotal()
@@ -114,7 +115,7 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 	// // 将获取的文件信息转换为 proto 格式
 	var fileListInfoProtos []*filepb.FileListInfo
 	for _, file := range files {
-		fileInfoProto := &filepb.FileListInfo{
+		fileListInfoProtos = append(fileListInfoProtos, &filepb.FileListInfo{
 			FileId:    file.ID,
 			FileName:  file.FileName,
 			Bytes:     file.FileSize,
@@ -122,9 +123,10 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 			Tag:       file.Tag,
 			CreatedAt: timestamppb.New(file.CreatedAt),
 			UpdatedAt: timestamppb.New(file.UpdatedAt),
-		}
-		fileListInfoProtos = append(fileListInfoProtos, fileInfoProto)
+		})
+
 	}
+
 	return &filepb.GetFileListResponse{
 		FileInfos: fileListInfoProtos,
 		Total:     total,
