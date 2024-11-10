@@ -7,13 +7,14 @@ import (
 )
 
 type Config struct {
-	LogLevel     string // 日志级别
-	DEV          bool   // 是否为开发环境
-	GRPCEndpoint string // GRPC服务地址
-	HTTPEndpoint string // HTTP服务地址
-
-	DBConfig *DBConfig       // 数据库配置
-	UserAuth *UserAuthConfig // 用户 auth 配置
+	LogLevel       string          // 日志级别
+	DEV            bool            // 是否为开发环境
+	GRPCEndpoint   string          // GRPC服务地址
+	HTTPEndpoint   string          // HTTP服务地址
+	EngineEndpoint string          // engine组件 endpoint
+	EnginePaths    []string        //
+	DBConfig       *DBConfig       // 数据库配置
+	UserAuth       *UserAuthConfig // 用户 auth 配置
 }
 
 type DBConfig struct {

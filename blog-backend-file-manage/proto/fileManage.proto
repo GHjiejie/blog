@@ -65,6 +65,17 @@ service fileManageService {
       description: "Query file by id"
     };
   }
+  // 获取文件列表
+  rpc GetFileList(GetFileListRequest) returns (GetFileListResponse) {
+    option (google.api.http) = {
+      get: "/v1/files/getFileList"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["FileManage"]
+      summary: "Get file list"
+      description: "Get file list"
+    };
+  }
 }
 
 message FileInfo {
@@ -89,6 +100,26 @@ message FileInfo {
   // 文件更新时间
   google.protobuf.Timestamp updated_at = 10;
  
+}
+message FileListInfo {
+  // 文件唯一标识
+  int64 fileId = 1;
+  // 文件大小
+  int64 bytes = 2;
+  // 文件名称
+  string fileName = 3;
+  // 文件类型
+  string fileType = 4;
+  // 文件标签
+  string tag = 5;
+  // 文件路径
+  string filePath = 6;
+  // 文件上传者ID
+  int64 uploaderId = 7;
+  // 文件上传时间 
+  google.protobuf.Timestamp created_at = 8;
+  // 文件更新时间
+  google.protobuf.Timestamp updated_at = 9;
 }
 
 
@@ -144,4 +175,19 @@ message QueryFileByIdRequest {
 message QueryFileByIdResponse {
   // 文件信息
   FileInfo fileInfo = 1;
+}
+
+// 获取文件列表请求
+message GetFileListRequest {
+  // 页码
+  int64 page = 1;
+  // 每页数量
+  int64 pageSize = 2;
+}
+
+// 获取文件列表响应
+message GetFileListResponse {
+  // 文件信息
+ repeated FileListInfo fileInfos = 1;
+ int64 total = 2;
 }

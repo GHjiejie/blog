@@ -80,6 +80,48 @@
         ]
       }
     },
+    "/v1/files/getFileList": {
+      "get": {
+        "summary": "Get file list",
+        "description": "Get file list",
+        "operationId": "fileManageService_GetFileList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fileManageGetFileListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "页码.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "description": "每页数量.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "FileManage"
+        ]
+      }
+    },
     "/v1/files/queryFile": {
       "get": {
         "summary": "Query file",
@@ -238,6 +280,69 @@
           "title": "文件更新时间"
         }
       }
+    },
+    "fileManageFileListInfo": {
+      "type": "object",
+      "properties": {
+        "fileId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文件唯一标识"
+        },
+        "bytes": {
+          "type": "string",
+          "format": "int64",
+          "title": "文件大小"
+        },
+        "fileName": {
+          "type": "string",
+          "title": "文件名称"
+        },
+        "fileType": {
+          "type": "string",
+          "title": "文件类型"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文件标签"
+        },
+        "filePath": {
+          "type": "string",
+          "title": "文件路径"
+        },
+        "uploaderId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文件上传者ID"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文件上传时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文件更新时间"
+        }
+      }
+    },
+    "fileManageGetFileListResponse": {
+      "type": "object",
+      "properties": {
+        "fileInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fileManageFileListInfo"
+          },
+          "title": "文件信息"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "获取文件列表响应"
     },
     "fileManageQueryFileByIdResponse": {
       "type": "object",

@@ -25,6 +25,7 @@ const (
 	FileManageService_DeleteFile_FullMethodName    = "/fileManage.fileManageService/DeleteFile"
 	FileManageService_QueryFile_FullMethodName     = "/fileManage.fileManageService/QueryFile"
 	FileManageService_QueryFileById_FullMethodName = "/fileManage.fileManageService/QueryFileById"
+	FileManageService_GetFileList_FullMethodName   = "/fileManage.fileManageService/GetFileList"
 )
 
 // FileManageServiceClient is the client API for FileManageService service.
@@ -39,6 +40,8 @@ type FileManageServiceClient interface {
 	QueryFile(ctx context.Context, in *QueryFileRequest, opts ...grpc.CallOption) (*QueryFileResponse, error)
 	// 根据文件ID查询文件
 	QueryFileById(ctx context.Context, in *QueryFileByIdRequest, opts ...grpc.CallOption) (*QueryFileByIdResponse, error)
+	// 获取文件列表
+	GetFileList(ctx context.Context, in *GetFileListRequest, opts ...grpc.CallOption) (*GetFileListResponse, error)
 }
 
 type fileManageServiceClient struct {
@@ -89,6 +92,16 @@ func (c *fileManageServiceClient) QueryFileById(ctx context.Context, in *QueryFi
 	return out, nil
 }
 
+func (c *fileManageServiceClient) GetFileList(ctx context.Context, in *GetFileListRequest, opts ...grpc.CallOption) (*GetFileListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFileListResponse)
+	err := c.cc.Invoke(ctx, FileManageService_GetFileList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileManageServiceServer is the server API for FileManageService service.
 // All implementations must embed UnimplementedFileManageServiceServer
 // for forward compatibility.
@@ -101,6 +114,8 @@ type FileManageServiceServer interface {
 	QueryFile(context.Context, *QueryFileRequest) (*QueryFileResponse, error)
 	// 根据文件ID查询文件
 	QueryFileById(context.Context, *QueryFileByIdRequest) (*QueryFileByIdResponse, error)
+	// 获取文件列表
+	GetFileList(context.Context, *GetFileListRequest) (*GetFileListResponse, error)
 	mustEmbedUnimplementedFileManageServiceServer()
 }
 
@@ -122,6 +137,9 @@ func (UnimplementedFileManageServiceServer) QueryFile(context.Context, *QueryFil
 }
 func (UnimplementedFileManageServiceServer) QueryFileById(context.Context, *QueryFileByIdRequest) (*QueryFileByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryFileById not implemented")
+}
+func (UnimplementedFileManageServiceServer) GetFileList(context.Context, *GetFileListRequest) (*GetFileListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFileList not implemented")
 }
 func (UnimplementedFileManageServiceServer) mustEmbedUnimplementedFileManageServiceServer() {}
 func (UnimplementedFileManageServiceServer) testEmbeddedByValue()                           {}
@@ -216,6 +234,24 @@ func _FileManageService_QueryFileById_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileManageService_GetFileList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManageServiceServer).GetFileList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManageService_GetFileList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManageServiceServer).GetFileList(ctx, req.(*GetFileListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FileManageService_ServiceDesc is the grpc.ServiceDesc for FileManageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -238,6 +274,10 @@ var FileManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueryFileById",
 			Handler:    _FileManageService_QueryFileById_Handler,
+		},
+		{
+			MethodName: "GetFileList",
+			Handler:    _FileManageService_GetFileList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -31,11 +31,6 @@ type BlogServer struct {
 	auth         *auth.Auth
 }
 
-// 设置需要进行远程调用的路径
-var remotePath = []string{
-	"/v1/hello",
-}
-
 // NewBlogServer 创建并返回一个新的 BlogServer 实例
 func NewBlogServer(c *config.Config) (*BlogServer, error) {
 	// 连接数据库
@@ -126,12 +121,14 @@ func (s *BlogServer) prepareServer() error {
 	// 创建 HTTP 多路复用器
 	httpmux := http.NewServeMux()
 
-	target, _ := url.Parse("http://localhost:9900")
+	target, _ := url.Parse(s.config.EngineEndpoint)
+
 	engine := middleware.ReverseProxy(target)
 
-	// 判断当前接口是否需要进行远程调用
-	for _, path := range remotePath {
-		httpmux.Handle(path, engine)
+	// // 判断当前接口是否需要进行远程调用
+	for _, path := range s.config.EnginePaths {
+		// 这里思考一个问题，就是这里需不需要进行中间件的执行
+		httpmux.Handle(path, s.Tracing(engine, s.casbinPermit))
 	}
 
 	httpmux.Handle("/v1/", s.Tracing(rmux, s.casbinPermit))

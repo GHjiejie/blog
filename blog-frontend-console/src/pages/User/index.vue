@@ -12,7 +12,7 @@
         :height="maxHeight"
         :highlight-current-row="true"
       >
-        <el-table-column fixed prop="userId" label="用户ID" width="120" />
+        <el-table-column fixed="left" prop="userId" label="用户ID" width="120" />
         <el-table-column prop="username" label="用户名" width="200" />
         <el-table-column prop="role" label="角色" width="150">
           <template #default="{ row }">
@@ -127,9 +127,7 @@ const getUserListData = async () => {
       UserListData.value = [...UserListData.value, ...res.data.users];
       userCount.value = res.data.total;
     }
-  } catch (error) {
-    ElMessage.error("获取用户列表失败");
-  }
+  } catch (error) {}
 };
 // 用户密码重置
 const handlePWDReset = async (userId) => {
@@ -156,8 +154,6 @@ const handlePWDReset = async (userId) => {
 
 // 删除用户
 const handelDelUser = async (rowInfo, userId) => {
-  console.log("输出rowInfo", rowInfo);
-
   ElMessageBox.confirm("此操作将永久删除该用户, 是否继续?", "提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",

@@ -113,3 +113,24 @@ func (s *SQLDB) DeleteFile(fileID int64) error {
 	}
 	return nil
 }
+
+// 获取文件列表
+func (s *SQLDB) GetFileList(page, pageSize int64) ([]UploadFile, error) {
+	var fileList []UploadFile
+	offset := (page - 1) * pageSize
+	if err := s.db.Offset(int(offset)).Limit(int(pageSize)).Find(&fileList).Error; err != nil {
+		log.Errorf("failed to get file list: %v", err)
+		return nil, err
+	}
+	return fileList, nil
+}
+
+// 获取文件总数
+func (s *SQLDB) GetFileTotal() (int64, error) {
+	var total int64
+	if err := s.db.Model(&UploadFile{}).Count(&total).Error; err != nil {
+		log.Errorf("failed to get file total: %v", err)
+		return 0, err
+	}
+	return total, nil
+}

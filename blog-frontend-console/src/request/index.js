@@ -1,6 +1,7 @@
 import axios from "axios";
 import router from "@/router";
 import cache from "@/utils/cache";
+import { ElMessage } from "element-plus";
 
 const token = cache.getToken();
 const service = axios.create({
@@ -44,6 +45,7 @@ service.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.response.status === 401) {
+      ElMessage.error("登录状态失效，请重新登录");
       router.push("/login");
     }
     return Promise.reject(error);

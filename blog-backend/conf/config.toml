@@ -3,11 +3,18 @@ LogLevel = "debug"
 Dev = true
 HTTPEndpoint = ":8080"
 GRPCEndpoint = ":8081"
+EngineEndpoint="http://127.0.0.1:8090"
 
 
 
 #引擎路径(这里暂时不要远程调用吧)
-
+EnginePaths = [
+    "/v1/files/upload",
+    "/v1/files/queryFile",
+    "/v1/files/queryFileById/{fileId}",
+    "/v1/files/deleteFile/{fileId}",
+    "/v1/files/downloadFile/{fileId}",
+]
 
 [DBConfig]
 Type = "mysql"

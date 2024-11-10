@@ -86,3 +86,48 @@ func (s *FileServer) QueryFileById(ctx context.Context, req *filepb.QueryFileByI
 	}, nil
 
 }
+
+// 获取文件列表
+func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListRequest) (*filepb.GetFileListResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "GetFileList",
+	})
+	// 获取请求参数
+	page := req.GetPage()
+	pageSize := req.GetPageSize()
+	logger.Infof("Received page: %d, pageSize: %d", page, pageSize)
+
+	// 先获取文件总数
+	total, err := s.DBEngine.GetFileTotal()
+	if err != nil {
+		logger.Errorf("Failed to query file total: %v", err)
+		return nil, status.Error(codes.Internal, "failed to query file total")
+	}
+
+	// // 接下来从数据库中查询文件信息
+	files, err := s.DBEngine.GetFileList(page, pageSize)
+	if err != nil {
+		logger.Errorf("Failed to query file list: %v", err)
+		return nil, status.Error(codes.Internal, "failed to query file list")
+	}
+
+	// // 将获取的文件信息转换为 proto 格式
+	var fileListInfoProtos []*filepb.FileListInfo
+	for _, file := range files {
+		fileInfoProto := &filepb.FileListInfo{
+			FileId:    file.ID,
+			FileName:  file.FileName,
+			Bytes:     file.FileSize,
+			FileType:  file.FileType,
+			Tag:       file.Tag,
+			CreatedAt: timestamppb.New(file.CreatedAt),
+			UpdatedAt: timestamppb.New(file.UpdatedAt),
+		}
+		fileListInfoProtos = append(fileListInfoProtos, fileInfoProto)
+	}
+	return &filepb.GetFileListResponse{
+		FileInfos: fileListInfoProtos,
+		Total:     total,
+	}, nil
+
+}

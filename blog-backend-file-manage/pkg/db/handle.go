@@ -13,6 +13,10 @@ type Handle interface {
 	GetFileByID(fileID int64) (UploadFile, error)
 	// 删除文件
 	DeleteFile(fileID int64) error
+	// 获取文件列表
+	GetFileList(page, pageSize int64) ([]UploadFile, error)
+	// 获取文件总数
+	GetFileTotal() (int64, error)
 }
 
 func NewHandler(c *config.DBConfig) (Handle, error) {
