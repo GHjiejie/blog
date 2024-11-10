@@ -4,7 +4,7 @@ import "time"
 
 type UploadFile struct {
 	// 文件ID
-	FileID int64 `gorm:"column:id;primaryKey"  json:"file_id"`
+	ID int64 `gorm:"column:id;primaryKey"  json:"id"`
 	// 文件名
 	FileName string `gorm:"column:file_name" json:"file_name"`
 	// 文件大小

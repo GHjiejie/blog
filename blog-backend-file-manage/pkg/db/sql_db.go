@@ -82,10 +82,22 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 
 // 上传文件
 func (s *SQLDB) UploadFile(fileInfo UploadFile) (UploadFile, error) {
-	log.Info("现在进行文件上传操作")
+	// log.Info("现在进行文件上传操作")
 	// 创建文件
 	if err := s.db.Create(&fileInfo).Error; err != nil {
 		log.Errorf("failed to create file: %v", err)
+		return UploadFile{}, err
+	}
+	return fileInfo, nil
+}
+
+// 根据文件ID获取文件信息
+func (s *SQLDB) GetFileByID(fileID int64) (UploadFile, error) {
+	log.Info("现在进行根据文件ID获取文件信息操作")
+	log.Infof("fileID: %d", fileID)
+	var fileInfo UploadFile
+	if err := s.db.Where("id = ?", fileID).First(&fileInfo).Error; err != nil {
+		log.Errorf("failed to get file by id: %v", err)
 		return UploadFile{}, err
 	}
 	return fileInfo, nil

@@ -6,6 +6,7 @@ package fileManage;
 // 导入公共的注解
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 // 设置生成的pb文件的位置
 option go_package="pb/fileManage";
@@ -73,10 +74,21 @@ message FileInfo {
   int64 bytes = 2;
   // 文件名称
   string fileName = 3;
+  // 文件内容
+  bytes content = 4;
   // 文件类型
-  string fileType = 4;
+  string fileType = 5;
   // 文件标签
-  string fileTag = 5;
+  string tag = 6;
+  // 文件路径
+  string filePath = 7;
+  // 文件上传者ID
+  int64 uploaderId = 8;
+  // 文件上传时间 
+  google.protobuf.Timestamp created_at = 9;
+  // 文件更新时间
+  google.protobuf.Timestamp updated_at = 10;
+ 
 }
 
 

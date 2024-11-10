@@ -205,13 +205,37 @@
           "type": "string",
           "title": "文件名称"
         },
+        "content": {
+          "type": "string",
+          "format": "byte",
+          "title": "文件内容"
+        },
         "fileType": {
           "type": "string",
           "title": "文件类型"
         },
-        "fileTag": {
+        "tag": {
           "type": "string",
           "title": "文件标签"
+        },
+        "filePath": {
+          "type": "string",
+          "title": "文件路径"
+        },
+        "uploaderId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文件上传者ID"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文件上传时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文件更新时间"
         }
       }
     },
