@@ -2,22 +2,14 @@
   <div class="container">
     <div class="Top">
       <button class="addserBtn" @click="openAddUserDialog">
-        <el-icon><Plus /></el-icon>
+        <el-icon>
+          <Plus />
+        </el-icon>
       </button>
     </div>
     <div class="Center">
-      <el-table
-        :data="filterTableData"
-        size="large"
-        :height="maxHeight"
-        :highlight-current-row="true"
-      >
-        <el-table-column
-          fixed="left"
-          prop="fileId"
-          label="文件ID"
-          width="120"
-        />
+      <el-table :data="filterTableData" size="large" :height="maxHeight" :highlight-current-row="true">
+        <el-table-column fixed="left" prop="fileId" label="文件ID" width="120" />
         <el-table-column prop="fileName" label="文件名" width="200" />
         <el-table-column prop="bytes" label="文件大小" width="150">
           <template #default="{ row }">
@@ -34,38 +26,18 @@
         <el-table-column prop="createdAt" label="创建时间" width="300" />
         <el-table-column fixed="right" min-width="150">
           <template #header>
-            <el-input
-              v-model="search"
-              size="small"
-              placeholder="Type to search"
-            />
+            <el-input v-model="search" size="small" placeholder="Type to search" />
           </template>
           <template #default="{ row }">
-            <el-button
-              :disabled="row.role === 'ADMIN'"
-              link
-              type="success"
-              size="small"
-              @click="viewFile(row, row.fileId)"
-            >
+            <el-button :disabled="row.role === 'ADMIN'" link type="success" size="small"
+              @click="viewFile(row, row.fileId)">
               查看
             </el-button>
-            <el-button
-              :disabled="row.role === 'ADMIN'"
-              link
-              type="danger"
-              size="small"
-              @click="handelDelFile(row, row.fileId)"
-            >
+            <el-button :disabled="row.role === 'ADMIN'" link type="danger" size="small"
+              @click="handelDelFile(row, row.fileId)">
               删除
             </el-button>
-            <el-button
-              :disabled="row.role === 'ADMIN'"
-              link
-              type="info"
-              size="small"
-              @click="handelDownload(row, row.fileId)"
-            >
+            <el-button :disabled="row.role === 'ADMIN'" link type="info" size="small" @click="handelDownload(row)">
               下载
             </el-button>
           </template>
@@ -73,9 +45,7 @@
       </el-table>
     </div>
     <div class="Footer">
-      <el-button type="primary" @click="handleNextPage()" size="small"
-        >加载更多</el-button
-      >
+      <el-button type="primary" @click="handleNextPage()" size="small">加载更多</el-button>
     </div>
   </div>
   <fileView ref="fileViewRef" :file-id="viewFileId"></fileView>
@@ -86,12 +56,12 @@ import {
   getFileList,
   deleteFile,
   getFileById,
-  downloadFile,
 } from "@/apis/file";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { getFileSize } from "@/utils/calculation";
 import fileView from "./components/fileView.vue";
+import { downloadFileContent } from "@/utils/fileFilter";
 
 let page = ref(1);
 let pageSize = ref(15);
@@ -116,15 +86,11 @@ const filterTableData = computed(() => {
 });
 
 // 下载文件
-const handelDownload = async (row, fileId) => {
+const handelDownload = async (row) => {
   try {
-    const res = await downloadFile({ fileId });
-    console.log(res);
+    const { data } = await getFileById({ fileId: row.fileId });
+    downloadFileContent(row.fileType, row.fileName, data.fileInfo.content);
   } catch (error) {
-    ElMessage({
-      message: "下载失败",
-      type: "error",
-    });
   }
 };
 
@@ -183,7 +149,7 @@ const getListFiles = async () => {
     } else {
       fileList.value = [...fileList.value, ...data.fileInfos];
     }
-  } catch (error) {}
+  } catch (error) { }
 };
 
 // 加载更多
@@ -197,11 +163,13 @@ const handleNextPage = async () => {
   display: flex;
   flex-direction: column;
   height: 100%;
+
   .Top {
     position: fixed;
     top: 50%;
     right: 2%;
     z-index: 999;
+
     .addserBtn {
       background-color: $--color-primary-opacity7;
       color: $--color-text;
@@ -212,6 +180,7 @@ const handleNextPage = async () => {
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       transition: all 0.3s;
       cursor: pointer;
+
       &:hover {
         background-color: $--color-primary;
       }
@@ -224,6 +193,7 @@ const handleNextPage = async () => {
     align-items: center;
     height: 50px;
     transition: all 0.3s;
+
     .el-button {
       &:hover {
         color: $--color-text3;

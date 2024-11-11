@@ -46,40 +46,6 @@
         ]
       }
     },
-    "/v1/files/downloadFile/{fileId}": {
-      "get": {
-        "summary": "Download file",
-        "description": "Download file",
-        "operationId": "fileManageService_DownloadFile",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/fileManageDownloadFileResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "fileId",
-            "description": "文件唯一标识",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "FileManage"
-        ]
-      }
-    },
     "/v1/files/getFileList": {
       "get": {
         "summary": "Get file list",
@@ -214,17 +180,6 @@
         }
       },
       "title": "文件删除响应"
-    },
-    "fileManageDownloadFileResponse": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "string",
-          "format": "byte",
-          "title": "文件内容"
-        }
-      },
-      "title": "文件下载响应"
     },
     "fileManageFileInfo": {
       "type": "object",

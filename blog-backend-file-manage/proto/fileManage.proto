@@ -18,18 +18,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 service fileManageService {
 
-  // 文件下载
-  rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {
-    option (google.api.http) = {
-      get: "/v1/files/downloadFile/{fileId}"
-    };
-    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
-      summary: "Download file"
-      description: "Download file"
-    };
-  }
-
   // 删除文件
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
     option (google.api.http) = {
@@ -123,17 +111,6 @@ message FileListInfo {
 }
 
 
-// 文件下载请求
-message DownloadFileRequest {
-  // 文件唯一标识
-  int64 fileId = 1;
-}
-
-// 文件下载响应
-message DownloadFileResponse {
-  // 文件内容
-  bytes content = 1;
-}
 
 // 文件删除请求
 message DeleteFileRequest {

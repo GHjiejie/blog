@@ -21,6 +21,20 @@ const typeMap = new Map([
 export function getFileType(fileType) {
   return typeMap.get(fileType);
 }
+// 下载文件
+export function downloadFileContent(type, name, data) {
+  const mine = type || "application/msword";
+  const blobData = base64ToBlob(data, mine);
+  const blob = new Blob([blobData], { type: mine });
+  const downloadElement = document.createElement("a");
+  const href = window.URL.createObjectURL(blob);
+  downloadElement.href = href;
+  document.body.appendChild(downloadElement);
+  downloadElement.download = name; //设置下载文件名称
+  downloadElement.click();
+  document.body.removeChild(downloadElement); //移除元素；防止连续点击创建多个a标签
+  window.URL.revokeObjectURL(href);
+}
 // 将base64解码成为字符串（转换为特定编码）
 export function decodeBase64(base64Data) {
   const decodedData = atob(base64Data);

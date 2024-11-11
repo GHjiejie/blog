@@ -21,7 +21,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FileManageService_DownloadFile_FullMethodName  = "/fileManage.fileManageService/DownloadFile"
 	FileManageService_DeleteFile_FullMethodName    = "/fileManage.fileManageService/DeleteFile"
 	FileManageService_QueryFile_FullMethodName     = "/fileManage.fileManageService/QueryFile"
 	FileManageService_QueryFileById_FullMethodName = "/fileManage.fileManageService/QueryFileById"
@@ -32,8 +31,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileManageServiceClient interface {
-	// 文件下载
-	DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error)
 	// 删除文件
 	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
 	// 文件的模糊查询(根据上传文件的标签、类型等)
@@ -50,16 +47,6 @@ type fileManageServiceClient struct {
 
 func NewFileManageServiceClient(cc grpc.ClientConnInterface) FileManageServiceClient {
 	return &fileManageServiceClient{cc}
-}
-
-func (c *fileManageServiceClient) DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DownloadFileResponse)
-	err := c.cc.Invoke(ctx, FileManageService_DownloadFile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *fileManageServiceClient) DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error) {
@@ -106,8 +93,6 @@ func (c *fileManageServiceClient) GetFileList(ctx context.Context, in *GetFileLi
 // All implementations must embed UnimplementedFileManageServiceServer
 // for forward compatibility.
 type FileManageServiceServer interface {
-	// 文件下载
-	DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error)
 	// 删除文件
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 	// 文件的模糊查询(根据上传文件的标签、类型等)
@@ -126,9 +111,6 @@ type FileManageServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFileManageServiceServer struct{}
 
-func (UnimplementedFileManageServiceServer) DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
-}
 func (UnimplementedFileManageServiceServer) DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFile not implemented")
 }
@@ -160,24 +142,6 @@ func RegisterFileManageServiceServer(s grpc.ServiceRegistrar, srv FileManageServ
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&FileManageService_ServiceDesc, srv)
-}
-
-func _FileManageService_DownloadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DownloadFileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileManageServiceServer).DownloadFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FileManageService_DownloadFile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileManageServiceServer).DownloadFile(ctx, req.(*DownloadFileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _FileManageService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -259,10 +223,6 @@ var FileManageService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "fileManage.fileManageService",
 	HandlerType: (*FileManageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "DownloadFile",
-			Handler:    _FileManageService_DownloadFile_Handler,
-		},
 		{
 			MethodName: "DeleteFile",
 			Handler:    _FileManageService_DeleteFile_Handler,
