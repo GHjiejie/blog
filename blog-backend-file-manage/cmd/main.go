@@ -36,11 +36,7 @@ func main() {
 		log.Errorf("Failed to load config(%v) and master service is exiting with err(%v):", *configFile, err)
 		return
 	}
-	// log.Infof("DBEngine: %v", cfg.DBConfig.SQLPara.DriverName)
-	// log.Infof("DBEngine: %v", cfg.DBConfig.SQLPara.User)
-	// log.Infof("DEV: %v ", cfg.DEV)
-	// log.Infof("GRPCEndpoint: %v", cfg.GRPCEndpoint)
-	// log.Infof("HTPPEndpoint: %v", cfg.HTTPEndpoint)
+
 	// 首先设置日志级别
 	log.AddHook(filename.NewHook())
 	switch strings.ToLower(cfg.LogLevel) {

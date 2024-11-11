@@ -46,9 +46,27 @@
               link
               type="success"
               size="small"
-              @click="viewFile(row, row.userId)"
+              @click="viewFile(row, row.fileId)"
             >
               查看
+            </el-button>
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="danger"
+              size="small"
+              @click="handelDelFile(row, row.fileId)"
+            >
+              删除
+            </el-button>
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="info"
+              size="small"
+              @click="handelDownload(row, row.fileId)"
+            >
+              下载
             </el-button>
           </template>
         </el-table-column>
@@ -60,13 +78,20 @@
       >
     </div>
   </div>
+  <fileView ref="fileViewRef" :file-id="viewFileId"></fileView>
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getFileList } from "@/apis/file";
+import {
+  getFileList,
+  deleteFile,
+  getFileById,
+  downloadFile,
+} from "@/apis/file";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { getFileSize } from "@/utils/calculation";
+import fileView from "./components/fileView.vue";
 
 let page = ref(1);
 let pageSize = ref(15);
@@ -74,6 +99,8 @@ const search = ref("");
 const fileList = ref([]);
 const maxHeight = window.innerHeight - 100;
 
+const fileViewRef = ref(null);
+const viewFileId = ref(null);
 onMounted(async () => {
   await getListFiles();
 });
@@ -87,6 +114,57 @@ const filterTableData = computed(() => {
     );
   });
 });
+
+// 下载文件
+const handelDownload = async (row, fileId) => {
+  try {
+    const res = await downloadFile({ fileId });
+    console.log(res);
+  } catch (error) {
+    ElMessage({
+      message: "下载失败",
+      type: "error",
+    });
+  }
+};
+
+// 预览文件
+const viewFile = async (row, fileId) => {
+  viewFileId.value = fileId;
+  fileViewRef.value.changeVisible(true);
+};
+
+// 删除文件
+const handelDelFile = async (row, fileId) => {
+  ElMessageBox.confirm("确定删除该文件吗?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      try {
+        await deleteFile({ fileId });
+        ElMessage({
+          message: "删除成功",
+          type: "success",
+        });
+        fileList.value = fileList.value.filter(
+          (item) => item.fileId !== fileId
+        );
+      } catch (error) {
+        ElMessage({
+          message: "删除失败",
+          type: "error",
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "已取消删除",
+      });
+    });
+};
 
 // 获取文件列表
 const getListFiles = async () => {

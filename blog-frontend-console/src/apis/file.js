@@ -7,3 +7,28 @@ export function getFileList(params) {
     method: "get",
   });
 }
+
+// 删除文件
+export function deleteFile(params) {
+  return httpRequest({
+    url: `/v1/files/deleteFile/${params.fileId}`,
+    method: "delete",
+  });
+}
+
+// 根据文件ID获取文件
+export function getFileById(params) {
+  return httpRequest({
+    url: `/v1/files/queryFileById/${params.fileId}`,
+    method: "get",
+  });
+}
+
+// 下载文件
+export function downloadFile(params) {
+  return httpRequest({
+    url: `/v1/files/downloadFile/${params.fileId}`,
+    method: "get",
+    responseType: "blob",
+  });
+}

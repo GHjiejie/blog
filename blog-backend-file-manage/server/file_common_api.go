@@ -56,8 +56,6 @@ func (s *FileServer) QueryFileById(ctx context.Context, req *filepb.QueryFileByI
 		"api": "QueryFileById",
 	})
 	fileId := req.GetFileId()
-	logger.Infof("Received file id: %d", fileId)
-
 	if err := validate.FileQueryById(req); err != nil {
 		logger.Errorf("Failed to validate file id: %v", err)
 		return nil, status.Error(codes.InvalidArgument, "invalid fileId")
@@ -65,6 +63,8 @@ func (s *FileServer) QueryFileById(ctx context.Context, req *filepb.QueryFileByI
 
 	// 接下来从数据库中查询文件信息
 	file, err := s.DBEngine.GetFileByID(fileId)
+	// logger.Infof("file: %v", file)
+	// logger.Infof("file content: %x", file.FileContent)
 	if err != nil {
 		logger.Errorf("Failed to query file by id: %v", err)
 		return nil, status.Error(codes.Internal, "failed to query file by id")
@@ -130,6 +130,27 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 	return &filepb.GetFileListResponse{
 		FileInfos: fileListInfoProtos,
 		Total:     total,
+	}, nil
+
+}
+
+// 文件下载
+func (s *FileServer) DownloadFile(ctx context.Context, req *filepb.DownloadFileRequest) (*filepb.DownloadFileResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "DownloadFile",
+	})
+	fileId := req.GetFileId()
+	// logger.Infof("Received file id: %d", fileId)
+	// 查询文件信息
+	file, err := s.DBEngine.GetFileByID(fileId)
+	if err != nil {
+		logger.Errorf("Failed to query file by id: %v", err)
+		return nil, status.Error(codes.Internal, "failed to query file by id")
+	}
+
+	// 返回文件信息
+	return &filepb.DownloadFileResponse{
+		Content: file.FileContent,
 	}, nil
 
 }

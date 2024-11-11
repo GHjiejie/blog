@@ -131,10 +131,8 @@ message DownloadFileRequest {
 
 // 文件下载响应
 message DownloadFileResponse {
-  // 文件信息
-  FileInfo fileInfo = 1;
   // 文件内容
-  bytes content = 2;
+  bytes content = 1;
 }
 
 // 文件删除请求

@@ -218,10 +218,6 @@
     "fileManageDownloadFileResponse": {
       "type": "object",
       "properties": {
-        "fileInfo": {
-          "$ref": "#/definitions/fileManageFileInfo",
-          "title": "文件信息"
-        },
         "content": {
           "type": "string",
           "format": "byte",
