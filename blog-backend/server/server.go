@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 
@@ -121,14 +122,22 @@ func (s *BlogServer) prepareServer() error {
 	// 创建 HTTP 多路复用器
 	httpmux := http.NewServeMux()
 
-	target, _ := url.Parse(s.config.EngineEndpoint)
+	target_files, _ := url.Parse(s.config.EngineEndpointFiles)
+	target_articles, _ := url.Parse(s.config.EngineEndpointArticles)
 
-	engine := middleware.ReverseProxy(target)
+	engine_files := middleware.ReverseProxy(target_files)
+	engine_articles := middleware.ReverseProxy(target_articles)
 
 	// // 判断当前接口是否需要进行远程调用
 	for _, path := range s.config.EnginePaths {
 		// 这里思考一个问题，就是这里需不需要进行中间件的执行
-		httpmux.Handle(path, s.Tracing(engine, s.casbinPermit))
+		// 如果path以/v1/files开头，那么就需要转发给engine_files
+		// 如果path以/v1/articles开头，那么就需要转发给engine_articles
+		if strings.HasPrefix(path, "/v1/files") {
+			httpmux.Handle(path, s.Tracing(engine_files, s.casbinPermit))
+		} else if strings.HasPrefix(path, "/v1/articles") {
+			httpmux.Handle(path, s.Tracing(engine_articles, s.casbinPermit))
+		}
 	}
 
 	httpmux.Handle("/v1/", s.Tracing(rmux, s.casbinPermit))

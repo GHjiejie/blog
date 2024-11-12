@@ -21,7 +21,7 @@ service articleManageService {
   // 基于当前文件发布文章
   rpc PublishArticle(PublishArticleRequest) returns (PublishArticleResponse) {
     option (google.api.http) = {
-      post: "/v1/files/publishArticle"
+      post: "/v1/articles/publishArticle"
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -33,7 +33,7 @@ service articleManageService {
   // 修改文章
   rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse) {
     option (google.api.http) = {
-      put: "/v1/files/updateArticle"
+      put: "/v1/articles/updateArticle"
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -45,18 +45,18 @@ service articleManageService {
   // 删除文章
   rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse) {
     option (google.api.http) = {
-      delete: "/v1/files/deleteArticle/{articleId}"
+      delete: "/v1/articles/deleteArticle/{article_id}"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["ArticleManage"]
       summary: "Delete article"
-      description: "Delete article"
+      description: "Delete article" 
     };
   }
   // 获取文章列表
   rpc GetArticleList(GetArticleListRequest) returns (GetArticleListResponse) {
     option (google.api.http) = {
-      get: "/v1/files/getArticleList"
+      get: "/v1/articles/getArticleList"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["ArticleManage"]
@@ -67,12 +67,24 @@ service articleManageService {
   // 文章的模糊查询
   rpc QueryArticle(QueryArticleRequest) returns (QueryArticleResponse) {
     option (google.api.http) = {
-      get: "/v1/files/queryArticle"
+      get: "/v1/articles/queryArticle"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["ArticleManage"]
       summary: "Query article"
       description: "Query article"
+    };
+  }
+
+  // 根据文章ID获取文章详情
+  rpc GetArticleDetail(GetArticleDetailRequest) returns (GetArticleDetailResponse) {
+    option (google.api.http) = {
+      get: "/v1/articles/getArticleDetail/{article_id}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Get article detail"
+      description: "Get article detail"
     };
   }
 }
@@ -82,118 +94,231 @@ service articleManageService {
 ----------文章请求与响应参数
 
 */
-
 // 文章基本信息
 message ArticleInfo {
   // 文章唯一标识
-  int64 articleId = 1;
+  int64 article_id = 1; // 使用下划线命名风格
+
   // 文章标题
   string title = 2;
+
   // 文章内容
   string content = 3;
+
+  // 文章摘要
+  string summary = 4;
+
   // 文章标签
-  string tag = 4;
-  // 文章作者
-  string author = 5;
+  string tag = 5;
+
+  // 文章状态，如“draft”, “published”等
+  string status = 6;
+
+  // 文章浏览次数
+  int32 view_count = 7;
+
+  // 文章点赞次数
+  int32 like_count = 8;
+
+  // 文章评论次数
+  int32 comment_count = 9;
+
+  // 文章封面图 URL
+  string image_url = 10;
+
+  // 文章分类ID
+  int64 category_id = 11;
+
+  // 文章作者ID
+  int64 author_id = 12;
+
   // 文章发布时间
-  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp created_at = 13;
+
   // 文章更新时间
-  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp updated_at = 14;
+
+  // 软删除时间
+  google.protobuf.Timestamp deleted_at = 15; // 可选的删除时间
 }
-// 文章列表信息
+
+// 文章列表基本信息
 message ArticleListInfo {
-  // 文章唯一标识
-  int64 articleId = 1;
+// 文章唯一标识
+  int64 article_id = 1; // 使用下划线命名风格
+
   // 文章标题
   string title = 2;
+
+  // 文章内容
+  // string content = 3;
+
+  // 文章摘要
+  string summary = 4;
+
   // 文章标签
-  string tag = 3;
-  // 文章作者
-  string author = 4;
+  string tag = 5;
+
+  // 文章状态，如“draft”, “published”等
+  string status = 6;
+
+  // 文章浏览次数
+  int32 view_count = 7;
+
+  // 文章点赞次数
+  int32 like_count = 8;
+
+  // 文章评论次数
+  int32 comment_count = 9;
+
+  // 文章封面图 URL
+  string image_url = 10;
+
+  // 文章分类ID
+  int64 category_id = 11;
+
+  // 文章作者ID
+  int64 author_id = 12;
+
   // 文章发布时间
-  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp created_at = 13;
+
   // 文章更新时间
-  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp updated_at = 14;
+
+  // 软删除时间
+  google.protobuf.Timestamp deleted_at = 15; // 可选的删除时间
+}
+
+// 获取的文章列表请求
+message GetArticleListRequest {
+  // 页码
+  int32 page = 1;
+
+  // 每页数量
+  int32 pageSize = 2;
+}
+
+// 获取的文章列表响应
+message GetArticleListResponse {
+  // 文章列表
+  repeated ArticleListInfo article_list = 1;
+
+  // 总数
+  int32 total = 2;
 }
 
 // 发布文章请求
 message PublishArticleRequest {
   // 文章标题
   string title = 1;
+
   // 文章内容
   string content = 2;
+
+  // 文章摘要
+  string summary = 3;
+
   // 文章标签
-  string tag = 3;
-  // 文章作者
-  string author = 4;
+  string tag = 4;
+
+  // 文章状态，如“draft”, “published”等
+  string status = 5;
+
+  // 文章封面图 URL
+  string image_url = 6;
+
+  // 文章分类ID
+  int64 category_id = 7;
+
+  // 文章作者ID
+  int64 author_id = 8;
 }
 
 // 发布文章响应
 message PublishArticleResponse {
-  // 文章信息
-  string message = 1;
+  // 文章唯一标识
+ string message = 1;
 }
 
 // 修改文章请求
 message UpdateArticleRequest {
   // 文章唯一标识
-  int64 articleId = 1;
+  int64 article_id = 1;
+
   // 文章标题
   string title = 2;
+
   // 文章内容
   string content = 3;
+
+  // 文章摘要
+  string summary = 4;
+
   // 文章标签
-  string tag = 4;
-  // 文章作者
-  string author = 5;
+  string tag = 5;
+
+  // 文章状态，如“draft”, “published”等
+  string status = 6;
+
+  // 文章封面图 URL
+  string image_url = 7;
+
+  // 文章分类ID
+  int64 category_id = 8;
+
+  // 文章作者ID
+  int64 author_id = 9;
 }
 
 // 修改文章响应
 message UpdateArticleResponse {
-  // 文章信息
+  // 文章唯一标识
   string message = 1;
 }
 
 // 删除文章请求
 message DeleteArticleRequest {
   // 文章唯一标识
-  int64 articleId = 1;
+  int64 article_id = 1;
 }
 
 // 删除文章响应
 message DeleteArticleResponse {
-  // 文章信息
+  // 文章唯一标识
   string message = 1;
 }
 
-// 获取文章列表请求
-message GetArticleListRequest {
-  // 页码
-  int64 page = 1;
-  // 每页数量
-  int64 pageSize = 2;
-}
-
-// 获取文章列表响应
-message GetArticleListResponse {
-  // 文章信息
-  repeated ArticleListInfo articleInfos = 1;
-  int64 total = 2;
-}
-
-// 文章查询请求
+// 查询文章请求
 message QueryArticleRequest {
-  // 文章标题
-  string title = 1;
-  // 文章标签
-  string tag = 2;
+  // 查询关键字
+  string keyword = 1;
 }
 
-// 文章查询响应
+// 查询文章响应
 message QueryArticleResponse {
-  // 文章信息
-  repeated ArticleInfo articleInfos = 1;
+  // 文章列表
+  repeated ArticleListInfo article_list = 1;
+
+  // 总数
+  int32 total = 2;
 }
+
+// 根据文章ID获取文章详情请求
+message GetArticleDetailRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+}
+
+// 根据文章ID获取文章详情响应
+message GetArticleDetailResponse {
+  // 文章详情
+  ArticleInfo article_info = 1;
+}
+
+
+
+
 
 
 

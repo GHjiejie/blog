@@ -21,11 +21,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ArticleManageService_PublishArticle_FullMethodName = "/articleManage.articleManageService/PublishArticle"
-	ArticleManageService_UpdateArticle_FullMethodName  = "/articleManage.articleManageService/UpdateArticle"
-	ArticleManageService_DeleteArticle_FullMethodName  = "/articleManage.articleManageService/DeleteArticle"
-	ArticleManageService_GetArticleList_FullMethodName = "/articleManage.articleManageService/GetArticleList"
-	ArticleManageService_QueryArticle_FullMethodName   = "/articleManage.articleManageService/QueryArticle"
+	ArticleManageService_PublishArticle_FullMethodName   = "/articleManage.articleManageService/PublishArticle"
+	ArticleManageService_UpdateArticle_FullMethodName    = "/articleManage.articleManageService/UpdateArticle"
+	ArticleManageService_DeleteArticle_FullMethodName    = "/articleManage.articleManageService/DeleteArticle"
+	ArticleManageService_GetArticleList_FullMethodName   = "/articleManage.articleManageService/GetArticleList"
+	ArticleManageService_QueryArticle_FullMethodName     = "/articleManage.articleManageService/QueryArticle"
+	ArticleManageService_GetArticleDetail_FullMethodName = "/articleManage.articleManageService/GetArticleDetail"
 )
 
 // ArticleManageServiceClient is the client API for ArticleManageService service.
@@ -42,6 +43,8 @@ type ArticleManageServiceClient interface {
 	GetArticleList(ctx context.Context, in *GetArticleListRequest, opts ...grpc.CallOption) (*GetArticleListResponse, error)
 	// 文章的模糊查询
 	QueryArticle(ctx context.Context, in *QueryArticleRequest, opts ...grpc.CallOption) (*QueryArticleResponse, error)
+	// 根据文章ID获取文章详情
+	GetArticleDetail(ctx context.Context, in *GetArticleDetailRequest, opts ...grpc.CallOption) (*GetArticleDetailResponse, error)
 }
 
 type articleManageServiceClient struct {
@@ -102,6 +105,16 @@ func (c *articleManageServiceClient) QueryArticle(ctx context.Context, in *Query
 	return out, nil
 }
 
+func (c *articleManageServiceClient) GetArticleDetail(ctx context.Context, in *GetArticleDetailRequest, opts ...grpc.CallOption) (*GetArticleDetailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArticleDetailResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_GetArticleDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleManageServiceServer is the server API for ArticleManageService service.
 // All implementations must embed UnimplementedArticleManageServiceServer
 // for forward compatibility.
@@ -116,6 +129,8 @@ type ArticleManageServiceServer interface {
 	GetArticleList(context.Context, *GetArticleListRequest) (*GetArticleListResponse, error)
 	// 文章的模糊查询
 	QueryArticle(context.Context, *QueryArticleRequest) (*QueryArticleResponse, error)
+	// 根据文章ID获取文章详情
+	GetArticleDetail(context.Context, *GetArticleDetailRequest) (*GetArticleDetailResponse, error)
 	mustEmbedUnimplementedArticleManageServiceServer()
 }
 
@@ -140,6 +155,9 @@ func (UnimplementedArticleManageServiceServer) GetArticleList(context.Context, *
 }
 func (UnimplementedArticleManageServiceServer) QueryArticle(context.Context, *QueryArticleRequest) (*QueryArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryArticle not implemented")
+}
+func (UnimplementedArticleManageServiceServer) GetArticleDetail(context.Context, *GetArticleDetailRequest) (*GetArticleDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticleDetail not implemented")
 }
 func (UnimplementedArticleManageServiceServer) mustEmbedUnimplementedArticleManageServiceServer() {}
 func (UnimplementedArticleManageServiceServer) testEmbeddedByValue()                              {}
@@ -252,6 +270,24 @@ func _ArticleManageService_QueryArticle_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleManageService_GetArticleDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticleDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).GetArticleDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_GetArticleDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).GetArticleDetail(ctx, req.(*GetArticleDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleManageService_ServiceDesc is the grpc.ServiceDesc for ArticleManageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -278,6 +314,10 @@ var ArticleManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueryArticle",
 			Handler:    _ArticleManageService_QueryArticle_Handler,
+		},
+		{
+			MethodName: "GetArticleDetail",
+			Handler:    _ArticleManageService_GetArticleDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

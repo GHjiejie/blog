@@ -3,10 +3,21 @@ LogLevel = "debug"
 Dev = true
 HTTPEndpoint = ":8070"
 GRPCEndpoint = ":8071"
+EngineEndpointUsers="http://127.0.0.1:8080"
+EngineEndpointFiles="http://127.0.0.1:8090"
+
 
 
 
 #引擎路径(这里暂时不要远程调用吧)
+EnginePaths = [
+    "/v1/files/upload",
+    "/v1/files/queryFile",
+    "/v1/files/queryFileById/{fileId}",
+    "/v1/files/deleteFile/{fileId}",
+    "/v1/files/getFileList",
+    "/v1/users/{user_id}"
+]
 
 
 [DBConfig]

@@ -3,7 +3,8 @@ LogLevel = "debug"
 Dev = true
 HTTPEndpoint = ":8080"
 GRPCEndpoint = ":8081"
-EngineEndpoint="http://127.0.0.1:8090"
+EngineEndpointFiles="http://127.0.0.1:8090"
+EngineEndpointArticles="http://127.0.0.1:8070"
 
 
 
@@ -14,7 +15,12 @@ EnginePaths = [
     "/v1/files/queryFileById/{fileId}",
     "/v1/files/deleteFile/{fileId}",
     "/v1/files/downloadFile/{fileId}",
-    "/v1/files/getFileList"
+    "/v1/files/getFileList",
+    "/v1/articles/deleteArticle/{articleId}",
+    "/v1/articles/getArticleList",
+    "/v1/articles/publishArticle",
+    "/v1/articles/queryArticle",
+    "/v1/articles/updateArticle",
 ]
 
 [DBConfig]

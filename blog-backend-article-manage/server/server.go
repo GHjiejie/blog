@@ -4,9 +4,12 @@ import (
 	articlepb "articleManage/pb/articleManage"
 	"articleManage/pkg/config"
 	"articleManage/pkg/db"
+	"articleManage/pkg/middleware"
 	"context"
 	"net"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	log "github.com/sirupsen/logrus"
@@ -14,7 +17,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type FileServer struct {
+type ArticleServer struct {
 	*articlepb.UnimplementedArticleManageServiceServer                //grpc里面未实现的接口
 	config                                             *config.Config //配置信息
 	DBEngine                                           db.Handle      //数据库引擎
@@ -23,7 +26,7 @@ type FileServer struct {
 }
 
 // Start 启动 gRPC 和 HTTP 服务
-func (s *FileServer) Start() error {
+func (s *ArticleServer) Start() error {
 	log.Info("FileServer starting...")
 
 	// 启动 gRPC 服务
@@ -47,12 +50,12 @@ func (s *FileServer) Start() error {
 			panic(err)
 		}
 	}()
-	log.Info("HTTP/JSON server listening on :8090")
+	log.Infof("http server listening on %s", s.config.HTTPEndpoint)
 
 	return nil
 }
 
-func NewArticleServer(c *config.Config) (*FileServer, error) {
+func NewArticleServer(c *config.Config) (*ArticleServer, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "startServer",
 	})
@@ -64,7 +67,7 @@ func NewArticleServer(c *config.Config) (*FileServer, error) {
 		logger.Error("failed to create database engine:", err)
 		return nil, err
 	}
-	s := &FileServer{
+	s := &ArticleServer{
 		config:                                  c,
 		DBEngine:                                dbEngine,
 		UnimplementedArticleManageServiceServer: &articlepb.UnimplementedArticleManageServiceServer{},
@@ -78,11 +81,11 @@ func NewArticleServer(c *config.Config) (*FileServer, error) {
 	return s, nil
 }
 
-func (s *FileServer) prepareServer() error {
+func (s *ArticleServer) prepareServer() error {
 	return s.prepareNetServer()
 }
 
-func (s *FileServer) prepareNetServer() error {
+func (s *ArticleServer) prepareNetServer() error {
 	logger := log.WithFields(log.Fields{
 		"module": "prepareNetServer",
 	})
@@ -104,6 +107,23 @@ func (s *FileServer) prepareNetServer() error {
 
 	httpmux := http.NewServeMux()
 	// 对于特殊的接口不需要进行grpc调用，直接在httpmux中注册
+	target_files, _ := url.Parse(s.config.EngineEndpointFiles)
+	target_users, _ := url.Parse(s.config.EngineEndpointUsers)
+
+	engine_files := middleware.ReverseProxy(target_files)
+	engine_users := middleware.ReverseProxy(target_users)
+
+	// // 判断当前接口是否需要进行远程调用
+	for _, path := range s.config.EnginePaths {
+		// 这里思考一个问题，就是这里需不需要进行中间件的执行
+		// 如果path以/v1/files开头，那么就需要转发给engine_files
+		// 如果path以/v1/articles开头，那么就需要转发给engine_articles
+		if strings.HasPrefix(path, "/v1/files") {
+			httpmux.Handle(path, engine_files)
+		} else if strings.HasPrefix(path, "/v1/users") {
+			httpmux.Handle(path, engine_users)
+		}
+	}
 
 	httpmux.Handle("/v1/", rmux)
 
