@@ -2,6 +2,7 @@ package db
 
 import "time"
 
+// 文件信息结构体
 type UploadFile struct {
 	// 文件ID
 	ID int64 `gorm:"column:id;primaryKey"  json:"id"`

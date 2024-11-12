@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="Center">
-      <el-table :data="filterTableData" size="large" :height="maxHeight" :highlight-current-row="true">
+      <el-table :data="filterTableData" size="large" :height="maxHeight" :highlight-current-row="false">
         <el-table-column fixed="left" prop="fileId" label="文件ID" width="120" />
         <el-table-column prop="fileName" label="文件名" width="200" />
         <el-table-column prop="bytes" label="文件大小" width="150">
@@ -23,8 +23,8 @@
         </el-table-column>
         <el-table-column prop="fileType" label="文件类型" width="200" />
 
-        <el-table-column prop="createdAt" label="创建时间" width="300" />
-        <el-table-column fixed="right" min-width="150">
+        <el-table-column prop="createdAt" label="创建时间" width="200" />
+        <el-table-column fixed="right" width="200">
           <template #header>
             <el-input v-model="search" size="small" placeholder="Type to search" />
           </template>
@@ -40,6 +40,7 @@
             <el-button :disabled="row.role === 'ADMIN'" link type="info" size="small" @click="handelDownload(row)">
               下载
             </el-button>
+
           </template>
         </el-table-column>
       </el-table>

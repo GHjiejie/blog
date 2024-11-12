@@ -134,23 +134,23 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 
 }
 
-// 文件下载
-func (s *FileServer) DownloadFile(ctx context.Context, req *filepb.DownloadFileRequest) (*filepb.DownloadFileResponse, error) {
-	logger := log.WithFields(log.Fields{
-		"api": "DownloadFile",
-	})
-	fileId := req.GetFileId()
-	// logger.Infof("Received file id: %d", fileId)
-	// 查询文件信息
-	file, err := s.DBEngine.GetFileByID(fileId)
-	if err != nil {
-		logger.Errorf("Failed to query file by id: %v", err)
-		return nil, status.Error(codes.Internal, "failed to query file by id")
-	}
+// // 文件下载
+// func (s *FileServer) DownloadFile(ctx context.Context, req *filepb.DownloadFileRequest) (*filepb.DownloadFileResponse, error) {
+// 	logger := log.WithFields(log.Fields{
+// 		"api": "DownloadFile",
+// 	})
+// 	fileId := req.GetFileId()
+// 	// logger.Infof("Received file id: %d", fileId)
+// 	// 查询文件信息
+// 	file, err := s.DBEngine.GetFileByID(fileId)
+// 	if err != nil {
+// 		logger.Errorf("Failed to query file by id: %v", err)
+// 		return nil, status.Error(codes.Internal, "failed to query file by id")
+// 	}
 
-	// 返回文件信息
-	return &filepb.DownloadFileResponse{
-		Content: file.FileContent,
-	}, nil
+// 	// 返回文件信息
+// 	return &filepb.DownloadFileResponse{
+// 		Content: file.FileContent,
+// 	}, nil
 
-}
+// }

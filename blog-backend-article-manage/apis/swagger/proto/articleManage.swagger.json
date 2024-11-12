@@ -1,0 +1,414 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ArticleManage API",
+    "description": "Article management API",
+    "version": "v1.0"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/files/deleteArticle/{articleId}": {
+      "delete": {
+        "summary": "Delete article",
+        "description": "Delete article",
+        "operationId": "articleManageService_DeleteArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageDeleteArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "articleId",
+            "description": "文章唯一标识",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
+    "/v1/files/getArticleList": {
+      "get": {
+        "summary": "Get article list",
+        "description": "Get article list",
+        "operationId": "articleManageService_GetArticleList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageGetArticleListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "页码.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "description": "每页数量.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
+    "/v1/files/publishArticle": {
+      "post": {
+        "summary": "Publish article",
+        "description": "Publish article",
+        "operationId": "articleManageService_PublishArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManagePublishArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManagePublishArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
+    "/v1/files/queryArticle": {
+      "get": {
+        "summary": "Query article",
+        "description": "Query article",
+        "operationId": "articleManageService_QueryArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageQueryArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "title",
+            "description": "文章标题.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tag",
+            "description": "文章标签.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
+    "/v1/files/updateArticle": {
+      "put": {
+        "summary": "Update article",
+        "description": "Update article",
+        "operationId": "articleManageService_UpdateArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageUpdateArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageUpdateArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "articleManageArticleInfo": {
+      "type": "object",
+      "properties": {
+        "articleId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "content": {
+          "type": "string",
+          "title": "文章内容"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章发布时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章更新时间"
+        }
+      },
+      "title": "文章基本信息"
+    },
+    "articleManageArticleListInfo": {
+      "type": "object",
+      "properties": {
+        "articleId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章发布时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章更新时间"
+        }
+      },
+      "title": "文章列表信息"
+    },
+    "articleManageDeleteArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章信息"
+        }
+      },
+      "title": "删除文章响应"
+    },
+    "articleManageGetArticleListResponse": {
+      "type": "object",
+      "properties": {
+        "articleInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/articleManageArticleListInfo"
+          },
+          "title": "文章信息"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "获取文章列表响应"
+    },
+    "articleManagePublishArticleRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "content": {
+          "type": "string",
+          "title": "文章内容"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        }
+      },
+      "title": "发布文章请求"
+    },
+    "articleManagePublishArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章信息"
+        }
+      },
+      "title": "发布文章响应"
+    },
+    "articleManageQueryArticleResponse": {
+      "type": "object",
+      "properties": {
+        "articleInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/articleManageArticleInfo"
+          },
+          "title": "文章信息"
+        }
+      },
+      "title": "文章查询响应"
+    },
+    "articleManageUpdateArticleRequest": {
+      "type": "object",
+      "properties": {
+        "articleId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "content": {
+          "type": "string",
+          "title": "文章内容"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        }
+      },
+      "title": "修改文章请求"
+    },
+    "articleManageUpdateArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章信息"
+        }
+      },
+      "title": "修改文章响应"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,40 @@
     "application/json"
   ],
   "paths": {
+    "/v1/files/deleteArticle/{articleId}": {
+      "delete": {
+        "summary": "Delete article",
+        "description": "Delete article",
+        "operationId": "fileManageService_DeleteArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fileManageDeleteArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "articleId",
+            "description": "文章唯一标识",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "FileManage"
+        ]
+      }
+    },
     "/v1/files/deleteFile/{fileId}": {
       "delete": {
         "summary": "Delete file",
@@ -37,6 +71,48 @@
             "description": "文件唯一标识",
             "in": "path",
             "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "FileManage"
+        ]
+      }
+    },
+    "/v1/files/getArticleList": {
+      "get": {
+        "summary": "Get article list",
+        "description": "Get article list",
+        "operationId": "fileManageService_GetArticleList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fileManageGetArticleListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "页码.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "description": "每页数量.",
+            "in": "query",
+            "required": false,
             "type": "string",
             "format": "int64"
           }
@@ -81,6 +157,80 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          }
+        ],
+        "tags": [
+          "FileManage"
+        ]
+      }
+    },
+    "/v1/files/publishArticle": {
+      "post": {
+        "summary": "Publish article",
+        "description": "Publish article",
+        "operationId": "fileManageService_PublishArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fileManagePublishArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/fileManagePublishArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManage"
+        ]
+      }
+    },
+    "/v1/files/queryArticle": {
+      "get": {
+        "summary": "Query article",
+        "description": "Query article",
+        "operationId": "fileManageService_QueryArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fileManageQueryArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "title",
+            "description": "文章标题.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tag",
+            "description": "文章标签.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -168,9 +318,123 @@
           "FileManage"
         ]
       }
+    },
+    "/v1/files/updateArticle": {
+      "put": {
+        "summary": "Update article",
+        "description": "Update article",
+        "operationId": "fileManageService_UpdateArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fileManageUpdateArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/fileManageUpdateArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FileManage"
+        ]
+      }
     }
   },
   "definitions": {
+    "fileManageArticleInfo": {
+      "type": "object",
+      "properties": {
+        "articleId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "content": {
+          "type": "string",
+          "title": "文章内容"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章发布时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章更新时间"
+        }
+      },
+      "title": "文章基本信息"
+    },
+    "fileManageArticleListInfo": {
+      "type": "object",
+      "properties": {
+        "articleId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章发布时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "文章更新时间"
+        }
+      },
+      "title": "文章列表信息"
+    },
+    "fileManageDeleteArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章信息"
+        }
+      },
+      "title": "删除文章响应"
+    },
     "fileManageDeleteFileResponse": {
       "type": "object",
       "properties": {
@@ -230,7 +494,8 @@
           "format": "date-time",
           "title": "文件更新时间"
         }
-      }
+      },
+      "title": "----------文件请求与响应参数"
     },
     "fileManageFileListInfo": {
       "type": "object",
@@ -278,6 +543,23 @@
         }
       }
     },
+    "fileManageGetArticleListResponse": {
+      "type": "object",
+      "properties": {
+        "articleInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fileManageArticleListInfo"
+          },
+          "title": "文章信息"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "获取文章列表响应"
+    },
     "fileManageGetFileListResponse": {
       "type": "object",
       "properties": {
@@ -294,6 +576,51 @@
         }
       },
       "title": "获取文件列表响应"
+    },
+    "fileManagePublishArticleRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "content": {
+          "type": "string",
+          "title": "文章内容"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        }
+      },
+      "title": "发布文章请求"
+    },
+    "fileManagePublishArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章信息"
+        }
+      },
+      "title": "发布文章响应"
+    },
+    "fileManageQueryArticleResponse": {
+      "type": "object",
+      "properties": {
+        "articleInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fileManageArticleInfo"
+          },
+          "title": "文章信息"
+        }
+      },
+      "title": "文章查询响应"
     },
     "fileManageQueryFileByIdResponse": {
       "type": "object",
@@ -317,6 +644,43 @@
         }
       },
       "title": "文件查询响应"
+    },
+    "fileManageUpdateArticleRequest": {
+      "type": "object",
+      "properties": {
+        "articleId": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "title": {
+          "type": "string",
+          "title": "文章标题"
+        },
+        "content": {
+          "type": "string",
+          "title": "文章内容"
+        },
+        "tag": {
+          "type": "string",
+          "title": "文章标签"
+        },
+        "author": {
+          "type": "string",
+          "title": "文章作者"
+        }
+      },
+      "title": "修改文章请求"
+    },
+    "fileManageUpdateArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章信息"
+        }
+      },
+      "title": "修改文章响应"
     },
     "protobufAny": {
       "type": "object",

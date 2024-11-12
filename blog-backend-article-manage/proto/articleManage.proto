@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 // 设置包的名称
-package fileManage;
+package articleManage;
 
 // 导入公共的注解
 import "google/api/annotations.proto";
@@ -9,61 +9,15 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 // 设置生成的pb文件的位置
-option go_package="pb/fileManage";
+option go_package="pb/articleManage";
 
 // 设置API的消息，包括版本、描述等
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: { title: "FileManage API" description: "File management API" version: "v1.0" }
+  info: { title: "ArticleManage API" description: "Article management API" version: "v1.0" }
 };
 
-service fileManageService {
+service articleManageService {
 
-  // 删除文件
-  rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
-    option (google.api.http) = {
-      delete: "/v1/files/deleteFile/{fileId}"
-    };
-    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
-      summary: "Delete file"
-      description: "Delete file"
-    };
-  }
-
-  // 文件的模糊查询(根据上传文件的标签、类型等)
-  rpc QueryFile(QueryFileRequest) returns (QueryFileResponse) {
-    option (google.api.http) = {
-      get: "/v1/files/queryFile"
-    };
-    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
-      summary: "Query file"
-      description: "Query file"
-    };
-  }
-
-  // 根据文件ID查询文件
-  rpc QueryFileById(QueryFileByIdRequest) returns (QueryFileByIdResponse) {
-    option (google.api.http) = {
-      get: "/v1/files/queryFileById/{fileId}"
-    };
-    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
-      summary: "Query file by id"
-      description: "Query file by id"
-    };
-  }
-  // 获取文件列表
-  rpc GetFileList(GetFileListRequest) returns (GetFileListResponse) {
-    option (google.api.http) = {
-      get: "/v1/files/getFileList"
-    };
-    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
-      summary: "Get file list"
-      description: "Get file list"
-    };
-  }
   // 基于当前文件发布文章
   rpc PublishArticle(PublishArticleRequest) returns (PublishArticleResponse) {
     option (google.api.http) = {
@@ -71,41 +25,41 @@ service fileManageService {
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
+      tags: ["ArticleManage"]
       summary: "Publish article"
       description: "Publish article"
     };
   }
-  // 基于当前文件修改文章
+  // 修改文章
   rpc UpdateArticle(UpdateArticleRequest) returns (UpdateArticleResponse) {
     option (google.api.http) = {
       put: "/v1/files/updateArticle"
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
+      tags: ["ArticleManage"]
       summary: "Update article"
       description: "Update article"
     };
   }
-  // 基于当前文件删除文章
+  // 删除文章
   rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse) {
     option (google.api.http) = {
       delete: "/v1/files/deleteArticle/{articleId}"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
+      tags: ["ArticleManage"]
       summary: "Delete article"
       description: "Delete article"
     };
   }
-  // 获取已发布的文章列表
+  // 获取文章列表
   rpc GetArticleList(GetArticleListRequest) returns (GetArticleListResponse) {
     option (google.api.http) = {
       get: "/v1/files/getArticleList"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
+      tags: ["ArticleManage"]
       summary: "Get article list"
       description: "Get article list"
     };
@@ -116,7 +70,7 @@ service fileManageService {
       get: "/v1/files/queryArticle"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["FileManage"]
+      tags: ["ArticleManage"]
       summary: "Query article"
       description: "Query article"
     };
@@ -242,106 +196,4 @@ message QueryArticleResponse {
 }
 
 
-/*
 
-----------文件请求与响应参数
-
-*/
-message FileInfo {
-  // 文件唯一标识
-  int64 fileId = 1;
-  // 文件大小
-  int64 bytes = 2;
-  // 文件名称
-  string fileName = 3;
-  // 文件内容
-  bytes content = 4;
-  // 文件类型
-  string fileType = 5;
-  // 文件标签
-  string tag = 6;
-  // 文件路径
-  string filePath = 7;
-  // 文件上传者ID
-  int64 uploaderId = 8;
-  // 文件上传时间 
-  google.protobuf.Timestamp created_at = 9;
-  // 文件更新时间
-  google.protobuf.Timestamp updated_at = 10;
- 
-}
-message FileListInfo {
-  // 文件唯一标识
-  int64 fileId = 1;
-  // 文件大小
-  int64 bytes = 2;
-  // 文件名称
-  string fileName = 3;
-  // 文件类型
-  string fileType = 4;
-  // 文件标签
-  string tag = 5;
-  // 文件路径
-  string filePath = 6;
-  // 文件上传者ID
-  int64 uploaderId = 7;
-  // 文件上传时间 
-  google.protobuf.Timestamp created_at = 8;
-  // 文件更新时间
-  google.protobuf.Timestamp updated_at = 9;
-}
-
-// 文件删除请求
-message DeleteFileRequest {
-  // 文件唯一标识
-  int64 fileId = 1;
-}
-
-// 文件删除响应
-message DeleteFileResponse {
-  // 文件信息
-  string message = 1;
-}
-
-// 文件查询请求
-message QueryFileRequest {
-  // 文件名称
-  string fileName = 1;
-  // 文件类型
-  string fileType = 2;
-  // 文件标签
-  string fileTag = 3;
-}
-
-// 文件查询响应
-message QueryFileResponse {
-  // 文件信息
-  repeated FileInfo fileInfos = 1;
-}
-
-// 根据文件ID查询文件
-message QueryFileByIdRequest {
-  // 文件唯一标识
-  int64 fileId = 1;
-}
-
-// 根据文件ID查询文件响应
-message QueryFileByIdResponse {
-  // 文件信息
-  FileInfo fileInfo = 1;
-}
-
-// 获取文件列表请求
-message GetFileListRequest {
-  // 页码
-  int64 page = 1;
-  // 每页数量
-  int64 pageSize = 2;
-}
-
-// 获取文件列表响应
-message GetFileListResponse {
-  // 文件信息
- repeated FileListInfo fileInfos = 1;
- int64 total = 2;
-}

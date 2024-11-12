@@ -1,9 +1,13 @@
 <template>
   <div class="layout">
     <el-container>
-      <el-header><Header /></el-header>
+      <el-header>
+        <Header />
+      </el-header>
       <el-container>
-        <el-aside><Aside /></el-aside>
+        <el-aside>
+          <Aside />
+        </el-aside>
         <el-main>
           <router-view />
         </el-main>
@@ -23,6 +27,7 @@ import Header from "@/components/Header/index.vue";
 .el-main {
   padding: 0;
 }
+
 .layout {
   display: flex;
 }
@@ -31,11 +36,18 @@ import Header from "@/components/Header/index.vue";
   height: 50px;
   border-bottom: 1px solid var(--el-border-color);
 }
+
 .el-container {
   flex: 1;
+
   .el-aside {
     width: 200px;
     // border-right: 1px solid var(--el-border-color);
   }
+}
+
+.el-main {
+  border-left: 1px solid $--color-primary-opacity3;
+
 }
 </style>

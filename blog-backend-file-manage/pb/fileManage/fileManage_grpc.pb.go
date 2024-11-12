@@ -21,10 +21,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FileManageService_DeleteFile_FullMethodName    = "/fileManage.fileManageService/DeleteFile"
-	FileManageService_QueryFile_FullMethodName     = "/fileManage.fileManageService/QueryFile"
-	FileManageService_QueryFileById_FullMethodName = "/fileManage.fileManageService/QueryFileById"
-	FileManageService_GetFileList_FullMethodName   = "/fileManage.fileManageService/GetFileList"
+	FileManageService_DeleteFile_FullMethodName     = "/fileManage.fileManageService/DeleteFile"
+	FileManageService_QueryFile_FullMethodName      = "/fileManage.fileManageService/QueryFile"
+	FileManageService_QueryFileById_FullMethodName  = "/fileManage.fileManageService/QueryFileById"
+	FileManageService_GetFileList_FullMethodName    = "/fileManage.fileManageService/GetFileList"
+	FileManageService_PublishArticle_FullMethodName = "/fileManage.fileManageService/PublishArticle"
+	FileManageService_UpdateArticle_FullMethodName  = "/fileManage.fileManageService/UpdateArticle"
+	FileManageService_DeleteArticle_FullMethodName  = "/fileManage.fileManageService/DeleteArticle"
+	FileManageService_GetArticleList_FullMethodName = "/fileManage.fileManageService/GetArticleList"
+	FileManageService_QueryArticle_FullMethodName   = "/fileManage.fileManageService/QueryArticle"
 )
 
 // FileManageServiceClient is the client API for FileManageService service.
@@ -39,6 +44,16 @@ type FileManageServiceClient interface {
 	QueryFileById(ctx context.Context, in *QueryFileByIdRequest, opts ...grpc.CallOption) (*QueryFileByIdResponse, error)
 	// 获取文件列表
 	GetFileList(ctx context.Context, in *GetFileListRequest, opts ...grpc.CallOption) (*GetFileListResponse, error)
+	// 基于当前文件发布文章
+	PublishArticle(ctx context.Context, in *PublishArticleRequest, opts ...grpc.CallOption) (*PublishArticleResponse, error)
+	// 基于当前文件修改文章
+	UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error)
+	// 基于当前文件删除文章
+	DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*DeleteArticleResponse, error)
+	// 获取已发布的文章列表
+	GetArticleList(ctx context.Context, in *GetArticleListRequest, opts ...grpc.CallOption) (*GetArticleListResponse, error)
+	// 文章的模糊查询
+	QueryArticle(ctx context.Context, in *QueryArticleRequest, opts ...grpc.CallOption) (*QueryArticleResponse, error)
 }
 
 type fileManageServiceClient struct {
@@ -89,6 +104,56 @@ func (c *fileManageServiceClient) GetFileList(ctx context.Context, in *GetFileLi
 	return out, nil
 }
 
+func (c *fileManageServiceClient) PublishArticle(ctx context.Context, in *PublishArticleRequest, opts ...grpc.CallOption) (*PublishArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublishArticleResponse)
+	err := c.cc.Invoke(ctx, FileManageService_PublishArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManageServiceClient) UpdateArticle(ctx context.Context, in *UpdateArticleRequest, opts ...grpc.CallOption) (*UpdateArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateArticleResponse)
+	err := c.cc.Invoke(ctx, FileManageService_UpdateArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManageServiceClient) DeleteArticle(ctx context.Context, in *DeleteArticleRequest, opts ...grpc.CallOption) (*DeleteArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteArticleResponse)
+	err := c.cc.Invoke(ctx, FileManageService_DeleteArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManageServiceClient) GetArticleList(ctx context.Context, in *GetArticleListRequest, opts ...grpc.CallOption) (*GetArticleListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArticleListResponse)
+	err := c.cc.Invoke(ctx, FileManageService_GetArticleList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManageServiceClient) QueryArticle(ctx context.Context, in *QueryArticleRequest, opts ...grpc.CallOption) (*QueryArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryArticleResponse)
+	err := c.cc.Invoke(ctx, FileManageService_QueryArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileManageServiceServer is the server API for FileManageService service.
 // All implementations must embed UnimplementedFileManageServiceServer
 // for forward compatibility.
@@ -101,6 +166,16 @@ type FileManageServiceServer interface {
 	QueryFileById(context.Context, *QueryFileByIdRequest) (*QueryFileByIdResponse, error)
 	// 获取文件列表
 	GetFileList(context.Context, *GetFileListRequest) (*GetFileListResponse, error)
+	// 基于当前文件发布文章
+	PublishArticle(context.Context, *PublishArticleRequest) (*PublishArticleResponse, error)
+	// 基于当前文件修改文章
+	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleResponse, error)
+	// 基于当前文件删除文章
+	DeleteArticle(context.Context, *DeleteArticleRequest) (*DeleteArticleResponse, error)
+	// 获取已发布的文章列表
+	GetArticleList(context.Context, *GetArticleListRequest) (*GetArticleListResponse, error)
+	// 文章的模糊查询
+	QueryArticle(context.Context, *QueryArticleRequest) (*QueryArticleResponse, error)
 	mustEmbedUnimplementedFileManageServiceServer()
 }
 
@@ -122,6 +197,21 @@ func (UnimplementedFileManageServiceServer) QueryFileById(context.Context, *Quer
 }
 func (UnimplementedFileManageServiceServer) GetFileList(context.Context, *GetFileListRequest) (*GetFileListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFileList not implemented")
+}
+func (UnimplementedFileManageServiceServer) PublishArticle(context.Context, *PublishArticleRequest) (*PublishArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishArticle not implemented")
+}
+func (UnimplementedFileManageServiceServer) UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateArticle not implemented")
+}
+func (UnimplementedFileManageServiceServer) DeleteArticle(context.Context, *DeleteArticleRequest) (*DeleteArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticle not implemented")
+}
+func (UnimplementedFileManageServiceServer) GetArticleList(context.Context, *GetArticleListRequest) (*GetArticleListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticleList not implemented")
+}
+func (UnimplementedFileManageServiceServer) QueryArticle(context.Context, *QueryArticleRequest) (*QueryArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryArticle not implemented")
 }
 func (UnimplementedFileManageServiceServer) mustEmbedUnimplementedFileManageServiceServer() {}
 func (UnimplementedFileManageServiceServer) testEmbeddedByValue()                           {}
@@ -216,6 +306,96 @@ func _FileManageService_GetFileList_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileManageService_PublishArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManageServiceServer).PublishArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManageService_PublishArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManageServiceServer).PublishArticle(ctx, req.(*PublishArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManageService_UpdateArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManageServiceServer).UpdateArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManageService_UpdateArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManageServiceServer).UpdateArticle(ctx, req.(*UpdateArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManageService_DeleteArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManageServiceServer).DeleteArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManageService_DeleteArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManageServiceServer).DeleteArticle(ctx, req.(*DeleteArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManageService_GetArticleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticleListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManageServiceServer).GetArticleList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManageService_GetArticleList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManageServiceServer).GetArticleList(ctx, req.(*GetArticleListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManageService_QueryArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManageServiceServer).QueryArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManageService_QueryArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManageServiceServer).QueryArticle(ctx, req.(*QueryArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FileManageService_ServiceDesc is the grpc.ServiceDesc for FileManageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -238,6 +418,26 @@ var FileManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFileList",
 			Handler:    _FileManageService_GetFileList_Handler,
+		},
+		{
+			MethodName: "PublishArticle",
+			Handler:    _FileManageService_PublishArticle_Handler,
+		},
+		{
+			MethodName: "UpdateArticle",
+			Handler:    _FileManageService_UpdateArticle_Handler,
+		},
+		{
+			MethodName: "DeleteArticle",
+			Handler:    _FileManageService_DeleteArticle_Handler,
+		},
+		{
+			MethodName: "GetArticleList",
+			Handler:    _FileManageService_GetArticleList_Handler,
+		},
+		{
+			MethodName: "QueryArticle",
+			Handler:    _FileManageService_QueryArticle_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
