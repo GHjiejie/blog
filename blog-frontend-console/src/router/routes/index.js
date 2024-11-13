@@ -11,7 +11,24 @@ const routes = [
       {
         path: "/article",
         name: "Article",
+        redirect: {
+          name: "ArticleList",
+        },
         component: () => import("@/pages/Article/index.vue"),
+        children: [
+          {
+            path: "articleList",
+            name: "ArticleList",
+            component: () =>
+              import("@/pages/Article/components/articleList.vue"),
+          },
+          {
+            path: "articlePublish",
+            name: "ArticlePublish",
+            component: () =>
+              import("@/pages/Article/components/articlePublish.vue"),
+          },
+        ],
       },
       // 用户管理
       {

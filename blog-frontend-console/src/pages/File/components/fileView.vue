@@ -19,7 +19,6 @@
       <JsonViewer v-else-if="fileType === 'json'" sort copyable boxed :value="fileContent" :expand-depth="999">
       </JsonViewer>
     </div>
-
   </el-dialog>
 </template>
 <script setup>

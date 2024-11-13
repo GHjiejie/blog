@@ -1,6 +1,6 @@
 <template>
   <div class="aside">
-    <el-menu router="true">
+    <el-menu router="true" default-active="/article/articleList">
       <!-- <el-menu-item index="/article">
         <el-icon><icon-menu /></el-icon>
         <span>文章管理</span>
@@ -13,7 +13,7 @@
           <span>文章管理</span>
         </template>
 
-        <el-menu-item index="1-1">
+        <el-menu-item index="/article/articleList">
           <template #title>
             <el-icon>
               <List />
@@ -22,7 +22,7 @@
           </template>
 
         </el-menu-item>
-        <el-menu-item index="1-2">
+        <el-menu-item index="/article/articlePublish">
           <template #title>
             <el-icon>
               <UploadFilled />
