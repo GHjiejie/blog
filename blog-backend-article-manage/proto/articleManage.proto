@@ -64,6 +64,9 @@ service articleManageService {
       description: "Get article list"
     };
   }
+  
+  
+  
   // 文章的模糊查询
   rpc QueryArticle(QueryArticleRequest) returns (QueryArticleResponse) {
     option (google.api.http) = {
@@ -98,6 +101,22 @@ service articleManageService {
       tags: ["ArticleManage"]
       summary: "Review article"
       description: "Review article"
+    };
+  }
+
+  /*
+  api for web 
+  */
+
+  //获取已发布的文章列表
+  rpc GetPublishedArticleList(GetPublishedArticleListRequest) returns (GetPublishedArticleListResponse) {
+    option (google.api.http) = {
+      get: "/v1/web/articles/getPublishedArticleList"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage For Web"]
+      summary: "Get published article list"
+      description: "Get published article list"
     };
   }
 }
@@ -235,6 +254,27 @@ message GetArticleListResponse {
   // 总数
   int32 total = 2;
 }
+
+// 获取已发布的文章列表请求
+message GetPublishedArticleListRequest {
+  // 页码
+  int32 page = 1;
+  // 每页数量
+  int32 pageSize = 2;
+}
+
+// 获取已发布的文章列表响应
+message  GetPublishedArticleListResponse {
+  // 文章列表
+  repeated ArticleListInfo article_list = 1;
+
+  // 总数
+  int32 total = 2;
+}
+
+
+
+
 
 // 发布文章请求
 message PublishArticleRequest {

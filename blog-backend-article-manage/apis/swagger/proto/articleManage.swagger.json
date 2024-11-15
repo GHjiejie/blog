@@ -256,6 +256,48 @@
           "ArticleManage"
         ]
       }
+    },
+    "/v1/web/articles/getPublishedArticleList": {
+      "get": {
+        "summary": "Get published article list",
+        "description": "Get published article list",
+        "operationId": "articleManageService_GetPublishedArticleList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageGetPublishedArticleListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "页码.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每页数量.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "ArticleManage For Web"
+        ]
+      }
     }
   },
   "definitions": {
@@ -442,6 +484,24 @@
         }
       },
       "title": "获取的文章列表响应"
+    },
+    "articleManageGetPublishedArticleListResponse": {
+      "type": "object",
+      "properties": {
+        "article_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/articleManageArticleListInfo"
+          },
+          "title": "文章列表"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "title": "总数"
+        }
+      },
+      "title": "获取已发布的文章列表响应"
     },
     "articleManagePublishArticleRequest": {
       "type": "object",

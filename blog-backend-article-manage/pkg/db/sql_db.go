@@ -172,3 +172,21 @@ func (s *SQLDB) GetArticleDetail(articleId int64) (Article, error) {
 	}
 	return article, nil
 }
+
+/*
+api for web
+*/
+
+// 获取已发布的文章列表
+func (s *SQLDB) GetPublishedArticleList(page, pageSize int32) ([]Article, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetPublishedArticleList",
+	})
+	var articleList []Article
+	offset := (page - 1) * pageSize
+	if err := s.db.Where("status = ?", 1).Offset(int(offset)).Limit(int(pageSize)).Find(&articleList).Error; err != nil {
+		logger.Errorf("failed to get published article list: %v", err)
+		return nil, err
+	}
+	return articleList, nil
+}
