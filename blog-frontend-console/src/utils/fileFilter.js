@@ -6,6 +6,7 @@ const typeMap = new Map([
   ],
   ["application/json", "json"],
   ["text/markdown", "md"],
+  ["application/octet-stream", "md"],
   ["application/pdf", "pdf"],
   ["text/plain", "txt"],
 

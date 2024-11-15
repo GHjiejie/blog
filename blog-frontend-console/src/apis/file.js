@@ -1,5 +1,18 @@
 import httpRequest from "@/request/index";
 
+// 上传文件
+export function uploadFile(data) {
+  console.log(data);
+  return httpRequest({
+    url: "/v1/files/upload",
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
 // 获取文件列表
 export function getFileList(params) {
   return httpRequest({

@@ -8,7 +8,7 @@
         <!-- <el-table-column prop="title" label="文章标题" width="200" /> -->
         <el-table-column prop="tag" label="文件标签" width="150">
           <template #default="{ row }">
-            <el-tag size="small" round>{{ row.tag }}</el-tag>
+            <el-tag size="small">{{ row.tag }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="authorId" label="文章作者" width="120">

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="Top">
-      <button class="addserBtn" @click="openAddUserDialog">
+      <button class="addFileBtn" @click="openAddFileDialog">
         <el-icon>
           <Plus />
         </el-icon>
@@ -26,7 +26,7 @@
         <el-table-column prop="createdAt" label="创建时间" width="200" />
         <el-table-column fixed="right" width="200">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="Type to search" />
+            <el-input v-model="search" size="small" placeholder="搜索" />
           </template>
           <template #default="{ row }">
             <el-button :disabled="row.role === 'ADMIN'" link type="success" size="small"
@@ -50,6 +50,7 @@
     </div>
   </div>
   <fileView ref="fileViewRef" :file-id="viewFileId"></fileView>
+  <uploadFiles ref="uploadFilesRef"></uploadFiles>
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
@@ -62,6 +63,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { getFileSize } from "@/utils/calculation";
 import fileView from "./components/fileView.vue";
+import uploadFiles from "./components/uploadFiles.vue";
 import { downloadFileContent } from "@/utils/fileFilter";
 
 let page = ref(1);
@@ -71,6 +73,7 @@ const fileList = ref([]);
 const maxHeight = window.innerHeight - 100;
 
 const fileViewRef = ref(null);
+const uploadFilesRef = ref(null);
 const viewFileId = ref(null);
 onMounted(async () => {
   await getListFiles();
@@ -80,11 +83,16 @@ const filterTableData = computed(() => {
   return fileList.value.filter((item) => {
     return (
       item.fileName.includes(search.value) ||
-      item.tag.includes(search.value) ||
-      item.fileType.includes(search.value)
+      item.tag.includes(search.value)
+
     );
   });
 });
+
+// 打开添加文件对话框
+const openAddFileDialog = () => {
+  uploadFilesRef.value.changeVisible(true);
+};
 
 // 下载文件
 const handelDownload = async (row) => {
@@ -171,7 +179,7 @@ const handleNextPage = async () => {
     right: 2%;
     z-index: 999;
 
-    .addserBtn {
+    .addFileBtn {
       background-color: $--color-primary-opacity7;
       color: $--color-text;
       border: none;
