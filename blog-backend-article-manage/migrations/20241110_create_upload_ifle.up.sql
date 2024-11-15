@@ -49,11 +49,11 @@ CREATE TABLE IF NOT EXISTS `articles` (
     `content` TEXT NOT NULL,
     `summary` VARCHAR(255) NOT NULL,
     `tag` VARCHAR(255) NOT NULL,
-    `status` VARCHAR(255) NOT NULL DEFAULT 'draft',
+    `status` TINYINT NOT NULL DEFAULT 3,
     `view_count` INT(11) NOT NULL DEFAULT 0,
     `like_count` INT(11) NOT NULL DEFAULT 0,
     `comment_count` INT(11) NOT NULL DEFAULT 0,
-    `image_url` VARCHAR(255) NOT NULL,
+    `image_url` VARCHAR(255) DEFAULT NULL, -- 允许为 NULL
     `category_id` BIGINT(20) NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -63,9 +63,10 @@ CREATE TABLE IF NOT EXISTS `articles` (
     INDEX `idx_article_tag` (`tag`),
     INDEX `idx_article_category_id` (`category_id`),
     INDEX `idx_article_author_id` (`author_id`),
-    INDEX `idx_article_deleted_at` (`deleted_at`),
-    CONSTRAINT `chk_article_status` CHECK (`status` IN ('draft', 'published'))
+    INDEX `idx_article_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 -- 创建comment表
 CREATE TABLE IF NOT EXISTS `comments` (

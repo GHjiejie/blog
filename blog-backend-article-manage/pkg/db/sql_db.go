@@ -82,10 +82,11 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 
 // 创建文章
 func (s *SQLDB) CreateArticle(articleInfo Article) (Article, error) {
+
 	logger := log.WithFields(log.Fields{
 		"module": "CreateArticle",
 	})
-	logger.Infof("articleInfo: %v", articleInfo)
+	logger.Infof("输出传递的文章消息: %v", articleInfo)
 	// 创建文章
 	if err := s.db.Create(&articleInfo).Error; err != nil {
 		logger.Errorf("failed to create article: %v", err)

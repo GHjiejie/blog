@@ -16,9 +16,19 @@ $--color-text5: #999999;
 $--color-text6: #8F9AAF;
 $--color-text7: #797D8B;
 $--color-text8: #DADEE2;
+$--color-text9: black;
 $--color-border: #1DB998;
 $--color-border2: #30363e;
 $--color-border3: red;
 $--color-gradient-azue-lane: inear-gradient(to right, rgb(127, 127, 213), rgb(134, 168, 231), rgb(145, 234, 228));
+
+$--color-status-published: #1DB998;
+$--color-status-draft: #FFA500;
+$--color-status-deleted: #FF0000;
+$--color-status-archived: #8F9AAF;
+$--bg-color-status-review-passed:skyblue;
+$--bg-color-status-review-failed: #FF0000;
+$--bg-color-status-reviewing: purple;
+
 
 $--color-box-shadow: 9px 9px 33px -19px rgba(0,0,0,1);

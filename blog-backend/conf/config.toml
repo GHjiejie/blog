@@ -21,6 +21,8 @@ EnginePaths = [
     "/v1/articles/publishArticle",
     "/v1/articles/queryArticle",
     "/v1/articles/updateArticle",
+    "/v1/articles/getArticleDetail/{articleId}",
+    "/v1/articles/reviewArticle"
 ]
 
 [DBConfig]

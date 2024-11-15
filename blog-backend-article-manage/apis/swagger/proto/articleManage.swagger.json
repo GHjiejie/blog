@@ -189,6 +189,40 @@
         ]
       }
     },
+    "/v1/articles/reviewArticle": {
+      "post": {
+        "summary": "Review article",
+        "description": "Review article",
+        "operationId": "articleManageService_ReviewArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageReviewArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageReviewArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
     "/v1/articles/updateArticle": {
       "put": {
         "summary": "Update article",
@@ -250,7 +284,7 @@
           "title": "文章标签"
         },
         "status": {
-          "type": "string",
+          "$ref": "#/definitions/articleManageStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "view_count": {
@@ -321,7 +355,7 @@
           "title": "文章标签"
         },
         "status": {
-          "type": "string",
+          "$ref": "#/definitions/articleManageStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "view_count": {
@@ -429,7 +463,7 @@
           "title": "文章标签"
         },
         "status": {
-          "type": "string",
+          "$ref": "#/definitions/articleManageStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "image_url": {
@@ -476,6 +510,44 @@
         }
       },
       "title": "查询文章响应"
+    },
+    "articleManageReviewArticleRequest": {
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "status": {
+          "$ref": "#/definitions/articleManageStatus",
+          "title": "文章状态，如“draft”, “published”等"
+        }
+      },
+      "title": "文章审核请求"
+    },
+    "articleManageReviewArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章唯一标识"
+        }
+      },
+      "title": "文章审核响应"
+    },
+    "articleManageStatus": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PUBLISHED",
+        "DELETED",
+        "REVIEWING",
+        "REVIEW_FAILED",
+        "REVIEW_PASSED"
+      ],
+      "default": "DRAFT",
+      "title": "- DRAFT: 草稿\n - PUBLISHED: 已发布\n - DELETED: 已删除\n - REVIEWING: 审核中\n - REVIEW_FAILED: 审核未通过\n - REVIEW_PASSED: 审核通过"
     },
     "articleManageUpdateArticleRequest": {
       "type": "object",

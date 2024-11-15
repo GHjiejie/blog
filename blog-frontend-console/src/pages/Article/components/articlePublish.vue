@@ -11,12 +11,10 @@
             <el-input v-model="articleFrom.summary" class="summary" />
           </el-form-item>
           <el-form-item label="文章标签" class="tag">
-            <el-select v-model="articleFrom.tag" placeholder="请选择">
-              <el-option label="前端" value="1" />
-              <el-option label="后端" value="2" />
-              <el-option label="数据库" value="3" />
-              <el-option label="运维" value="4" />
-              <el-option label="其他" value="5" />
+            <el-select v-model="articleFrom.tag" placeholder="标签" style="width: 240px">
+              <el-option-group v-for="group in articleTags" :key="group.label" :label="group.label">
+                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
+              </el-option-group>
             </el-select>
           </el-form-item>
         </div>
@@ -48,18 +46,16 @@
               <el-button type="success"> 上传 </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>本地文件</el-dropdown-item>
+                  <el-dropdown-item @click="uploadLocalFile">本地文件</el-dropdown-item>
                   <el-dropdown-item @click="uploadOriginFile">在线文件</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
           </div>
         </div>
-
         <div class="mainInfoCenter">
           <v-md-editor v-model="articleFrom.content" height="600px"></v-md-editor>
         </div>
-
       </div>
       <!-- 下面的消息是确认发布者的ID是否正确 -->
       <div class="confirmInfo">
@@ -67,6 +63,9 @@
         <el-button @click="handlePublish">发布</el-button>
       </div>
     </el-form>
+    <!-- 虚拟按钮 -->
+    <input type="file" style="display: none;" ref="uploadImgRef" @change="imgChange"></input>
+    <input type="file" style="display: none;" ref="uploadLocalFileRef" @change="fileChange" accept=".md">
   </div>
   <fileList ref="fileListRef" :file-id="viewFileId" @selectOnlineFile="handleOnlineFile"></fileList>
 </template>
@@ -79,6 +78,7 @@ import { decodeBase64 } from "@/utils/fileFilter";
 import { getFileById } from '@/apis/file'
 import { publishArticle } from '@/apis/articles'
 import cache from '@/utils/cache'
+import { articleTags } from '@/utils/articles'
 const articleFrom = reactive({
   title: '',
   tag: '',
@@ -86,21 +86,23 @@ const articleFrom = reactive({
   summary: '',
   authorId: cache.sessionGet('userId'),
 })
-
 const uploadImgRef = ref(null);
+const uploadLocalFileRef = ref(null);
 const fileListRef = ref(null);
-const fileChange = () => {
-  console.log('fileChange')
-  // const file = e.target.files[0];
-  // if (file.size > 1024 * 1024 * 2) {
-  //   ElMessage.error('图片大小不能超过2M');
-  //   return;
-  // }
-  // const reader = new FileReader();
-  // reader.readAsDataURL(file);
-  // reader.onload = (e) => {
-  //   articleFrom.cover = e.target.result;
-  // }
+
+// 处理本地文件上传
+const fileChange = (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    articleFrom.content = e.target.result;
+  }
+  reader.readAsText(file);
+}
+
+// 上传本地文件
+const uploadLocalFile = () => {
+  uploadLocalFileRef.value.click();
 }
 
 // 上传在线文件
@@ -110,25 +112,30 @@ const uploadOriginFile = () => {
 
 // 处理在线文件上传
 const handleOnlineFile = async (fileId) => {
-  console.log('handleOnlineFile', fileId)
   await getFileContent(fileId)
 }
 // 根据ID获取文件的内容
 const getFileContent = async (fileId) => {
   try {
     const { data } = await getFileById({ fileId });
-    console.log('getFileContent', data)
     articleFrom.content = decodeBase64(data.fileInfo.content);
+    // articleFrom.title = data.fileInfo.fileName;
+    // articleFrom.tag = data.fileInfo.tag;
+    // articleFrom.summary = data.fileInfo.summary;
+
   } catch (error) {
     console.log('getFileContent error', error)
   }
 }
 
 const handlePublish = async () => {
-  console.log('handlePublish')
-  // console.log('articleFrom', articleFrom)
-  const res = await publishArticle(articleFrom)
-  console.log('res', res)
+  try {
+    await publishArticle(articleFrom);
+    ElMessage.success('发布成功，请等待审核');
+  } catch (error) {
+    console.log('发布失败', error)
+  }
+
 }
 </script>
 
@@ -256,10 +263,10 @@ const handlePublish = async () => {
   transition: background-color 0.3s ease;
 }
 
-.el-button:hover {
-  background-color: $--bg-color-hover;
-  border-color: $--color-border3;
-}
+// .el-button:hover {
+//   background-color: $--bg-color-hover;
+//   border-color: $--color-border3;
+// }
 
 /* File list component */
 .fileListRef {

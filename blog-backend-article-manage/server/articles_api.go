@@ -27,7 +27,7 @@ func (s *ArticleServer) PublishArticle(ctx context.Context, req *articlepb.Publi
 	tag := req.GetTag()
 	imageUrl := req.GetImageUrl()
 	status := req.GetStatus()
-	// logger.Infof("title: %s, content: %s, authorId: %d, summary: %s, imageUrl: %s, status: %s", title, content, authorId, summary, imageUrl, status)
+	// logger.Infof("title: %s, content: %s, authorId: %d, summary: %s, tag: %s, imageUrl: %s, status: %s", title, content, authorId, summary, tag, imageUrl, status)
 	// 创建文章消息结构体
 	articleInfo := db.Article{
 		Title:     title,
@@ -58,37 +58,61 @@ func (s *ArticleServer) UpdateArticle(ctx context.Context, req *articlepb.Update
 	logger := log.WithFields(log.Fields{
 		"api": "UpdateArticle",
 	})
+
 	// 获取请求参数
 	articleId := req.GetArticleId()
-	title := req.GetTitle()
-	content := req.GetContent()
-	summary := req.GetSummary()
-	tag := req.GetTag()
-	fileStatus := req.GetStatus()
-	imageUrl := req.GetImageUrl()
-	authorId := req.GetAuthorId()
 
-	// 根据id去查询这个文章的消息
+	// 根据id查询文章的详细信息
 	article, err := s.DBEngine.GetArticleDetail(articleId)
 	if err != nil {
 		logger.Errorf("failed to get article detail with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "failed to get article detail: %v", err)
 	}
-	// 首先校验这个参数是否合法(这个太多了,不处理了,前端处理就好了)
-	fileInfo := db.Article{
-		ID:        articleId,
-		Title:     title,
-		Content:   content,
-		AuthorId:  authorId,
-		Summary:   summary,
-		Tag:       tag,
-		ImageURL:  imageUrl,
-		Status:    fileStatus,
-		CreatedAt: article.CreatedAt,
-		UpdatedAt: timestamppb.Now().AsTime(),
+
+	// 创建一个更新的结构体，只更新有变动的字段
+	updateFields := db.Article{
+		ID:           article.ID,
+		Title:        article.Title,        // 保留原标题
+		Content:      article.Content,      // 保留原内容
+		AuthorId:     article.AuthorId,     // 保留原作者
+		Summary:      article.Summary,      // 保留原摘要
+		Tag:          article.Tag,          // 保留原标签
+		ViewCount:    article.ViewCount,    // 保留原浏览次数
+		LikeCount:    article.LikeCount,    // 保留原点赞次数
+		CommentCount: article.CommentCount, // 保留原评论次数
+		Comments:     article.Comments,     // 保留原评论
+		CategoryId:   article.CategoryId,   // 保留原分类ID
+		ImageURL:     article.ImageURL,     // 保留原图片
+		Status:       article.Status,       // 保留原状态
+		CreatedAt:    article.CreatedAt,    // 保留原创建时间
+		UpdatedAt:    timestamppb.Now().AsTime(),
+		DeletedAt:    article.DeletedAt, // 保留原删除时间
 	}
+
+	// 检查哪些字段需要更新
+	if title := req.GetTitle(); title != "" {
+		updateFields.Title = title
+	}
+	if content := req.GetContent(); content != "" {
+		updateFields.Content = content
+	}
+	if summary := req.GetSummary(); summary != "" {
+		updateFields.Summary = summary
+	}
+	if tag := req.GetTag(); tag != "" {
+		updateFields.Tag = tag
+	}
+
+	if imageUrl := req.GetImageUrl(); imageUrl != "" {
+		updateFields.ImageURL = imageUrl
+	}
+	if authorId := req.GetAuthorId(); authorId != 0 {
+		updateFields.AuthorId = authorId
+	}
+	logger.Infof("title: %s, content: %s, authorId: %d, summary: %s, imageUrl: %s, status: %s", updateFields.Title, updateFields.Content, updateFields.AuthorId, updateFields.Summary, updateFields.ImageURL, updateFields.Status)
+
 	// 更新文章
-	if err := s.DBEngine.UpdateArticle(fileInfo); err != nil {
+	if err := s.DBEngine.UpdateArticle(updateFields); err != nil {
 		logger.Errorf("failed to update article with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "failed to update article: %v", err)
 	}
@@ -97,6 +121,50 @@ func (s *ArticleServer) UpdateArticle(ctx context.Context, req *articlepb.Update
 		Message: "article updated successfully",
 	}, nil
 }
+
+// func (s *ArticleServer) UpdateArticle(ctx context.Context, req *articlepb.UpdateArticleRequest) (*articlepb.UpdateArticleResponse, error) {
+// 	logger := log.WithFields(log.Fields{
+// 		"api": "UpdateArticle",
+// 	})
+// 	// 获取请求参数
+// 	articleId := req.GetArticleId()
+// 	title := req.GetTitle()
+// 	content := req.GetContent()
+// 	summary := req.GetSummary()
+// 	tag := req.GetTag()
+// 	fileStatus := req.GetStatus()
+// 	imageUrl := req.GetImageUrl()
+// 	authorId := req.GetAuthorId()
+
+// 	// 根据id去查询这个文章的消息
+// 	article, err := s.DBEngine.GetArticleDetail(articleId)
+// 	if err != nil {
+// 		logger.Errorf("failed to get article detail with err(%s)", err.Error())
+// 		return nil, status.Errorf(codes.Internal, "failed to get article detail: %v", err)
+// 	}
+// 	// 首先校验这个参数是否合法(这个太多了,不处理了,前端处理就好了)
+// 	fileInfo := db.Article{
+// 		ID:        articleId,
+// 		Title:     title,
+// 		Content:   content,
+// 		AuthorId:  authorId,
+// 		Summary:   summary,
+// 		Tag:       tag,
+// 		ImageURL:  imageUrl,
+// 		Status:    fileStatus,
+// 		CreatedAt: article.CreatedAt,
+// 		UpdatedAt: timestamppb.Now().AsTime(),
+// 	}
+// 	// 更新文章
+// 	if err := s.DBEngine.UpdateArticle(fileInfo); err != nil {
+// 		logger.Errorf("failed to update article with err(%s)", err.Error())
+// 		return nil, status.Errorf(codes.Internal, "failed to update article: %v", err)
+// 	}
+
+// 	return &articlepb.UpdateArticleResponse{
+// 		Message: "article updated successfully",
+// 	}, nil
+// }
 
 // 删除文章
 func (s *ArticleServer) DeleteArticle(ctx context.Context, req *articlepb.DeleteArticleRequest) (*articlepb.DeleteArticleResponse, error) {
@@ -111,16 +179,16 @@ func (s *ArticleServer) DeleteArticle(ctx context.Context, req *articlepb.Delete
 		return nil, status.Errorf(codes.InvalidArgument, "invalid argument: %v", err)
 	}
 	// 然后获取所以文章的总数
-	articleCount, err := s.DBEngine.GetArticleCount()
-	if err != nil {
-		logger.Errorf("failed to get article count with err(%s)", err.Error())
-		return nil, err
-	}
+	// articleCount, err := s.DBEngine.GetArticleCount()
+	// if err != nil {
+	// 	logger.Errorf("failed to get article count with err(%s)", err.Error())
+	// 	return nil, err
+	// }
 	// 判断文章ID是否在合法范围内
-	if articleId > articleCount {
-		logger.Errorf("articleId(%d) is out of range", articleId)
-		return nil, status.Errorf(codes.InvalidArgument, "articleId is out of range")
-	}
+	// if articleId > articleCount {
+	// 	logger.Errorf("articleId(%d) is out of range", articleId)
+	// 	return nil, status.Errorf(codes.InvalidArgument, "articleId is out of range")
+	// }
 	// 删除文章
 	if err := s.DBEngine.DeleteArticle(articleId); err != nil {
 		logger.Errorf("failed to delete article with err(%s)", err.Error())
@@ -259,5 +327,32 @@ func (s *ArticleServer) GetArticleDetail(ctx context.Context, req *articlepb.Get
 			CreatedAt:    timestamppb.New(article.CreatedAt),
 			UpdatedAt:    timestamppb.New(article.UpdatedAt),
 		},
+	}, nil
+}
+
+// 审核文章
+func (s *ArticleServer) ReviewArticle(ctx context.Context, req *articlepb.ReviewArticleRequest) (*articlepb.ReviewArticleResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "ReviewArticle",
+	})
+	// 获取请求参数
+	articleId := req.GetArticleId()
+	articleStatus := req.GetStatus()
+
+	// 查询文章
+	article, err := s.DBEngine.GetArticleDetail(articleId)
+	if err != nil {
+		logger.Errorf("failed to get article detail with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "failed to get article detail: %v", err)
+	}
+	// 更新文章状态
+	article.Status = articleStatus
+	if err := s.DBEngine.UpdateArticle(article); err != nil {
+		logger.Errorf("failed to update article with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "failed to update article: %v", err)
+	}
+
+	return &articlepb.ReviewArticleResponse{
+		Message: "article reviewed successfully",
 	}, nil
 }
