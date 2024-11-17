@@ -40,12 +40,12 @@ func (s *ArticleServer) PublishArticle(ctx context.Context, req *articlepb.Publi
 		CreatedAt: timestamppb.Now().AsTime(),
 		UpdatedAt: timestamppb.Now().AsTime(),
 	}
-	article, err := s.DBEngine.CreateArticle(articleInfo)
+	_, err := s.DBEngine.CreateArticle(articleInfo)
 	if err != nil {
 		logger.Errorf("failed to create article with err(%s)", err.Error())
 		return nil, err
 	}
-	logger.Infof("article created: %v", article)
+	// logger.Infof("article created: %v", article)
 
 	// return nil, status.Errorf(codes.Unimplemented, "method PublishArticle not implemented")
 	return &articlepb.PublishArticleResponse{
@@ -109,7 +109,7 @@ func (s *ArticleServer) UpdateArticle(ctx context.Context, req *articlepb.Update
 	if authorId := req.GetAuthorId(); authorId != 0 {
 		updateFields.AuthorId = authorId
 	}
-	logger.Infof("title: %s, content: %s, authorId: %d, summary: %s, imageUrl: %s, status: %s", updateFields.Title, updateFields.Content, updateFields.AuthorId, updateFields.Summary, updateFields.ImageURL, updateFields.Status)
+	// logger.Infof("title: %s, content: %s, authorId: %d, summary: %s, imageUrl: %s, status: %s", updateFields.Title, updateFields.Content, updateFields.AuthorId, updateFields.Summary, updateFields.ImageURL, updateFields.Status)
 
 	// 更新文章
 	if err := s.DBEngine.UpdateArticle(updateFields); err != nil {
