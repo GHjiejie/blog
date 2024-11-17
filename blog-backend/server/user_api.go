@@ -10,6 +10,7 @@ import (
 
 	pb "blog-backend/pb/user"
 	"blog-backend/pkg/auth"
+	"blog-backend/pkg/constant"
 	"blog-backend/pkg/db"
 	"blog-backend/pkg/validate"
 )
@@ -48,6 +49,16 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 		logger.Errorf("failed to register user with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "register user failed with err(%s)", err.Error())
 	}
+	var userSubRoles []string
+	userRole := req.GetRole()
+	userSubRoles = append(userSubRoles, constant.DefaultUserRole[userRole])
+	logger.Infof("输出用户的角色: %v", userSubRoles)
+
+	if err := s.auth.AddSubRoles(userSubRoles, username); err != nil {
+		logger.Errorf("add policys failed with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "add policys failed with err(%s)", err.Error())
+	}
+
 	// log.Infof("注册用户成功, 用户ID: %d", userId)
 	// TODO 将前端传递过来的密码进行解密
 	// 然后对密码的有效性进行校验(前端已经校验了一次,这个是第二次(后端)校验)
@@ -126,6 +137,7 @@ func (s *BlogServer) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.Log
 	})
 	// 首先我们要获取用户ID
 	userID := req.GetUserId()
+	logger.Infof("输出获取到的用户ID: %v", userID)
 	// log.Infof("输出获取到的用户ID: %v", userID)
 	// 然后我们需要去数据库中获取用户信息
 	user, err := s.DBEngine.UserGetByID(userID)
@@ -225,6 +237,11 @@ func (s *BlogServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) 
 	if err != nil {
 		logger.Errorf("failed to delete user with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "delete user failed with err(%s)", err.Error())
+	}
+	// 删除用户的权限记录
+	if err := s.auth.DelSubRoles(user.Username); err != nil {
+		logger.Errorf("failed to delete user sub roles with err(%s)", err.Error())
+		return nil, status.Errorf(codes.Internal, "delete user sub roles failed with err(%s)", err.Error())
 	}
 
 	// logger.Info("删除用户成功")

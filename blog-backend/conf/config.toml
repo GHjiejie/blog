@@ -23,7 +23,12 @@ EnginePaths = [
     "/v1/articles/updateArticle",
     "/v1/articles/getArticleDetail/{articleId}",
     "/v1/articles/reviewArticle",
-    "/v1/articles/getPublishedArticleList"
+    "/v1/web/articles/getPublishedArticleList",
+    "/v1/web/articles/deleteArticleComment/{comment_id}",
+    "/v1/web/articles/getArticleCommentDetail/{comment_id}",
+    "/v1/web/articles/getArticleCommentList",
+    "/v1/web/articles/likeArticleComment",
+    "/v1/web/articles/publishArticleComment",
 ]
 
 [DBConfig]

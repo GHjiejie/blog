@@ -746,7 +746,7 @@ func RegisterArticleManageServiceHandlerServer(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentList", runtime.WithHTTPPathPattern("/v1/web/articles/getArticleCommentList"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentList", runtime.WithHTTPPathPattern("/v1/articles/getArticleCommentList"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -771,7 +771,7 @@ func RegisterArticleManageServiceHandlerServer(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/PublishArticleComment", runtime.WithHTTPPathPattern("/v1/web/articles/publishArticleComment"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/PublishArticleComment", runtime.WithHTTPPathPattern("/v1/articles/publishArticleComment"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -796,7 +796,7 @@ func RegisterArticleManageServiceHandlerServer(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/DeleteArticleComment", runtime.WithHTTPPathPattern("/v1/web/articles/deleteArticleComment/{comment_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/DeleteArticleComment", runtime.WithHTTPPathPattern("/v1/articles/deleteArticleComment/{comment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -821,7 +821,7 @@ func RegisterArticleManageServiceHandlerServer(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentDetail", runtime.WithHTTPPathPattern("/v1/web/articles/getArticleCommentDetail/{comment_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentDetail", runtime.WithHTTPPathPattern("/v1/articles/getArticleCommentDetail/{comment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -846,7 +846,7 @@ func RegisterArticleManageServiceHandlerServer(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/LikeArticleComment", runtime.WithHTTPPathPattern("/v1/web/articles/likeArticleComment"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/articleManage.ArticleManageService/LikeArticleComment", runtime.WithHTTPPathPattern("/v1/articles/likeArticleComment"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1086,7 +1086,7 @@ func RegisterArticleManageServiceHandlerClient(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentList", runtime.WithHTTPPathPattern("/v1/web/articles/getArticleCommentList"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentList", runtime.WithHTTPPathPattern("/v1/articles/getArticleCommentList"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1108,7 +1108,7 @@ func RegisterArticleManageServiceHandlerClient(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/PublishArticleComment", runtime.WithHTTPPathPattern("/v1/web/articles/publishArticleComment"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/PublishArticleComment", runtime.WithHTTPPathPattern("/v1/articles/publishArticleComment"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1130,7 +1130,7 @@ func RegisterArticleManageServiceHandlerClient(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/DeleteArticleComment", runtime.WithHTTPPathPattern("/v1/web/articles/deleteArticleComment/{comment_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/DeleteArticleComment", runtime.WithHTTPPathPattern("/v1/articles/deleteArticleComment/{comment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1152,7 +1152,7 @@ func RegisterArticleManageServiceHandlerClient(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentDetail", runtime.WithHTTPPathPattern("/v1/web/articles/getArticleCommentDetail/{comment_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/GetArticleCommentDetail", runtime.WithHTTPPathPattern("/v1/articles/getArticleCommentDetail/{comment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1174,7 +1174,7 @@ func RegisterArticleManageServiceHandlerClient(ctx context.Context, mux *runtime
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/LikeArticleComment", runtime.WithHTTPPathPattern("/v1/web/articles/likeArticleComment"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/articleManage.ArticleManageService/LikeArticleComment", runtime.WithHTTPPathPattern("/v1/articles/likeArticleComment"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1210,15 +1210,15 @@ var (
 
 	pattern_ArticleManageService_GetPublishedArticleList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "web", "articles", "getPublishedArticleList"}, ""))
 
-	pattern_ArticleManageService_GetArticleCommentList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "web", "articles", "getArticleCommentList"}, ""))
+	pattern_ArticleManageService_GetArticleCommentList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "articles", "getArticleCommentList"}, ""))
 
-	pattern_ArticleManageService_PublishArticleComment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "web", "articles", "publishArticleComment"}, ""))
+	pattern_ArticleManageService_PublishArticleComment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "articles", "publishArticleComment"}, ""))
 
-	pattern_ArticleManageService_DeleteArticleComment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "web", "articles", "deleteArticleComment", "comment_id"}, ""))
+	pattern_ArticleManageService_DeleteArticleComment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"v1", "articles", "deleteArticleComment", "comment_id"}, ""))
 
-	pattern_ArticleManageService_GetArticleCommentDetail_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "web", "articles", "getArticleCommentDetail", "comment_id"}, ""))
+	pattern_ArticleManageService_GetArticleCommentDetail_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"v1", "articles", "getArticleCommentDetail", "comment_id"}, ""))
 
-	pattern_ArticleManageService_LikeArticleComment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"v1", "web", "articles", "likeArticleComment"}, ""))
+	pattern_ArticleManageService_LikeArticleComment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "articles", "likeArticleComment"}, ""))
 )
 
 var (

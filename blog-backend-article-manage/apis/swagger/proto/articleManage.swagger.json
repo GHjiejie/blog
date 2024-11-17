@@ -46,6 +46,131 @@
         ]
       }
     },
+    "/v1/articles/deleteArticleComment/{comment_id}": {
+      "delete": {
+        "summary": "Delete article comment",
+        "description": "Delete article comment",
+        "operationId": "articleManageService_DeleteArticleComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageDeleteArticleCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "description": "评论唯一标识",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "article_id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
+    "/v1/articles/getArticleCommentDetail/{comment_id}": {
+      "get": {
+        "summary": "Get article comment detail",
+        "description": "Get article comment detail",
+        "operationId": "articleManageService_GetArticleCommentDetail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageGetArticleCommentDetailResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "description": "评论唯一标识",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
+    "/v1/articles/getArticleCommentList": {
+      "get": {
+        "summary": "Get article comment list",
+        "description": "Get article comment list",
+        "operationId": "articleManageService_GetArticleCommentList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageGetArticleCommentListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "article_id",
+            "description": "文章唯一标识.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "页码.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每页数量.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
     "/v1/articles/getArticleDetail/{article_id}": {
       "get": {
         "summary": "Get article detail",
@@ -122,6 +247,40 @@
         ]
       }
     },
+    "/v1/articles/likeArticleComment": {
+      "post": {
+        "summary": "Like article comment",
+        "description": "Like article comment",
+        "operationId": "articleManageService_LikeArticleComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageLikeArticleCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageLikeArticleCommentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
     "/v1/articles/publishArticle": {
       "post": {
         "summary": "Publish article",
@@ -153,6 +312,40 @@
         ],
         "tags": [
           "ArticleManage"
+        ]
+      }
+    },
+    "/v1/articles/publishArticleComment": {
+      "post": {
+        "summary": "Publish article comment",
+        "description": "Publish article comment",
+        "operationId": "articleManageService_PublishArticleComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManagePublishArticleCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManagePublishArticleCommentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CommentManage"
         ]
       }
     },
@@ -257,131 +450,6 @@
         ]
       }
     },
-    "/v1/web/articles/deleteArticleComment/{comment_id}": {
-      "delete": {
-        "summary": "Delete article comment",
-        "description": "Delete article comment",
-        "operationId": "articleManageService_DeleteArticleComment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/articleManageDeleteArticleCommentResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "comment_id",
-            "description": "评论唯一标识",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "article_id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "CommentManage"
-        ]
-      }
-    },
-    "/v1/web/articles/getArticleCommentDetail/{comment_id}": {
-      "get": {
-        "summary": "Get article comment detail",
-        "description": "Get article comment detail",
-        "operationId": "articleManageService_GetArticleCommentDetail",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/articleManageGetArticleCommentDetailResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "comment_id",
-            "description": "评论唯一标识",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "CommentManage"
-        ]
-      }
-    },
-    "/v1/web/articles/getArticleCommentList": {
-      "get": {
-        "summary": "Get article comment list",
-        "description": "Get article comment list",
-        "operationId": "articleManageService_GetArticleCommentList",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/articleManageGetArticleCommentListResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "article_id",
-            "description": "文章唯一标识.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "page",
-            "description": "页码.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "description": "每页数量.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "tags": [
-          "CommentManage"
-        ]
-      }
-    },
     "/v1/web/articles/getPublishedArticleList": {
       "get": {
         "summary": "Get published article list",
@@ -421,74 +489,6 @@
         ],
         "tags": [
           "ArticleManage For Web"
-        ]
-      }
-    },
-    "/v1/web/articles/likeArticleComment": {
-      "post": {
-        "summary": "Like article comment",
-        "description": "Like article comment",
-        "operationId": "articleManageService_LikeArticleComment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/articleManageLikeArticleCommentResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/articleManageLikeArticleCommentRequest"
-            }
-          }
-        ],
-        "tags": [
-          "CommentManage"
-        ]
-      }
-    },
-    "/v1/web/articles/publishArticleComment": {
-      "post": {
-        "summary": "Publish article comment",
-        "description": "Publish article comment",
-        "operationId": "articleManageService_PublishArticleComment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/articleManagePublishArticleCommentResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/articleManagePublishArticleCommentRequest"
-            }
-          }
-        ],
-        "tags": [
-          "CommentManage"
         ]
       }
     }

@@ -127,7 +127,7 @@ service articleManageService {
   // 获取文章评论列表
   rpc GetArticleCommentList(GetArticleCommentListRequest) returns (GetArticleCommentListResponse) {
     option (google.api.http) = {
-      get: "/v1/web/articles/getArticleCommentList"
+      get: "/v1/articles/getArticleCommentList"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["CommentManage"]
@@ -139,7 +139,7 @@ service articleManageService {
   // 发布文章评论
   rpc PublishArticleComment(PublishArticleCommentRequest) returns (PublishArticleCommentResponse) {
     option (google.api.http) = {
-      post: "/v1/web/articles/publishArticleComment"
+      post: "/v1/articles/publishArticleComment"
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -152,7 +152,7 @@ service articleManageService {
   // 删除文章评论
   rpc DeleteArticleComment(DeleteArticleCommentRequest) returns (DeleteArticleCommentResponse) {
     option (google.api.http) = {
-      delete: "/v1/web/articles/deleteArticleComment/{comment_id}"
+      delete: "/v1/articles/deleteArticleComment/{comment_id}"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["CommentManage"]
@@ -164,7 +164,7 @@ service articleManageService {
   // 获取文章评论详情
   rpc GetArticleCommentDetail(GetArticleCommentDetailRequest) returns (GetArticleCommentDetailResponse) {
     option (google.api.http) = {
-      get: "/v1/web/articles/getArticleCommentDetail/{comment_id}"
+      get: "/v1/articles/getArticleCommentDetail/{comment_id}"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["CommentManage"]
@@ -175,7 +175,7 @@ service articleManageService {
   //点赞文章评论
   rpc LikeArticleComment(LikeArticleCommentRequest) returns (LikeArticleCommentResponse) {
     option (google.api.http) = {
-      post: "/v1/web/articles/likeArticleComment"
+      post: "/v1/articles/likeArticleComment"
       body: "*"
     };
     option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

@@ -1,49 +1,21 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    :title="title"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    width="550"
-  >
-    <el-form
-      ref="formDataRef"
-      class="user-form"
-      label-position="right"
-      label-width="80px"
-      :model="formData"
-      :rules="rules"
-    >
+  <el-dialog v-model="dialogVisible" :title="title" :close-on-click-modal="false" :close-on-press-escape="false"
+    width="550">
+    <el-form ref="formDataRef" class="user-form" label-position="right" label-width="80px" :model="formData"
+      :rules="rules">
       <el-form-item label="角色">
         <el-select v-model="formData.role" disabled class="role-select">
-          <el-option
-            v-for="item in roleList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="item in roleList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="用户名" prop="username">
-        <username
-          ref="usernameRef"
-          v-model:value="formData.username"
-        ></username>
+        <username ref="usernameRef" v-model:value="formData.username"></username>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <password
-          ref="passwordRef"
-          v-model:value="formData.password"
-        ></password>
+        <password ref="passwordRef" v-model:value="formData.password"></password>
       </el-form-item>
       <el-form-item label="确认密码" prop="checkPassword">
-        <el-input
-          v-model="formData.checkPassword"
-          placeholder="请输入确认密码"
-          type="password"
-          clearable
-          show-password
-        />
+        <el-input v-model="formData.checkPassword" placeholder="请输入确认密码" type="password" clearable show-password />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -186,6 +158,7 @@ defineExpose({
 .user-form {
   padding: 30px 40px;
 }
+
 .role-select {
   width: 100%;
 }

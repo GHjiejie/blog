@@ -87,7 +87,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 			}
 
 			username = claims.Username
-			logger.Infof("token解析成功, 输出获取的claims: %v", claims)
+			// logger.Infof("token解析成功, 输出获取的claims: %v", claims)
 
 			// 我们直接进行权限验证
 			permitted, err := userPermit.CheckPermission(username, r.URL.Path, r.Method)
@@ -190,7 +190,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 }
 
 func needAuthorizations(urlPath, method string) bool {
-	log.Info("判断当前接口是否需要进行鉴权验证")
+	// log.Info("判断当前接口是否需要进行鉴权验证")
 	log.Infof("urlPath: %s, method: %s", urlPath, method)
 	need := true
 	for path := range NotNeedAuthorizationPaths {
