@@ -118,14 +118,15 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		return nil, status.Errorf(codes.Internal, "update user token failed with err(%s)", err.Error())
 	}
 
-	// log.Printf("更新用户token成功")
-	logger.Info("登录成功")
 	// 返回登录成功的响应
-
 	return &pb.LoginResponse{
 		Token: token,
 		User: &pb.User{
-			Username: user.Username,
+			UserId:    user.ID,
+			Username:  user.Username,
+			Role:      pb.Role(user.Role),
+			CreatedAt: timestamppb.New(user.CreatedAt),
+			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		},
 	}, nil
 }

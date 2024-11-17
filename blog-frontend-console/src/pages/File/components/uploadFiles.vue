@@ -57,6 +57,7 @@ const submitForm = async () => {
   formData.append('file', file);
 
   try {
+    console.log('formData', formData);
     await uploadFile(formData);
     visible.value = false; // 上传成功后关闭对话框或处理其他逻辑
     ElMessage.success('文件上传成功'); // 提示成功信息

@@ -71,14 +71,15 @@ func (s *FileServer) QueryFileById(ctx context.Context, req *filepb.QueryFileByI
 	}
 
 	fileInfoProto := &filepb.FileInfo{
-		FileId:    file.ID,
-		FileName:  file.FileName,
-		Bytes:     file.FileSize,
-		FileType:  file.FileType,
-		Tag:       file.Tag,
-		Content:   file.FileContent,
-		CreatedAt: timestamppb.New(file.CreatedAt),
-		UpdatedAt: timestamppb.New(file.UpdatedAt),
+		FileId:     file.ID,
+		FileName:   file.FileName,
+		Bytes:      file.FileSize,
+		FileType:   file.FileType,
+		Tag:        file.Tag,
+		UploaderId: file.UploaderId,
+		Content:    file.FileContent,
+		CreatedAt:  timestamppb.New(file.CreatedAt),
+		UpdatedAt:  timestamppb.New(file.UpdatedAt),
 	}
 	// 将获取的文件信息转换为 proto 格式
 	return &filepb.QueryFileByIdResponse{

@@ -3,11 +3,7 @@
     <div class="login-card">
       <h1>Login</h1>
       <input type="text" v-model="userForm.username" placeholder="Username" />
-      <input
-        type="password"
-        v-model="userForm.password"
-        placeholder="Password"
-      />
+      <input type="password" v-model="userForm.password" placeholder="Password" />
       <button @click="handleLogin">login</button>
       <el-button @click="handleRegister" link>Register</el-button>
     </div>
@@ -34,6 +30,7 @@ const handleLogin = async () => {
   try {
     // console.log("输出userForm", userForm);
     const res = await login(userForm);
+    console.log("输出登录res", res);
     if (res.status == 200) {
       cache.setToken(res.data.token);
       cache.sessionSet("userId", res.data.user.userId);
@@ -48,7 +45,7 @@ const handleLogin = async () => {
     // setTimeout(() => {
     //   router.push("/");
     // }, 1000);
-  } catch (error) {}
+  } catch (error) { }
 };
 const handleRegister = () => {
   router.push("/register");
