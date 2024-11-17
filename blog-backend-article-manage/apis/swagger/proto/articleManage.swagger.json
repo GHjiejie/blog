@@ -257,6 +257,131 @@
         ]
       }
     },
+    "/v1/web/articles/deleteArticleComment/{comment_id}": {
+      "delete": {
+        "summary": "Delete article comment",
+        "description": "Delete article comment",
+        "operationId": "articleManageService_DeleteArticleComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageDeleteArticleCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "description": "评论唯一标识",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "article_id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
+    "/v1/web/articles/getArticleCommentDetail/{comment_id}": {
+      "get": {
+        "summary": "Get article comment detail",
+        "description": "Get article comment detail",
+        "operationId": "articleManageService_GetArticleCommentDetail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageGetArticleCommentDetailResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "description": "评论唯一标识",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
+    "/v1/web/articles/getArticleCommentList": {
+      "get": {
+        "summary": "Get article comment list",
+        "description": "Get article comment list",
+        "operationId": "articleManageService_GetArticleCommentList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageGetArticleCommentListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "article_id",
+            "description": "文章唯一标识.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "description": "页码.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "description": "每页数量.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
     "/v1/web/articles/getPublishedArticleList": {
       "get": {
         "summary": "Get published article list",
@@ -298,9 +423,126 @@
           "ArticleManage For Web"
         ]
       }
+    },
+    "/v1/web/articles/likeArticleComment": {
+      "post": {
+        "summary": "Like article comment",
+        "description": "Like article comment",
+        "operationId": "articleManageService_LikeArticleComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageLikeArticleCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageLikeArticleCommentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
+    },
+    "/v1/web/articles/publishArticleComment": {
+      "post": {
+        "summary": "Publish article comment",
+        "description": "Publish article comment",
+        "operationId": "articleManageService_PublishArticleComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManagePublishArticleCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManagePublishArticleCommentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CommentManage"
+        ]
+      }
     }
   },
   "definitions": {
+    "articleManageArticleCommentInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "title": "评论唯一标识"
+        },
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "content": {
+          "type": "string",
+          "title": "评论内容"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "评论者ID"
+        },
+        "status": {
+          "$ref": "#/definitions/articleManageCommentStatus",
+          "title": "评论状态"
+        },
+        "like_count": {
+          "type": "integer",
+          "format": "int32",
+          "title": "点赞次数"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "评论时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "评论更新时间"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "软删除时间"
+        }
+      },
+      "title": "文章评论基本信息"
+    },
     "articleManageArticleInfo": {
       "type": "object",
       "properties": {
@@ -326,7 +568,7 @@
           "title": "文章标签"
         },
         "status": {
-          "$ref": "#/definitions/articleManageStatus",
+          "$ref": "#/definitions/articleManageArticleStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "view_count": {
@@ -397,7 +639,7 @@
           "title": "文章标签"
         },
         "status": {
-          "$ref": "#/definitions/articleManageStatus",
+          "$ref": "#/definitions/articleManageArticleStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "view_count": {
@@ -447,6 +689,41 @@
       },
       "title": "文章列表基本信息"
     },
+    "articleManageArticleStatus": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PUBLISHED",
+        "DELETED",
+        "REVIEWING",
+        "REVIEW_FAILED",
+        "REVIEW_PASSED"
+      ],
+      "default": "DRAFT",
+      "title": "- DRAFT: 草稿\n - PUBLISHED: 已发布\n - DELETED: 已删除\n - REVIEWING: 审核中\n - REVIEW_FAILED: 审核未通过\n - REVIEW_PASSED: 审核通过"
+    },
+    "articleManageCommentStatus": {
+      "type": "string",
+      "enum": [
+        "C_PUBLISHED",
+        "C_DELETED",
+        "C_REVIEWING",
+        "C_REVIEW_FAILED",
+        "C_REVIEW_PASSED"
+      ],
+      "default": "C_PUBLISHED",
+      "title": "- C_PUBLISHED: 已发布\n - C_DELETED: 已删除\n - C_REVIEWING: 审核中\n - C_REVIEW_FAILED: 审核未通过\n - C_REVIEW_PASSED: 审核通过"
+    },
+    "articleManageDeleteArticleCommentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "评论唯一标识"
+        }
+      },
+      "title": "删除文章评论响应"
+    },
     "articleManageDeleteArticleResponse": {
       "type": "object",
       "properties": {
@@ -456,6 +733,34 @@
         }
       },
       "title": "删除文章响应"
+    },
+    "articleManageGetArticleCommentDetailResponse": {
+      "type": "object",
+      "properties": {
+        "comment_info": {
+          "$ref": "#/definitions/articleManageArticleCommentInfo",
+          "title": "评论详情"
+        }
+      },
+      "title": "获取文章评论详情响应"
+    },
+    "articleManageGetArticleCommentListResponse": {
+      "type": "object",
+      "properties": {
+        "comment_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/articleManageArticleCommentInfo"
+          },
+          "title": "文章评论列表"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "title": "总数"
+        }
+      },
+      "title": "获取文章评论列表响应"
     },
     "articleManageGetArticleDetailResponse": {
       "type": "object",
@@ -503,6 +808,67 @@
       },
       "title": "获取已发布的文章列表响应"
     },
+    "articleManageLikeArticleCommentRequest": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "评论唯一标识"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "点赞者ID"
+        },
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章ID"
+        }
+      },
+      "title": "点赞文章评论请求"
+    },
+    "articleManageLikeArticleCommentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "评论唯一标识"
+        }
+      },
+      "title": "点赞文章评论响应"
+    },
+    "articleManagePublishArticleCommentRequest": {
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "content": {
+          "type": "string",
+          "title": "评论内容"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "评论者ID"
+        }
+      },
+      "title": "发布文章评论请求"
+    },
+    "articleManagePublishArticleCommentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "评论唯一标识"
+        }
+      },
+      "title": "发布文章评论响应"
+    },
     "articleManagePublishArticleRequest": {
       "type": "object",
       "properties": {
@@ -523,7 +889,7 @@
           "title": "文章标签"
         },
         "status": {
-          "$ref": "#/definitions/articleManageStatus",
+          "$ref": "#/definitions/articleManageArticleStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "image_url": {
@@ -580,7 +946,7 @@
           "title": "文章唯一标识"
         },
         "status": {
-          "$ref": "#/definitions/articleManageStatus",
+          "$ref": "#/definitions/articleManageArticleStatus",
           "title": "文章状态，如“draft”, “published”等"
         }
       },
@@ -595,19 +961,6 @@
         }
       },
       "title": "文章审核响应"
-    },
-    "articleManageStatus": {
-      "type": "string",
-      "enum": [
-        "DRAFT",
-        "PUBLISHED",
-        "DELETED",
-        "REVIEWING",
-        "REVIEW_FAILED",
-        "REVIEW_PASSED"
-      ],
-      "default": "DRAFT",
-      "title": "- DRAFT: 草稿\n - PUBLISHED: 已发布\n - DELETED: 已删除\n - REVIEWING: 审核中\n - REVIEW_FAILED: 审核未通过\n - REVIEW_PASSED: 审核通过"
     },
     "articleManageUpdateArticleRequest": {
       "type": "object",
@@ -634,7 +987,7 @@
           "title": "文章标签"
         },
         "status": {
-          "type": "string",
+          "$ref": "#/definitions/articleManageArticleStatus",
           "title": "文章状态，如“draft”, “published”等"
         },
         "image_url": {

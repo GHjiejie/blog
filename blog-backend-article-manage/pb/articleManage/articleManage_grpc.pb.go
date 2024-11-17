@@ -29,6 +29,11 @@ const (
 	ArticleManageService_GetArticleDetail_FullMethodName        = "/articleManage.articleManageService/GetArticleDetail"
 	ArticleManageService_ReviewArticle_FullMethodName           = "/articleManage.articleManageService/ReviewArticle"
 	ArticleManageService_GetPublishedArticleList_FullMethodName = "/articleManage.articleManageService/GetPublishedArticleList"
+	ArticleManageService_GetArticleCommentList_FullMethodName   = "/articleManage.articleManageService/GetArticleCommentList"
+	ArticleManageService_PublishArticleComment_FullMethodName   = "/articleManage.articleManageService/PublishArticleComment"
+	ArticleManageService_DeleteArticleComment_FullMethodName    = "/articleManage.articleManageService/DeleteArticleComment"
+	ArticleManageService_GetArticleCommentDetail_FullMethodName = "/articleManage.articleManageService/GetArticleCommentDetail"
+	ArticleManageService_LikeArticleComment_FullMethodName      = "/articleManage.articleManageService/LikeArticleComment"
 )
 
 // ArticleManageServiceClient is the client API for ArticleManageService service.
@@ -51,6 +56,16 @@ type ArticleManageServiceClient interface {
 	ReviewArticle(ctx context.Context, in *ReviewArticleRequest, opts ...grpc.CallOption) (*ReviewArticleResponse, error)
 	// 获取已发布的文章列表
 	GetPublishedArticleList(ctx context.Context, in *GetPublishedArticleListRequest, opts ...grpc.CallOption) (*GetPublishedArticleListResponse, error)
+	// 获取文章评论列表
+	GetArticleCommentList(ctx context.Context, in *GetArticleCommentListRequest, opts ...grpc.CallOption) (*GetArticleCommentListResponse, error)
+	// 发布文章评论
+	PublishArticleComment(ctx context.Context, in *PublishArticleCommentRequest, opts ...grpc.CallOption) (*PublishArticleCommentResponse, error)
+	// 删除文章评论
+	DeleteArticleComment(ctx context.Context, in *DeleteArticleCommentRequest, opts ...grpc.CallOption) (*DeleteArticleCommentResponse, error)
+	// 获取文章评论详情
+	GetArticleCommentDetail(ctx context.Context, in *GetArticleCommentDetailRequest, opts ...grpc.CallOption) (*GetArticleCommentDetailResponse, error)
+	// 点赞文章评论
+	LikeArticleComment(ctx context.Context, in *LikeArticleCommentRequest, opts ...grpc.CallOption) (*LikeArticleCommentResponse, error)
 }
 
 type articleManageServiceClient struct {
@@ -141,6 +156,56 @@ func (c *articleManageServiceClient) GetPublishedArticleList(ctx context.Context
 	return out, nil
 }
 
+func (c *articleManageServiceClient) GetArticleCommentList(ctx context.Context, in *GetArticleCommentListRequest, opts ...grpc.CallOption) (*GetArticleCommentListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArticleCommentListResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_GetArticleCommentList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) PublishArticleComment(ctx context.Context, in *PublishArticleCommentRequest, opts ...grpc.CallOption) (*PublishArticleCommentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublishArticleCommentResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_PublishArticleComment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) DeleteArticleComment(ctx context.Context, in *DeleteArticleCommentRequest, opts ...grpc.CallOption) (*DeleteArticleCommentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteArticleCommentResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_DeleteArticleComment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) GetArticleCommentDetail(ctx context.Context, in *GetArticleCommentDetailRequest, opts ...grpc.CallOption) (*GetArticleCommentDetailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArticleCommentDetailResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_GetArticleCommentDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) LikeArticleComment(ctx context.Context, in *LikeArticleCommentRequest, opts ...grpc.CallOption) (*LikeArticleCommentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LikeArticleCommentResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_LikeArticleComment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleManageServiceServer is the server API for ArticleManageService service.
 // All implementations must embed UnimplementedArticleManageServiceServer
 // for forward compatibility.
@@ -161,6 +226,16 @@ type ArticleManageServiceServer interface {
 	ReviewArticle(context.Context, *ReviewArticleRequest) (*ReviewArticleResponse, error)
 	// 获取已发布的文章列表
 	GetPublishedArticleList(context.Context, *GetPublishedArticleListRequest) (*GetPublishedArticleListResponse, error)
+	// 获取文章评论列表
+	GetArticleCommentList(context.Context, *GetArticleCommentListRequest) (*GetArticleCommentListResponse, error)
+	// 发布文章评论
+	PublishArticleComment(context.Context, *PublishArticleCommentRequest) (*PublishArticleCommentResponse, error)
+	// 删除文章评论
+	DeleteArticleComment(context.Context, *DeleteArticleCommentRequest) (*DeleteArticleCommentResponse, error)
+	// 获取文章评论详情
+	GetArticleCommentDetail(context.Context, *GetArticleCommentDetailRequest) (*GetArticleCommentDetailResponse, error)
+	// 点赞文章评论
+	LikeArticleComment(context.Context, *LikeArticleCommentRequest) (*LikeArticleCommentResponse, error)
 	mustEmbedUnimplementedArticleManageServiceServer()
 }
 
@@ -194,6 +269,21 @@ func (UnimplementedArticleManageServiceServer) ReviewArticle(context.Context, *R
 }
 func (UnimplementedArticleManageServiceServer) GetPublishedArticleList(context.Context, *GetPublishedArticleListRequest) (*GetPublishedArticleListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPublishedArticleList not implemented")
+}
+func (UnimplementedArticleManageServiceServer) GetArticleCommentList(context.Context, *GetArticleCommentListRequest) (*GetArticleCommentListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticleCommentList not implemented")
+}
+func (UnimplementedArticleManageServiceServer) PublishArticleComment(context.Context, *PublishArticleCommentRequest) (*PublishArticleCommentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishArticleComment not implemented")
+}
+func (UnimplementedArticleManageServiceServer) DeleteArticleComment(context.Context, *DeleteArticleCommentRequest) (*DeleteArticleCommentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticleComment not implemented")
+}
+func (UnimplementedArticleManageServiceServer) GetArticleCommentDetail(context.Context, *GetArticleCommentDetailRequest) (*GetArticleCommentDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticleCommentDetail not implemented")
+}
+func (UnimplementedArticleManageServiceServer) LikeArticleComment(context.Context, *LikeArticleCommentRequest) (*LikeArticleCommentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeArticleComment not implemented")
 }
 func (UnimplementedArticleManageServiceServer) mustEmbedUnimplementedArticleManageServiceServer() {}
 func (UnimplementedArticleManageServiceServer) testEmbeddedByValue()                              {}
@@ -360,6 +450,96 @@ func _ArticleManageService_GetPublishedArticleList_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleManageService_GetArticleCommentList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticleCommentListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).GetArticleCommentList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_GetArticleCommentList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).GetArticleCommentList(ctx, req.(*GetArticleCommentListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_PublishArticleComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishArticleCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).PublishArticleComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_PublishArticleComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).PublishArticleComment(ctx, req.(*PublishArticleCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_DeleteArticleComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArticleCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).DeleteArticleComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_DeleteArticleComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).DeleteArticleComment(ctx, req.(*DeleteArticleCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_GetArticleCommentDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticleCommentDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).GetArticleCommentDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_GetArticleCommentDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).GetArticleCommentDetail(ctx, req.(*GetArticleCommentDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_LikeArticleComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeArticleCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).LikeArticleComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_LikeArticleComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).LikeArticleComment(ctx, req.(*LikeArticleCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleManageService_ServiceDesc is the grpc.ServiceDesc for ArticleManageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -398,6 +578,26 @@ var ArticleManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPublishedArticleList",
 			Handler:    _ArticleManageService_GetPublishedArticleList_Handler,
+		},
+		{
+			MethodName: "GetArticleCommentList",
+			Handler:    _ArticleManageService_GetArticleCommentList_Handler,
+		},
+		{
+			MethodName: "PublishArticleComment",
+			Handler:    _ArticleManageService_PublishArticleComment_Handler,
+		},
+		{
+			MethodName: "DeleteArticleComment",
+			Handler:    _ArticleManageService_DeleteArticleComment_Handler,
+		},
+		{
+			MethodName: "GetArticleCommentDetail",
+			Handler:    _ArticleManageService_GetArticleCommentDetail_Handler,
+		},
+		{
+			MethodName: "LikeArticleComment",
+			Handler:    _ArticleManageService_LikeArticleComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
