@@ -82,14 +82,12 @@ const filterTableData = computed(() => {
 
 // 审核文章
 const reviewArticle = (articleId) => {
-  console.log(articleId);
   articleReviewId.value = articleId;
   articleReviewRef.value.changeVisible(true);
 };
 
 // 更新文章状态
 const updateArticleStatus = (data) => {
-  console.log(data);
   const { articleId, status } = data;
   const index = articleList.value.findIndex(
     (item) => item.articleId === articleId

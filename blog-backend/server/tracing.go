@@ -148,42 +148,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 				}
 				return
 			}
-			// nextHandle.ServeHTTP(w, r)
-
-			// 如果首次校验失败,则重新从数据库加载策略,然后再次进行校验
-			// if !permitted {
-			// 	if err := userPermit.Enforcer.LoadPolicy(); err != nil {
-			// 		isOk, _ := userPermit.CheckPermission(username, r.URL.Path, r.Method)
-			// 		logger.Debugf("user(%s) permission 2nd checking result, permit(%v)", username, isOk)
-			// 		if isOk {
-			// 			nextHandle.ServeHTTP(w, r)
-			// 		}
-			// 	}
-			// 	logger.Errorf("%s does not have permission to %s %s", username, r.Method, r.URL.Path)
-			// 	newerr := status.New(
-			// 		codes.PermissionDenied,
-			// 		fmt.Sprintf("%s does not have permission to %s %s", username, r.Method, r.URL.Path),
-			// 	)
-			// 	body := ErrorBody{
-			// 		Error:   newerr.Message(),
-			// 		Message: newerr.Message(),
-			// 		Code:    int32(newerr.Code()),
-			// 		Details: newerr.Proto().GetDetails(),
-			// 	}
-			// 	msg, err := json.Marshal(body)
-			// 	if err != nil {
-			// 		logger.Errorf("marshal error body failed with err(%s)", err.Error())
-			// 	}
-			// 	w.Header().Set("Content-Type", "application/json")
-			// 	w.WriteHeader(http.StatusForbidden)
-			// 	_, err = w.Write(msg)
-			// 	if err != nil {
-			// 		logger.Errorf("failed to write msg with err(%s)", err.Error())
-			// 	}
-			// 	return
-			// }
 		} else {
-			log.Info("当前接口无需进行鉴权验证")
 			nextHandle.ServeHTTP(w, r)
 		}
 	})

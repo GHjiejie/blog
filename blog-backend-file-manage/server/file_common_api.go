@@ -6,8 +6,12 @@ import (
 	filepb "fileManage/pb/fileManage"
 	"fileManage/validate"
 
+	"fileManage/pkg/auth"
+	"fileManage/pkg/db"
+
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -99,6 +103,27 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 	pageSize := req.GetPageSize()
 	logger.Infof("Received pageSize: %d", pageSize)
 
+	// 获取请求头里面的auth
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		logger.Errorf("Failed to get metadata from context")
+		return nil, status.Error(codes.Internal, "failed to get metadata from context")
+	}
+	authInfo := md.Get("authorization")
+	if len(authInfo) == 0 {
+		logger.Errorf("Failed to get authorization from context")
+		return nil, status.Error(codes.Internal, "failed to get authorization from context")
+	}
+	// logger.Infof("Received authorization: %s", authInfo[0])
+
+	// 解析token
+	claims, err := auth.ParseUserToken(authInfo[0])
+	if err != nil {
+		logger.Errorf("Failed to parse token: %v", err)
+		return nil, status.Error(codes.Internal, "failed to parse token")
+	}
+	logger.Infof("Received claims: %v", claims)
+
 	// 先获取文件总数
 	total, err := s.DBEngine.GetFileTotal()
 	if err != nil {
@@ -106,8 +131,13 @@ func (s *FileServer) GetFileList(ctx context.Context, req *filepb.GetFileListReq
 		return nil, status.Error(codes.Internal, "failed to query file total")
 	}
 
-	// // 接下来从数据库中查询文件信息
-	files, err := s.DBEngine.GetFileList(page, pageSize)
+	// 如果是管理员，可以查看所有文件，否则只能查看自己上传的文件
+	var files []db.UploadFile
+	if claims.Role == "ADMIN" {
+		files, err = s.DBEngine.GetFileList(page, pageSize)
+	} else {
+		files, err = s.DBEngine.GetFileListByUserId(claims.UserId, page, pageSize)
+	}
 	if err != nil {
 		logger.Errorf("Failed to query file list: %v", err)
 		return nil, status.Error(codes.Internal, "failed to query file list")

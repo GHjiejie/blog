@@ -50,6 +50,14 @@
         </el-icon>
         <span>文件管理</span>
       </el-menu-item>
+      <el-menu-item index="/personal">
+        <el-icon>
+          <User />
+        </el-icon>
+        <span>个人中心</span>
+      </el-menu-item>
+
+
     </el-menu>
   </div>
 </template>

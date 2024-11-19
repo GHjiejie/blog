@@ -13,8 +13,10 @@ type Handle interface {
 	GetArticleCount() (int64, error)
 	// 删除文章
 	DeleteArticle(articleId int64) error
-	// 获取文章列表
+	// 获取文章列表(管理员)
 	GetArticleList(page, pageSize int32) ([]Article, error)
+	// 获取文章列表(用户)
+	GetArticleListByAuthor(userId, page, pageSize int32) ([]Article, error)
 	// 根据tag查询文章
 	GetArticleListByTag(tag string) ([]Article, error)
 	// 更新文章

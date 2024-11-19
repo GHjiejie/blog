@@ -121,7 +121,7 @@ func (s *SQLDB) DeleteArticle(articleId int64) error {
 	return nil
 }
 
-// 获取文章列表
+// 获取文章列表（管理员）
 func (s *SQLDB) GetArticleList(page, pageSize int32) ([]Article, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "GetArticleList",
@@ -130,6 +130,20 @@ func (s *SQLDB) GetArticleList(page, pageSize int32) ([]Article, error) {
 	offset := (page - 1) * pageSize
 	if err := s.db.Offset(int(offset)).Limit(int(pageSize)).Find(&articleList).Error; err != nil {
 		logger.Errorf("failed to get article list: %v", err)
+		return nil, err
+	}
+	return articleList, nil
+}
+
+// 获取文章列表（用户）
+func (s *SQLDB) GetArticleListByAuthor(userId, page, pageSize int32) ([]Article, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetArticleListByAuthor",
+	})
+	var articleList []Article
+	offset := (page - 1) * pageSize
+	if err := s.db.Where("author_id = ?", userId).Offset(int(offset)).Limit(int(pageSize)).Find(&articleList).Error; err != nil {
+		logger.Errorf("failed to get article list by author: %v", err)
 		return nil, err
 	}
 	return articleList, nil

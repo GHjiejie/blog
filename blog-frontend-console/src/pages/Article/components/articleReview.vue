@@ -60,15 +60,18 @@ const changeVisible = (val) => {
 
 
 // 发布文章
-const publish = () => {
+const publish = async () => {
   try {
-    auditArticle({ articleId: props.articleId, status: "PUBLISHED" });
-    ElMessage.success("发布成功");
-    changeVisible(false);
-    emits("changeArticleStatus", {
-      articleId: props.articleId,
-      status: "PUBLISHED",
-    });
+    const res = await auditArticle({ articleId: props.articleId, status: "PUBLISHED" });
+
+    if (res.status === 200) {
+      ElMessage.success("发布成功");
+      changeVisible(false);
+      emits("changeArticleStatus", {
+        articleId: props.articleId,
+        status: "PUBLISHED",
+      });
+    }
   } catch (error) {
     console.log("发布失败：", error);
   }
@@ -76,15 +79,17 @@ const publish = () => {
 
 // 撤回文章
 const revoke = async () => {
-  // console.log("撤回文章");
   try {
-    await auditArticle({ articleId: props.articleId, status: "DELETED" });
-    ElMessage.success("撤回成功");
-    changeVisible(false);
-    emits("changeArticleStatus", {
-      articleId: props.articleId,
-      status: "DELETED",
-    });
+    const res = await auditArticle({ articleId: props.articleId, status: "DELETED" });
+
+    if (res.status === 200) {
+      ElMessage.success("撤回成功");
+      changeVisible(false);
+      emits("changeArticleStatus", {
+        articleId: props.articleId,
+        status: "DELETED",
+      });
+    }
   } catch (error) {
     console.log("撤回失败：", error);
   }
@@ -104,7 +109,7 @@ const getArticleContentById = async (articleId) => {
 
 // 获取用户信息
 const getUserInfo = async (currentUserId) => {
-  console.log("输出用户currentUserId：", currentUserId);
+
   try {
     const { data } = await getUserById({ userId: currentUserId });
     userInfo.value = data.user;

@@ -23,6 +23,7 @@
             <el-tag v-else type="danger" round>禁用</el-tag>
           </template>
         </el-table-column>
+
         <!-- <el-table-column prop="email" label="邮箱" width="120" />
         <el-table-column prop="phone" label="手机号" width="120" /> -->
 

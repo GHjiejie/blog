@@ -39,6 +39,7 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
         ('p','users-password-reset', '/v1/users/change_password', 'PUT'),
         ('p','users-password-update', '/v1/users/update_password', 'POST'),
         ('p','users-update', '/v1/users/*', 'PUT'),
+        ('p','users-get', '/v1/users/*', 'GET'),
 
     --- files api ---
         ('p','files-upload','/v1/files/upload','POST'),
@@ -71,6 +72,7 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
         ('g', 'users-basic-policy', 'users-logout', ''),
         ('g', 'users-basic-policy', 'users-password-update', ''),
         ('g', 'users-basic-policy', 'users-update', ''),
+        ('g', 'users-basic-policy', 'users-get', ''),
    
         ('g', 'engine-all', 'files-manage-all', ''), 
         ('g', 'engine-all', 'articles-manage-all', ''), 

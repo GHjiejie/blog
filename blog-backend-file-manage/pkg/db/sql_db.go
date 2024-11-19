@@ -114,12 +114,24 @@ func (s *SQLDB) DeleteFile(fileID int64) error {
 	return nil
 }
 
-// 获取文件列表
+// 获取文件列表（管理员）
 func (s *SQLDB) GetFileList(page, pageSize int64) ([]UploadFile, error) {
 	var fileList []UploadFile
 	offset := (page - 1) * pageSize
 	if err := s.db.Offset(int(offset)).Limit(int(pageSize)).Find(&fileList).Error; err != nil {
 		log.Errorf("failed to get file list: %v", err)
+		return nil, err
+	}
+	return fileList, nil
+}
+
+// 获取文件列表(用户)
+func (s *SQLDB) GetFileListByUserId(userID, page, pageSize int64) ([]UploadFile, error) {
+	log.Infof("userID: %d", userID)
+	var fileList []UploadFile
+	offset := (page - 1) * pageSize
+	if err := s.db.Where("uploader_id = ?", userID).Offset(int(offset)).Limit(int(pageSize)).Find(&fileList).Error; err != nil {
+		log.Errorf("failed to get file list by user id: %v", err)
 		return nil, err
 	}
 	return fileList, nil

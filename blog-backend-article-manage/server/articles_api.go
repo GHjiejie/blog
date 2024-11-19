@@ -5,11 +5,13 @@ import (
 	"strings"
 
 	articlepb "articleManage/pb/articleManage"
+	"articleManage/pkg/auth"
 	"articleManage/pkg/db"
 	"articleManage/validate"
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -220,12 +222,39 @@ func (s *ArticleServer) GetArticleList(ctx context.Context, req *articlepb.GetAr
 		logger.Errorf("page(%d) or pageSize(%d) is invalid", page, pageSize)
 		return nil, status.Errorf(codes.InvalidArgument, "page or pageSize is invalid")
 	}
-	// 获取文章列表
-	articleList, err := s.DBEngine.GetArticleList(page, pageSize)
+	// 获取请求头里面的auth
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		logger.Errorf("Failed to get metadata from context")
+		return nil, status.Error(codes.Internal, "failed to get metadata from context")
+	}
+	authInfo := md.Get("authorization")
+	if len(authInfo) == 0 {
+		logger.Errorf("Failed to get authorization from context")
+		return nil, status.Error(codes.Internal, "failed to get authorization from context")
+	}
+	// logger.Infof("Received authorization: %s", authInfo[0])
+
+	// 解析token
+	claims, err := auth.ParseUserToken(authInfo[0])
+	if err != nil {
+		logger.Errorf("Failed to parse token: %v", err)
+		return nil, status.Error(codes.Internal, "failed to parse token")
+	}
+	logger.Infof("Received claims: %v", claims)
+
+	// 判断是不是管理员，如果是管理员，就返回所有文章，如果不是管理员，就返回自己的文章
+	var articleList []db.Article
+	if claims.Role == "ADMIN" {
+		articleList, err = s.DBEngine.GetArticleList(page, pageSize)
+	} else {
+		articleList, err = s.DBEngine.GetArticleListByAuthor(int32(claims.UserId), page, pageSize)
+	}
 	if err != nil {
 		logger.Errorf("failed to get article list with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "failed to get article list: %v", err)
 	}
+
 	var articles []*articlepb.ArticleListInfo
 	for _, article := range articleList {
 		articles = append(articles, &articlepb.ArticleListInfo{

@@ -49,7 +49,8 @@ const handleLogout = async () => {
   justify-content: space-between;
   align-items: center;
   background-color: $--bg-color;
-  box-shadow: $--color-box-shadow;
+  border-bottom: 2px solid $--color-border;
+
 
   .left {
     flex: 1;
