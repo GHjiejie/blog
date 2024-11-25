@@ -355,6 +355,8 @@ func (s *BlogServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.G
 			UserId:    user.ID,
 			Username:  user.Username,
 			Role:      pb.Role(user.Role),
+			Email:     user.Email,
+			Phone:     user.Phone,
 			CreatedAt: timestamppb.New(user.CreatedAt),
 			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		},

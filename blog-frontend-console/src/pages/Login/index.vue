@@ -35,6 +35,7 @@ const handleLogin = async () => {
       cache.setToken(res.data.token);
       cache.sessionSet("userId", res.data.user.userId);
       cache.sessionSet("user", userForm.username);
+      cache.sessionSet("userRole", res.data.user.role);
       ElMessage.success("登录成功");
       // 跳转到根目录
       router.push("/");

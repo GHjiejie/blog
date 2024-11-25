@@ -32,7 +32,7 @@
         </el-menu-item>
 
       </el-sub-menu>
-      <el-menu-item index="/user">
+      <el-menu-item v-if="cache.sessionGet('userRole') === 'ADMIN'" index="/user">
         <el-icon>
           <User />
         </el-icon>
@@ -63,6 +63,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import cache from "@/utils/cache";
 import {
   Menu as IconMenu,
   ChatLineRound,
