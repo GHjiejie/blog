@@ -62,6 +62,12 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 			QueryFields: true, //避免查询所有字段
 		},
 	)
+
+	// 数据库迁移操作
+	if err := gormDB.AutoMigrate(&UploadFile{}); err != nil {
+		logger.Errorf("failed to migrate database: %v", err)
+		return nil, err
+	}
 	if err != nil {
 		logger.Errorf("failed to open database: %v", err)
 		return nil, err

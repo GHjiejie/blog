@@ -66,6 +66,12 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 		logger.Errorf("failed to open database: %v", err)
 		return nil, err
 	}
+
+	// 进行数据库的迁移操作
+	if err := gormDB.AutoMigrate(&Article{}, &Comment{}, &CommentLike{}); err != nil {
+		logger.Errorf("failed to migrate schema: %v", err)
+		return nil, err
+	}
 	// 设置数据库连接池
 	if err := setupDbConnPool(gormDB); err != nil {
 		logger.Errorf("failed to setup db connection pool: %v", err)
