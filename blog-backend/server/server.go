@@ -136,6 +136,8 @@ func (s *BlogServer) prepareServer() error {
 		if strings.HasPrefix(path, "/v1/files") {
 			httpmux.Handle(path, s.Tracing(engine_files, s.casbinPermit))
 		} else if strings.HasPrefix(path, "/v1/articles") {
+			httpmux.Handle(path, s.Tracing(engine_articles, s.casbinPermit))5
+		} else if strings.HasPrefix(path, "/v1/web") {
 			httpmux.Handle(path, s.Tracing(engine_articles, s.casbinPermit))
 		}
 	}

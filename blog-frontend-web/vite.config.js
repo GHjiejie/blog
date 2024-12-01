@@ -29,4 +29,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  // 处理css资源
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/themes.scss";`,
+      },
+    },
+  },
 });

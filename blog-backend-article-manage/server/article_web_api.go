@@ -17,6 +17,7 @@ func (s *ArticleServer) GetPublishedArticleList(ctx context.Context, req *articl
 	logger := log.WithFields(log.Fields{
 		"api": "GetPublishedArticleList",
 	})
+	logger.Infof("GetPublishedArticleList request with page(%d) and pageSize(%d)", req.GetPage(), req.GetPageSize())
 
 	// 获取请求参数
 	page := req.GetPage()

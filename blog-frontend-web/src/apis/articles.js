@@ -3,9 +3,8 @@ import httpRequest from "@/request/index";
 // 获取已经发布的文章列表
 export function getArticleList(params) {
   return httpRequest({
-    url: `/v1/web/articles/getPublishedArticleList`,
+    url: `/v1/web/articles/getPublishedArticleList?page=${params.page}&pageSize=${params.pageSize}`,
     method: "get",
-    params,
   });
 }
 
@@ -16,5 +15,3 @@ export function getArticleById(params) {
     method: "get",
   });
 }
-
-
