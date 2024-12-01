@@ -1,8 +1,18 @@
 <template>
-  <div class="header">博客前端</div>
+  <div class="header-container">
+    <div class="left">
+      <svg-icon iconClass="icon-blog-logo" className="icon"></svg-icon>
+    </div>
+    <Navbar></Navbar>
+    <div class="right">
+      Jie
+    </div>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Navbar from '@/components/Header/components/Navbar/index.vue'
+</script>
 <style scoped lang="scss">
 .header {
   height: 50px;

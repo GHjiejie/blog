@@ -29,6 +29,9 @@ func (s *ArticleServer) PublishArticle(ctx context.Context, req *articlepb.Publi
 	tag := req.GetTag()
 	imageUrl := req.GetImageUrl()
 	status := req.GetStatus()
+	if imageUrl == "" {
+		imageUrl = "https://images.pexels.com/photos/3423896/pexels-photo-3423896.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+	}
 	// logger.Infof("title: %s, content: %s, authorId: %d, summary: %s, tag: %s, imageUrl: %s, status: %s", title, content, authorId, summary, tag, imageUrl, status)
 	// 创建文章消息结构体
 	articleInfo := db.Article{
