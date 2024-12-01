@@ -23,5 +23,7 @@ import Header from "@/components/Header/index.vue";
   height: 50px;
 }
 
-.el-main {}
+.el-main {
+  margin-top: 50px;
+}
 </style>

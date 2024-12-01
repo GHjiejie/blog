@@ -333,7 +333,7 @@ message GetPublishedArticleListRequest {
 // 获取已发布的文章列表响应
 message  GetPublishedArticleListResponse {
   // 文章列表
-  repeated ArticleListInfo article_list = 1;
+  repeated ArticleInfo article_list = 1;
 
   // 总数
   int32 total = 2;

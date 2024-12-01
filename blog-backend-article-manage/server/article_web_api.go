@@ -40,13 +40,14 @@ func (s *ArticleServer) GetPublishedArticleList(ctx context.Context, req *articl
 		logger.Errorf("failed to get published article list with err(%s)", err.Error())
 		return nil, err
 	}
-	var articles []*articlepb.ArticleListInfo
+	var articles []*articlepb.ArticleInfo
 	for _, article := range articleList {
-		articles = append(articles, &articlepb.ArticleListInfo{
+		articles = append(articles, &articlepb.ArticleInfo{
 			ArticleId: article.ID,
 			Title:     article.Title,
 			AuthorId:  article.AuthorId,
 			Summary:   article.Summary,
+			Content:   article.Content,
 			Tag:       article.Tag,
 			ImageUrl:  article.ImageURL,
 			Status:    article.Status,

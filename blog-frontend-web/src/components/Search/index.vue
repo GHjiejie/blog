@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <el-input v-model="keywords" style="width: 240px" placeholder="请输入关键词" :prefix-icon="Search" />
+    <el-input v-model="keywords" style="width: 240px" placeholder="Crtl + K" :prefix-icon="Search" />
   </div>
 </template>
 

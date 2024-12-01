@@ -1,8 +1,7 @@
 // import { VMdEditor, VMdPreview } from './mdEditor'
 import VMdPreview from "./mdPreview";
-import VMdEditor from "./mdEditor";
 
-const pluginList = [VMdPreview, VMdEditor];
+const pluginList = [VMdPreview];
 const plugins = {
   install(app) {
     // 批量注册插件  改用自动引入

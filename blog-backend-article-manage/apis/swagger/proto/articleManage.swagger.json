@@ -796,7 +796,7 @@
         "article_list": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/articleManageArticleListInfo"
+            "$ref": "#/definitions/articleManageArticleInfo"
           },
           "title": "文章列表"
         },
