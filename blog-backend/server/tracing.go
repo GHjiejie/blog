@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"github.com/golang/protobuf/ptypes/any"
 	log "github.com/sirupsen/logrus"
@@ -17,8 +18,10 @@ var NotNeedAuthorizationPaths = map[string]bool{
 	"/v1/users/login":    true,
 	"/v1/users/register": true,
 	"/v1/captchas":       true,
-	// 以v1/web开头的都不需要验证
-	"/v1/web/articles/getPublishedArticleList": true,
+	// 以v1/web开头的都不需要验证(使用正则表达式)
+	"^/v1/web.*": true,
+
+	// "/v1/web/articles/getPublishedArticleList": true,
 }
 
 const (
@@ -45,7 +48,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 		// 从请求体中获取用户信息
 		// username := r.Header.Get("username")
 		// 判断当前接口是否需要进行鉴权验证
-		if needAuthorizations(r.URL.Path, r.Method) {
+		if needAuthorizations(r.URL.Path) {
 			var (
 				username  string
 				userToken string
@@ -156,12 +159,12 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 	})
 }
 
-func needAuthorizations(urlPath, method string) bool {
-	log.Info("判断当前接口是否需要进行鉴权验证")
-	log.Infof("urlPath: %s, method: %s", urlPath, method)
+func needAuthorizations(urlPath string) bool {
 	need := true
 	for path := range NotNeedAuthorizationPaths {
-		if path == urlPath {
+		match, _ := regexp.MatchString(path, urlPath)
+		if match {
+			log.Debugf("[%s] no need to authorization, continue...", urlPath)
 			need = false
 			break
 		}
