@@ -1,7 +1,7 @@
 <template>
   <div class="articleContainer">
     <div class="articleList">
-      <div class="ArticleItem" v-for="(item, index) in articleList ">
+      <div class="ArticleItem" v-for="(item, index) in articleList " @click="goArticleDetail(item.content)">
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -53,6 +53,11 @@
 
       </div>
     </div>
+
+    <el-drawer v-model="articleVisible" title="I am the title" :with-header="false" direction="ttb" size="80%"
+      :lock-scroll="false">
+      <v-md-preview :text="text" height="100vh"></v-md-preview>
+    </el-drawer>
   </div>
 </template>
 
@@ -61,10 +66,21 @@ import { ref, onMounted } from 'vue'
 import { getArticleList } from '@/apis/articles'
 import { Star, ChatLineRound, View } from '@element-plus/icons-vue'
 
+const text = ref('')
+
 const page = ref(1)
 const pageSize = ref(10)
 
 const articleList = ref([])
+
+const articleVisible = ref(false)
+const goArticleDetail = (content) => {
+  articleVisible.value = true
+  text.value = content
+}
+
+
+
 onMounted(async () => {
   // const res = await getArticleList({ page: page.value, pageSize: pageSize.value })
   // console.log(res)
@@ -80,6 +96,10 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.el-drawer__body {
+  height: 90vh;
+}
+
 .articleContainer {
   display: flex;
   flex-direction: column;

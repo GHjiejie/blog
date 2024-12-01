@@ -3,14 +3,19 @@ const routes = [
     path: "/",
     name: "",
     redirect: {
-      name: "Blog",
+      name: "Article",
     },
     component: () => import("@/layout/layout.vue"),
     children: [
       {
-        path: "/blog",
-        name: "Blog",
-        component: () => import("@/pages/Blog/index.vue"),
+        path: "/article",
+        name: "Article",
+        component: () => import("@/pages/Article/index.vue"),
+      },
+      {
+        path: "/article/:id",
+        name: "ArticleDetail",
+        component: () => import("@/pages/Article/components/detail.vue"),
       },
     ],
   },
