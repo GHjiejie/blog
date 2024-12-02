@@ -34,6 +34,8 @@ const (
 	ArticleManageService_DeleteArticleComment_FullMethodName    = "/articleManage.articleManageService/DeleteArticleComment"
 	ArticleManageService_GetArticleCommentDetail_FullMethodName = "/articleManage.articleManageService/GetArticleCommentDetail"
 	ArticleManageService_LikeArticleComment_FullMethodName      = "/articleManage.articleManageService/LikeArticleComment"
+	ArticleManageService_LikeArticle_FullMethodName             = "/articleManage.articleManageService/LikeArticle"
+	ArticleManageService_CancelLikeArticle_FullMethodName       = "/articleManage.articleManageService/CancelLikeArticle"
 )
 
 // ArticleManageServiceClient is the client API for ArticleManageService service.
@@ -66,6 +68,10 @@ type ArticleManageServiceClient interface {
 	GetArticleCommentDetail(ctx context.Context, in *GetArticleCommentDetailRequest, opts ...grpc.CallOption) (*GetArticleCommentDetailResponse, error)
 	// 点赞文章评论
 	LikeArticleComment(ctx context.Context, in *LikeArticleCommentRequest, opts ...grpc.CallOption) (*LikeArticleCommentResponse, error)
+	// 文章点赞数增加
+	LikeArticle(ctx context.Context, in *LikeArticleRequest, opts ...grpc.CallOption) (*LikeArticleResponse, error)
+	// 取消文章点赞
+	CancelLikeArticle(ctx context.Context, in *CancelLikeArticleRequest, opts ...grpc.CallOption) (*CancelLikeArticleResponse, error)
 }
 
 type articleManageServiceClient struct {
@@ -206,6 +212,26 @@ func (c *articleManageServiceClient) LikeArticleComment(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *articleManageServiceClient) LikeArticle(ctx context.Context, in *LikeArticleRequest, opts ...grpc.CallOption) (*LikeArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LikeArticleResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_LikeArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) CancelLikeArticle(ctx context.Context, in *CancelLikeArticleRequest, opts ...grpc.CallOption) (*CancelLikeArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CancelLikeArticleResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_CancelLikeArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleManageServiceServer is the server API for ArticleManageService service.
 // All implementations must embed UnimplementedArticleManageServiceServer
 // for forward compatibility.
@@ -236,6 +262,10 @@ type ArticleManageServiceServer interface {
 	GetArticleCommentDetail(context.Context, *GetArticleCommentDetailRequest) (*GetArticleCommentDetailResponse, error)
 	// 点赞文章评论
 	LikeArticleComment(context.Context, *LikeArticleCommentRequest) (*LikeArticleCommentResponse, error)
+	// 文章点赞数增加
+	LikeArticle(context.Context, *LikeArticleRequest) (*LikeArticleResponse, error)
+	// 取消文章点赞
+	CancelLikeArticle(context.Context, *CancelLikeArticleRequest) (*CancelLikeArticleResponse, error)
 	mustEmbedUnimplementedArticleManageServiceServer()
 }
 
@@ -284,6 +314,12 @@ func (UnimplementedArticleManageServiceServer) GetArticleCommentDetail(context.C
 }
 func (UnimplementedArticleManageServiceServer) LikeArticleComment(context.Context, *LikeArticleCommentRequest) (*LikeArticleCommentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeArticleComment not implemented")
+}
+func (UnimplementedArticleManageServiceServer) LikeArticle(context.Context, *LikeArticleRequest) (*LikeArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeArticle not implemented")
+}
+func (UnimplementedArticleManageServiceServer) CancelLikeArticle(context.Context, *CancelLikeArticleRequest) (*CancelLikeArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelLikeArticle not implemented")
 }
 func (UnimplementedArticleManageServiceServer) mustEmbedUnimplementedArticleManageServiceServer() {}
 func (UnimplementedArticleManageServiceServer) testEmbeddedByValue()                              {}
@@ -540,6 +576,42 @@ func _ArticleManageService_LikeArticleComment_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleManageService_LikeArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).LikeArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_LikeArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).LikeArticle(ctx, req.(*LikeArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_CancelLikeArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelLikeArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).CancelLikeArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_CancelLikeArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).CancelLikeArticle(ctx, req.(*CancelLikeArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleManageService_ServiceDesc is the grpc.ServiceDesc for ArticleManageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -598,6 +670,14 @@ var ArticleManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LikeArticleComment",
 			Handler:    _ArticleManageService_LikeArticleComment_Handler,
+		},
+		{
+			MethodName: "LikeArticle",
+			Handler:    _ArticleManageService_LikeArticle_Handler,
+		},
+		{
+			MethodName: "CancelLikeArticle",
+			Handler:    _ArticleManageService_CancelLikeArticle_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

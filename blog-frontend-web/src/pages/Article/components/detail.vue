@@ -1,6 +1,6 @@
 <template>
   <div class="articleDetail">
-    <div class="header">
+    <!-- <div class="header">
       <div class="back">
         <el-button
           type="text"
@@ -11,7 +11,7 @@
           返回
         </el-button>
       </div>
-    </div>
+    </div> -->
     <div class="content">
       <div class="left">
         <div class="anchors">
@@ -23,7 +23,7 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <UserComment></UserComment>
+          <UserComment :author-info="authorInfo"></UserComment>
         </div>
       </div>
     </div>
@@ -31,15 +31,24 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, Comment } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted, Comment, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { getArticleById } from "@/apis/articles";
+import { getUserById } from "@/apis/user";
 import UserComment from "@/pages/Article/components/comment.vue";
 const route = useRoute();
+// const router = useRouter();
 const articleDetail = ref({});
 const titles = ref([]);
 
 const preview = ref(null);
+
+const authorId = ref(0);
+const authorInfo = ref({});
+
+// const goBack = () => {
+//   router.go(-1);
+// };
 
 onMounted(async () => {
   await getArticleDetail(route.params.id);
@@ -62,7 +71,6 @@ onMounted(async () => {
     lineIndex: el.getAttribute("data-v-md-line"),
     indent: hTags.indexOf(el.tagName),
   }));
-  console.log("标题", titles.value);
 });
 
 const handleAnchorClick = (anchor) => {
@@ -85,32 +93,45 @@ const getArticleDetail = async () => {
   const params = {
     articleId: route.params.id,
   };
-  const { data } = await getArticleById(params);
-  console.log("文章详情", data);
-  articleDetail.value = data.articleInfo;
+  try {
+    const { data } = await getArticleById(params);
+    articleDetail.value = data.articleInfo;
+    authorId.value = data.articleInfo.authorId;
+    const res = await getUserById({ userId: data.articleInfo.authorId });
+    authorInfo.value = res.data.user;
+  } catch (error) {}
 };
+// 监听路由变化，文章浏览量+1
+watch(
+  () => route.params.id,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await getArticleDetail();
+    }
+  }
+);
 </script>
 <style scoped lang="scss">
 .articleDetail {
   display: flex;
   flex-direction: column;
-  .header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #000000;
-    z-index: 999;
-    .back {
-      display: flex;
-      align-items: center;
-    }
-  }
+  // .header {
+  //   position: fixed;
+  //   top: 0;
+  //   width: 100%;
+  //   height: 50px;
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   background-color: #282c34; // 深色背景
+  //   z-index: 999;
+  //   .back {
+  //     display: flex;
+  //     align-items: center;
+  //   }
+  // }
   .content {
-    margin-top: 50px;
+    // margin-top: 50px;
     .left {
       position: fixed;
       width: 20%;
@@ -135,6 +156,12 @@ const getArticleDetail = async () => {
     }
     .right {
       margin-left: 20%;
+      .footer {
+        position: fixed;
+        bottom: 0;
+        width: 80%;
+        z-index: 888;
+      }
     }
   }
 }

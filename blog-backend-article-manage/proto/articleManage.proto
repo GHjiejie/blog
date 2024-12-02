@@ -185,6 +185,32 @@ service articleManageService {
     };
   }
 
+  // 文章点赞数增加
+  rpc LikeArticle(LikeArticleRequest) returns (LikeArticleResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/likeArticle"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Like article"
+      description: "Like article"
+    };
+  }
+  //取消文章点赞
+  rpc CancelLikeArticle(CancelLikeArticleRequest) returns (CancelLikeArticleResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/cancelLikeArticle"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Cancel like article"
+      description: "Cancel like article"
+    };
+  }
+
+
 
 }
 
@@ -334,7 +360,6 @@ message GetPublishedArticleListRequest {
 message  GetPublishedArticleListResponse {
   // 文章列表
   repeated ArticleListInfo article_list = 1;
-
   // 总数
   int32 total = 2;
 }
@@ -597,6 +622,36 @@ message LikeArticleCommentResponse {
 }
 
 
+// 文章点赞数增加请求
+message LikeArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+}
+
+// 文章点赞数增加响应
+message LikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
+
+
+//取消文章点赞请求
+message CancelLikeArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+}
+
+//取消文章点赞响应
+message CancelLikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
 
 
 

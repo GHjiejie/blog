@@ -50,7 +50,7 @@ const keywords = ref('');
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px;
+  height: 70px;
   padding: 0 2rem; // 左右内边距
   background-color: #282c34; // 深色背景
   color: white;
@@ -113,7 +113,7 @@ const keywords = ref('');
 }
 
 body {
-  padding-top: 80px; // 根据 headerContainer 的高度调整
+  padding-top: 70px; // 根据 headerContainer 的高度调整
   background-color: red;
 }
 </style>

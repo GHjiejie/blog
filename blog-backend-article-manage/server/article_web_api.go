@@ -60,3 +60,100 @@ func (s *ArticleServer) GetPublishedArticleList(ctx context.Context, req *articl
 		Total:       int32(articleCount),
 	}, nil
 }
+
+// 文章点赞增加
+func (s *ArticleServer) LikeArticle(ctx context.Context, req *articlepb.LikeArticleRequest) (*articlepb.LikeArticleResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "LikeArticle",
+	})
+	logger.Infof("LikeArticle request with articleId(%d) and userId(%d)", req.GetArticleId(), req.GetUserId())
+	// 接下来要做的就是在数据库中创建一条点赞记录，同时更新文章的点赞次数
+	articleId := req.GetArticleId()
+	userId := req.GetUserId()
+
+	// 查询文章是否存在()
+	// article, err := s.DBEngine.GetArticleDetail(articleId)
+	// if err != nil {
+	// 	logger.Errorf("failed to get article by id(%d) with err(%s)", articleId, err.Error())
+	// 	return nil, err
+	// }
+	// if article == nil {
+	// 	logger.Errorf("article(%d) not found", articleId)
+	// 	return nil, status.Errorf(codes.NotFound, "article(%d) not found", articleId)
+	// }
+
+	// 查询用户是否已经点赞
+	_, err := s.DBEngine.GetArticleLike(articleId, userId)
+	if err != nil {
+		// 那么我们就需要在数据库中创建一条点赞记录，同时更新文章的点赞次数
+		// 创建点赞记录
+		err = s.DBEngine.CreateArticleLike(articleId, userId)
+		if err != nil {
+			logger.Errorf("failed to create article like with err(%s)", err.Error())
+			return nil, err
+		}
+
+		// 更新文章点赞次数
+		err = s.DBEngine.UpdateArticleLikeCount(articleId, 1)
+		if err != nil {
+			logger.Errorf("failed to update article like count with err(%s)", err.Error())
+			return nil, err
+		}
+	} else {
+		logger.Infof("user(%d) already like article(%d)", userId, articleId)
+		return &articlepb.LikeArticleResponse{
+			Message: "user already like article",
+		}, nil
+	}
+
+	return &articlepb.LikeArticleResponse{
+		Message: "like article success",
+	}, nil
+}
+
+//	func (UnimplementedArticleManageServiceServer) CancelLikeArticle(context.Context, *LikeArticleRequest) (*LikeArticleResponse, error) {
+//		return nil, status.Errorf(codes.Unimplemented, "method CancelLikeArticle not implemented")
+//	}
+//
+// 文章点赞取消
+func (s *ArticleServer) CancelLikeArticle(ctx context.Context, req *articlepb.CancelLikeArticleRequest) (*articlepb.CancelLikeArticleResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "UnLikeArticle",
+	})
+	logger.Infof("UnLikeArticle request with articleId(%d) and userId(%d)", req.GetArticleId(), req.GetUserId())
+	// 接下来要做的就是在数据库中删除一条点赞记录，同时更新文章的点赞次数
+	articleId := req.GetArticleId()
+	userId := req.GetUserId()
+
+	// 查询用户是否已经点赞
+	like, err := s.DBEngine.GetArticleLike(articleId, userId)
+	if err != nil {
+		logger.Errorf("failed to get article like with err(%s)", err.Error())
+		return nil, err
+	}
+	if like.ID == 0 {
+		logger.Infof("user(%d) not like article(%d)", userId, articleId)
+		return &articlepb.CancelLikeArticleResponse{
+			Message: "user not like article",
+		}, nil
+	}
+
+	// 删除点赞记录
+	err = s.DBEngine.DeleteArticleLike(articleId, userId)
+	if err != nil {
+		logger.Errorf("failed to delete article like with err(%s)", err.Error())
+		return nil, err
+	}
+
+	// 更新文章点赞次数
+	err = s.DBEngine.UpdateArticleLikeCount(articleId, -1)
+	if err != nil {
+		logger.Errorf("failed to update article like count with err(%s)", err.Error())
+		return nil, err
+	}
+
+	return &articlepb.CancelLikeArticleResponse{
+		Message: "cancel like article success",
+	}, nil
+
+}

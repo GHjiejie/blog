@@ -56,6 +56,18 @@ type Handle interface {
 
 	// 删除点赞记录
 	DeleteCommentLike(articleId, commentId int64) error
+
+	//查询用户是否点赞
+	GetArticleLike(articleId, userId int64) (ArticleLike, error)
+
+	//创建点赞记录
+	CreateArticleLike(articleId, userId int64) error
+
+	// 更新文章点赞数
+	UpdateArticleLikeCount(articleId, updateCount int64) error
+
+	// 删除文章点赞记录
+	DeleteArticleLike(articleId, userId int64) error
 }
 
 func NewHandler(c *config.DBConfig) (Handle, error) {

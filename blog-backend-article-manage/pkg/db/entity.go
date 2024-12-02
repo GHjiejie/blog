@@ -5,23 +5,6 @@ import (
 	"time"
 )
 
-// Comment 表示用户对文章的评论模型
-type Comment struct {
-	ID           int64                   `gorm:"column:id;primaryKey" json:"id"`                      // 评论ID
-	ArticleId    int64                   `gorm:"column:article_id;index" json:"article_id"`           // 关联的文章ID
-	UserId       int64                   `gorm:"column:user_id;index" json:"user_id"`                 // 评论者的用户ID
-	Content      string                  `gorm:"column:content;type:text" json:"content"`             // 评论内容
-	LikeCount    int                     `gorm:"column:like_count;default:0" json:"like_count"`       // 评论点赞次数
-	CreatedAt    time.Time               `gorm:"column:created_at;autoCreateTime" json:"created_at"`  // 创建时间
-	UpdatedAt    time.Time               `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`  // 更新时间
-	DeletedAt    *time.Time              `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"` // 软删除时间
-	ReviewStatus articlepb.CommentStatus `gorm:"column:review_status;default:0" json:"review_status"` // 评论审核状态
-}
-
-func (c *Comment) TableName() string {
-	return "comments"
-}
-
 // Article 结构体更新以包含评论
 type Article struct {
 	ID           int64                   `gorm:"column:id;primaryKey" json:"id"`                      // 文章ID
@@ -44,6 +27,36 @@ type Article struct {
 
 func (a *Article) TableName() string {
 	return "articles"
+}
+
+// 创建文章点赞记录模型
+type ArticleLike struct {
+	ID        int64     `gorm:"column:id;primaryKey" json:"id"`                     // 点赞ID
+	ArticleId int64     `gorm:"column:article_id;index" json:"article_id"`          // 关联的文章ID
+	UserId    int64     `gorm:"column:user_id;index" json:"user_id"`                // 点赞者的用户ID
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"` // 创建时间
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"` // 更新时间
+}
+
+func (l *ArticleLike) TableName() string {
+	return "article_likes"
+}
+
+// Comment 表示用户对文章的评论模型
+type Comment struct {
+	ID           int64                   `gorm:"column:id;primaryKey" json:"id"`                      // 评论ID
+	ArticleId    int64                   `gorm:"column:article_id;index" json:"article_id"`           // 关联的文章ID
+	UserId       int64                   `gorm:"column:user_id;index" json:"user_id"`                 // 评论者的用户ID
+	Content      string                  `gorm:"column:content;type:text" json:"content"`             // 评论内容
+	LikeCount    int                     `gorm:"column:like_count;default:0" json:"like_count"`       // 评论点赞次数
+	CreatedAt    time.Time               `gorm:"column:created_at;autoCreateTime" json:"created_at"`  // 创建时间
+	UpdatedAt    time.Time               `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`  // 更新时间
+	DeletedAt    *time.Time              `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"` // 软删除时间
+	ReviewStatus articlepb.CommentStatus `gorm:"column:review_status;default:0" json:"review_status"` // 评论审核状态
+}
+
+func (c *Comment) TableName() string {
+	return "comments"
 }
 
 // likes表示用户对文章的点赞模型

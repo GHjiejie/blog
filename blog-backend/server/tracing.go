@@ -21,8 +21,8 @@ var NotNeedAuthorizationPaths = map[string]bool{
 	// 以v1/web开头的都不需要验证(使用正则表达式)
 	"^/v1/web.*":                     true,
 	"/v1/articles/getArticleDetail/": true,
-
-	// "/v1/web/articles/getPublishedArticleList": true,
+	// 匹配/v1/users/数字结尾的路径: true,
+	"^/v1/users/[0-9]+$": true,
 }
 
 const (

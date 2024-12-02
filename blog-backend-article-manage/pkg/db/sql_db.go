@@ -68,7 +68,7 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 	}
 
 	// 进行数据库的迁移操作
-	if err := gormDB.AutoMigrate(&Article{}, &Comment{}, &CommentLike{}); err != nil {
+	if err := gormDB.AutoMigrate(&Article{}, &Comment{}, &CommentLike{}, &ArticleLike{}); err != nil {
 		logger.Errorf("failed to migrate schema: %v", err)
 		return nil, err
 	}
@@ -317,6 +317,60 @@ func (s *SQLDB) DeleteCommentLike(articleId, commentId int64) error {
 	// 根据articleId和commentId删除点赞记录
 	if err := s.db.Where("article_id = ? AND comment_id = ?", articleId, commentId).Delete(&CommentLike{}).Error; err != nil {
 		logger.Errorf("failed to delete comment like: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 查询用户是否点赞
+func (s *SQLDB) GetArticleLike(articleId, userId int64) (ArticleLike, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetArticleLike",
+	})
+	var like ArticleLike
+
+	if err := s.db.Where("article_id = ? AND user_id = ?", articleId, userId).First(&like).Error; err != nil {
+		logger.Errorf("failed to get article like: %v", err)
+		return ArticleLike{}, err
+	}
+	return like, nil
+}
+
+// 创建点赞记录
+func (s *SQLDB) CreateArticleLike(articleId, userId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "CreateArticleLike",
+	})
+	like := ArticleLike{
+		ArticleId: articleId,
+		UserId:    userId,
+	}
+	if err := s.db.Create(&like).Error; err != nil {
+		logger.Errorf("failed to create article like: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 更新文章点赞数（思考怎么做限流？？？）
+func (s *SQLDB) UpdateArticleLikeCount(articleId, updateCount int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpdateArticleLikeCount",
+	})
+	if err := s.db.Model(&Article{}).Where("id = ?", articleId).Update("like_count", gorm.Expr("like_count + ?", updateCount)).Error; err != nil {
+		logger.Errorf("failed to update article like count: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 删除文章点赞记录
+func (s *SQLDB) DeleteArticleLike(articleId, userId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "DeleteArticleLike",
+	})
+	if err := s.db.Where("article_id = ? AND user_id = ?", articleId, userId).Delete(&ArticleLike{}).Error; err != nil {
+		logger.Errorf("failed to delete article like: %v", err)
 		return err
 	}
 	return nil

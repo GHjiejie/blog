@@ -18,7 +18,6 @@
           </div>
           <div class="summary" @click="goArticleDetail(item.articleId)">
             <p>{{ item.summary }}</p>
-            <!-- <v-md-preview :text="item.summary" height="50px"></v-md-preview> -->
           </div>
           <div class="articleInfo">
             <div class="creatAt">
@@ -96,10 +95,6 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-.el-drawer__body {
-  height: 90vh;
-}
-
 .articleContainer {
   display: flex;
   flex-direction: column;
@@ -164,24 +159,23 @@ onMounted(async () => {
         }
 
         .summary {
-         p{
-          font-size: 16px; // 加大摘要字体
-          color: #555;
-          line-height: 1.6;
-          margin-bottom: 10px;
-          // 设置显示的行数
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          line-clamp: 3;
-          -webkit-box-orient: vertical;
-          word-wrap: break-word;
-          &:hover {
-            color: var(--el-color-primary); // 鼠标悬停时颜色变化
+          p {
+            font-size: 16px; // 加大摘要字体
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            // 设置显示的行数
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            word-wrap: break-word;
+            &:hover {
+              color: var(--el-color-primary); // 鼠标悬停时颜色变化
+            }
           }
-         }
-          
         }
 
         .articleInfo {

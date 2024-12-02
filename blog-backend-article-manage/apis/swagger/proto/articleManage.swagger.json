@@ -12,6 +12,40 @@
     "application/json"
   ],
   "paths": {
+    "/v1/articles/cancelLikeArticle": {
+      "post": {
+        "summary": "Cancel like article",
+        "description": "Cancel like article",
+        "operationId": "articleManageService_CancelLikeArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageCancelLikeArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageCancelLikeArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
     "/v1/articles/deleteArticle/{article_id}": {
       "delete": {
         "summary": "Delete article",
@@ -240,6 +274,40 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
+    "/v1/articles/likeArticle": {
+      "post": {
+        "summary": "Like article",
+        "description": "Like article",
+        "operationId": "articleManageService_LikeArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageLikeArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageLikeArticleRequest"
+            }
           }
         ],
         "tags": [
@@ -702,6 +770,32 @@
       "default": "DRAFT",
       "title": "- DRAFT: 草稿\n - PUBLISHED: 已发布\n - DELETED: 已删除\n - REVIEWING: 审核中\n - REVIEW_FAILED: 审核未通过\n - REVIEW_PASSED: 审核通过"
     },
+    "articleManageCancelLikeArticleRequest": {
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "点赞者ID"
+        }
+      },
+      "title": "取消文章点赞请求"
+    },
+    "articleManageCancelLikeArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章唯一标识"
+        }
+      },
+      "title": "取消文章点赞响应"
+    },
     "articleManageCommentStatus": {
       "type": "string",
       "enum": [
@@ -838,6 +932,32 @@
         }
       },
       "title": "点赞文章评论响应"
+    },
+    "articleManageLikeArticleRequest": {
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "点赞者ID"
+        }
+      },
+      "title": "文章点赞数增加请求"
+    },
+    "articleManageLikeArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章唯一标识"
+        }
+      },
+      "title": "文章点赞数增加响应"
     },
     "articleManagePublishArticleCommentRequest": {
       "type": "object",

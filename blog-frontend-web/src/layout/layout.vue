@@ -18,12 +18,4 @@ import Header from "@/components/Header/index.vue";
   padding: 0;
   margin: 0;
 }
-
-.el-header {
-  height: 50px;
-}
-
-.el-main {
-  margin-top: 50px;
-}
 </style>
