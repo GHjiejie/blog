@@ -157,3 +157,24 @@ func (s *ArticleServer) CancelLikeArticle(ctx context.Context, req *articlepb.Ca
 	}, nil
 
 }
+
+// 文章浏览数增加
+func (s *ArticleServer) ViewArticle(ctx context.Context, req *articlepb.ViewArticleRequest) (*articlepb.ViewArticleResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "ViewArticle",
+	})
+	logger.Infof("ViewArticle request with articleId(%d)", req.GetArticleId())
+	// 接下来要做的就是在数据库中更新文章的浏览次数
+	articleId := req.GetArticleId()
+
+	// 更新文章浏览次数
+	err := s.DBEngine.UpdateArticleViewCount(articleId, 1)
+	if err != nil {
+		logger.Errorf("failed to update article view count with err(%s)", err.Error())
+		return nil, err
+	}
+
+	return &articlepb.ViewArticleResponse{
+		Message: "view article success",
+	}, nil
+}

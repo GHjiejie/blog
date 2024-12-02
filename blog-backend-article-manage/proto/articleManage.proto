@@ -210,6 +210,19 @@ service articleManageService {
     };
   }
 
+  // 文章浏览数增加
+  rpc ViewArticle(ViewArticleRequest) returns (ViewArticleResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/viewArticle"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "View article"
+      description: "View article"
+    };
+  }
+
 
 
 }
@@ -649,6 +662,21 @@ message CancelLikeArticleRequest {
 
 //取消文章点赞响应
 message CancelLikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
+
+// 文章浏览数增加请求
+message ViewArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 浏览者ID
+  int64 user_id = 2;
+}
+
+// 文章浏览数增加响应
+message ViewArticleResponse {
   // 文章唯一标识
   string message = 1;
 }

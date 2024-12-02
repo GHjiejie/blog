@@ -375,3 +375,15 @@ func (s *SQLDB) DeleteArticleLike(articleId, userId int64) error {
 	}
 	return nil
 }
+
+// 更新文章浏览次数
+func (s *SQLDB) UpdateArticleViewCount(articleId, updateCount int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpdateArticleViewCount",
+	})
+	if err := s.db.Model(&Article{}).Where("id = ?", articleId).Update("view_count", gorm.Expr("view_count + ?", updateCount)).Error; err != nil {
+		logger.Errorf("failed to update article view count: %v", err)
+		return err
+	}
+	return nil
+}

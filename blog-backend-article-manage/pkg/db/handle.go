@@ -68,6 +68,9 @@ type Handle interface {
 
 	// 删除文章点赞记录
 	DeleteArticleLike(articleId, userId int64) error
+
+	// 更新文章浏览次数
+	UpdateArticleViewCount(articleId, updateCount int64) error
 }
 
 func NewHandler(c *config.DBConfig) (Handle, error) {

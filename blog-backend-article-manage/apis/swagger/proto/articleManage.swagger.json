@@ -518,6 +518,40 @@
         ]
       }
     },
+    "/v1/articles/viewArticle": {
+      "post": {
+        "summary": "View article",
+        "description": "View article",
+        "operationId": "articleManageService_ViewArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageViewArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/articleManageViewArticleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
     "/v1/web/articles/getPublishedArticleList": {
       "get": {
         "summary": "Get published article list",
@@ -1136,6 +1170,32 @@
         }
       },
       "title": "修改文章响应"
+    },
+    "articleManageViewArticleRequest": {
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "文章唯一标识"
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "title": "浏览者ID"
+        }
+      },
+      "title": "文章浏览数增加请求"
+    },
+    "articleManageViewArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章唯一标识"
+        }
+      },
+      "title": "文章浏览数增加响应"
     },
     "protobufAny": {
       "type": "object",
