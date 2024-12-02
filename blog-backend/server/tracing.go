@@ -19,7 +19,8 @@ var NotNeedAuthorizationPaths = map[string]bool{
 	"/v1/users/register": true,
 	"/v1/captchas":       true,
 	// 以v1/web开头的都不需要验证(使用正则表达式)
-	"^/v1/web.*": true,
+	"^/v1/web.*":                     true,
+	"/v1/articles/getArticleDetail/": true,
 
 	// "/v1/web/articles/getPublishedArticleList": true,
 }

@@ -1,7 +1,11 @@
 <template>
   <div class="articleContainer">
     <div class="articleList">
-      <div class="ArticleItem" v-for="(item, index) in articleList " @click="goArticleDetail(item.articleId)">
+      <div
+        class="ArticleItem"
+        v-for="(item, index) in articleList"
+        :key="index"
+      >
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -12,7 +16,7 @@
           <div class="title">
             {{ item.title }}
           </div>
-          <div class="summary">
+          <div class="summary" @click="goArticleDetail(item.articleId)">
             <p>{{ item.summary }}</p>
             <!-- <v-md-preview :text="item.summary" height="50px"></v-md-preview> -->
           </div>
@@ -50,51 +54,45 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
-
-    <el-drawer v-model="articleVisible" title="I am the title" :with-header="false" direction="ttb" size="80%"
-      :lock-scroll="false">
-      <v-md-preview :text="text" height="100vh"></v-md-preview>
-    </el-drawer>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getArticleList } from '@/apis/articles'
-import { Star, ChatLineRound, View } from '@element-plus/icons-vue'
-import {useRouter} from 'vue-router'
-const router = useRouter()
-const text = ref('')
+import { ref, onMounted } from "vue";
+import { getArticleList } from "@/apis/articles";
+import { Star, ChatLineRound, View } from "@element-plus/icons-vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const text = ref("");
 
-const page = ref(1)
-const pageSize = ref(10)
+const page = ref(1);
+const pageSize = ref(10);
 
-const articleList = ref([])
+const articleList = ref([]);
 
-const articleVisible = ref(false)
+const articleVisible = ref(false);
 const goArticleDetail = (articleId) => {
   // articleVisible.value = true
   // text.value = content
-  router.push(`/article/${articleId}`)
-}
-
-
+  router.push(`/article/${articleId}`);
+};
 
 onMounted(async () => {
   // const res = await getArticleList({ page: page.value, pageSize: pageSize.value })
   // console.log(res)
   try {
-    const { data } = await getArticleList({ page: page.value, pageSize: pageSize.value })
-    console.log(data)
-    articleList.value = data.articleList
+    const { data } = await getArticleList({
+      page: page.value,
+      pageSize: pageSize.value,
+    });
+    console.log(data);
+    articleList.value = data.articleList;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-
-})
+});
 </script>
 
 <style scoped lang="scss">
@@ -107,7 +105,6 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-
 
   .articleList {
     width: 100%;
@@ -125,13 +122,10 @@ onMounted(async () => {
       border: 1px solid #f0f0f0; // 增加边框
       transition: all 0.3s ease;
 
-
       &:hover {
         cursor: pointer;
         border-color: var(--el-color-primary-light-5); // 鼠标悬停时边框颜色变化
-
       }
-
 
       .left {
         flex-shrink: 0;
@@ -170,6 +164,7 @@ onMounted(async () => {
         }
 
         .summary {
+         p{
           font-size: 16px; // 加大摘要字体
           color: #555;
           line-height: 1.6;
@@ -181,7 +176,12 @@ onMounted(async () => {
           -webkit-line-clamp: 3;
           line-clamp: 3;
           -webkit-box-orient: vertical;
-
+          word-wrap: break-word;
+          &:hover {
+            color: var(--el-color-primary); // 鼠标悬停时颜色变化
+          }
+         }
+          
         }
 
         .articleInfo {
@@ -199,11 +199,6 @@ onMounted(async () => {
               color: #555;
             }
           }
-
-
-
-
-
         }
 
         .articleView {
@@ -221,17 +216,14 @@ onMounted(async () => {
             .el-icon {
               font-size: 14px; // 图标略微增大
 
-
               &:hover {
                 cursor: pointer;
                 color: var(--el-color-primary); // 鼠标悬停时颜色变化
-
               }
             }
 
             span {
               color: #555;
-
             }
           }
         }
@@ -240,7 +232,6 @@ onMounted(async () => {
   }
 }
 </style>
-
 
 <!-- <style scoped lang="scss">
 .articleContainer {
