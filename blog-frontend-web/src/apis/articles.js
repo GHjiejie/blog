@@ -15,3 +15,12 @@ export function getArticleById(params) {
     method: "get",
   });
 }
+
+// 文章浏览数增加
+export function addArticleViewCount(data) {
+  return httpRequest({
+    url: `/v1/articles/viewArticle`,
+    method: "post",
+    data: data,
+  });
+}

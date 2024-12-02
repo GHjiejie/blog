@@ -43,15 +43,18 @@ func (s *ArticleServer) GetPublishedArticleList(ctx context.Context, req *articl
 	var articles []*articlepb.ArticleListInfo
 	for _, article := range articleList {
 		articles = append(articles, &articlepb.ArticleListInfo{
-			ArticleId: article.ID,
-			Title:     article.Title,
-			AuthorId:  article.AuthorId,
-			Summary:   article.Summary,
-			Tag:       article.Tag,
-			ImageUrl:  article.ImageURL,
-			Status:    article.Status,
-			CreatedAt: timestamppb.New(article.CreatedAt),
-			UpdatedAt: timestamppb.New(article.UpdatedAt),
+			ArticleId:    article.ID,
+			Title:        article.Title,
+			AuthorId:     article.AuthorId,
+			Summary:      article.Summary,
+			Tag:          article.Tag,
+			ImageUrl:     article.ImageURL,
+			Status:       article.Status,
+			ViewCount:    int32(article.ViewCount),
+			LikeCount:    int32(article.LikeCount),
+			CommentCount: int32(article.CommentCount),
+			CreatedAt:    timestamppb.New(article.CreatedAt),
+			UpdatedAt:    timestamppb.New(article.UpdatedAt),
 		})
 	}
 

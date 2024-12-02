@@ -20,8 +20,7 @@
           <el-icon>
             <View />
           </el-icon>
-          <!-- <span>{{ item.viewCount }}</span> -->
-          1
+          <span>{{ props.articleInfo.viewCount }}</span>
         </div>
 
         <div class="like">
@@ -29,15 +28,15 @@
             <Star />
           </el-icon>
           <!-- <span>{{ item.likeCount }}</span> -->
-          1
+          <span>{{ props.articleInfo.likeCount }}</span>
         </div>
 
         <div class="comment">
           <el-icon>
             <ChatLineRound />
           </el-icon>
-          <!-- <span>{{ item.commentCount }}</span> -->
-          1
+
+          {{ props.articleInfo.commentCount }}
         </div>
       </div>
     </div>
@@ -49,6 +48,7 @@ import { Star, ChatLineRound, View } from "@element-plus/icons-vue";
 
 const props = defineProps({
   authorInfo: Object,
+  articleInfo: Object,
 });
 </script>
 

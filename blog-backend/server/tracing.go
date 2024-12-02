@@ -22,7 +22,8 @@ var NotNeedAuthorizationPaths = map[string]bool{
 	"^/v1/web.*":                     true,
 	"/v1/articles/getArticleDetail/": true,
 	// 匹配/v1/users/数字结尾的路径: true,
-	"^/v1/users/[0-9]+$": true,
+	"^/v1/users/[0-9]+$":       true,
+	"/v1/articles/viewArticle": true,
 }
 
 const (

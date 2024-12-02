@@ -23,7 +23,10 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <UserComment :author-info="authorInfo"></UserComment>
+          <UserComment
+            :author-info="authorInfo"
+            :article-info="articleDetail"
+          ></UserComment>
         </div>
       </div>
     </div>
@@ -33,7 +36,7 @@
 <script setup>
 import { ref, onMounted, Comment, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getArticleById } from "@/apis/articles";
+import { getArticleById, addArticleViewCount } from "@/apis/articles";
 import { getUserById } from "@/apis/user";
 import UserComment from "@/pages/Article/components/comment.vue";
 const route = useRoute();
@@ -105,9 +108,13 @@ const getArticleDetail = async () => {
 watch(
   () => route.params.id,
   async (newVal, oldVal) => {
+    console.log("newVal", newVal);
     if (newVal !== oldVal) {
-      await getArticleDetail();
+      await addArticleViewCount({ articleId: newVal });
     }
+  },
+  {
+    immediate: true,
   }
 );
 </script>
