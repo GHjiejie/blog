@@ -45,12 +45,12 @@ func (s *ArticleServer) PublishArticle(ctx context.Context, req *articlepb.Publi
 		CreatedAt: timestamppb.Now().AsTime(),
 		UpdatedAt: timestamppb.Now().AsTime(),
 	}
-	article, err := s.DBEngine.CreateArticle(articleInfo)
+	_, err := s.DBEngine.CreateArticle(articleInfo)
 	if err != nil {
 		logger.Errorf("failed to create article with err(%s)", err.Error())
 		return nil, err
 	}
-	logger.Infof("article created: %v", article)
+	// logger.Infof("article created: %v", article)
 
 	// return nil, status.Errorf(codes.Unimplemented, "method PublishArticle not implemented")
 	return &articlepb.PublishArticleResponse{

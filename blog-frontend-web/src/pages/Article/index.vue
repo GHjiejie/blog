@@ -1,7 +1,7 @@
 <template>
   <div class="articleContainer">
     <div class="articleList">
-      <div class="ArticleItem" v-for="(item, index) in articleList " @click="goArticleDetail(item.content)">
+      <div class="ArticleItem" v-for="(item, index) in articleList " @click="goArticleDetail(item.articleId)">
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -65,7 +65,8 @@
 import { ref, onMounted } from 'vue'
 import { getArticleList } from '@/apis/articles'
 import { Star, ChatLineRound, View } from '@element-plus/icons-vue'
-
+import {useRouter} from 'vue-router'
+const router = useRouter()
 const text = ref('')
 
 const page = ref(1)
@@ -74,9 +75,10 @@ const pageSize = ref(10)
 const articleList = ref([])
 
 const articleVisible = ref(false)
-const goArticleDetail = (content) => {
-  articleVisible.value = true
-  text.value = content
+const goArticleDetail = (articleId) => {
+  // articleVisible.value = true
+  // text.value = content
+  router.push(`/article/${articleId}`)
 }
 
 
