@@ -41,23 +41,16 @@ import { getArticleList } from "@/apis/articles";
 import { useRouter } from "vue-router";
 import FeedBack from "@/components/Feedback/index.vue";
 const router = useRouter();
-const text = ref("");
-
 const page = ref(1);
 const pageSize = ref(10);
-
 const articleList = ref([]);
 
-const articleVisible = ref(false);
+
 const goArticleDetail = (articleId) => {
-  // articleVisible.value = true
-  // text.value = content
   router.push(`/article/${articleId}`);
 };
 
 onMounted(async () => {
-  // const res = await getArticleList({ page: page.value, pageSize: pageSize.value })
-  // console.log(res)
   try {
     const { data } = await getArticleList({
       page: page.value,

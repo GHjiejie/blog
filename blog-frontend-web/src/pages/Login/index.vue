@@ -30,7 +30,6 @@ const handleLogin = async () => {
   try {
     // console.log("输出userForm", userForm);
     const res = await login(userForm);
-    console.log("输出登录res", res);
     if (res.status == 200) {
       cache.setToken(res.data.token);
       cache.sessionSet("userId", res.data.user.userId);
@@ -42,10 +41,6 @@ const handleLogin = async () => {
     } else {
       ElMessage.error("账号或者密码错误");
     }
-    // cache.setToken(res.data.token);
-    // setTimeout(() => {
-    //   router.push("/");
-    // }, 1000);
   } catch (error) { }
 };
 const handleRegister = () => {
@@ -57,8 +52,8 @@ const handleRegister = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f5f5f5;
+  height: 60vh;
+  /* background-color: #f5f5f5; */
 }
 
 .login-card {
@@ -70,12 +65,17 @@ const handleRegister = () => {
   flex-direction: column;
   align-items: center;
   width: 350px;
+
 }
 
 h1 {
   margin-bottom: 20px;
   font-size: 2em;
   color: #333;
+}
+
+input {
+  transition: all 0.3s;
 }
 
 input[type="text"],
@@ -90,9 +90,9 @@ input[type="password"] {
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-  border-color: #66afe9;
+  border-color: var(--el-color-primary);
   outline: none;
-  box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: 0 0 8px var(--el-color-primary-light-5);
 }
 
 button {
@@ -101,13 +101,14 @@ button {
   margin-top: 20px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
+  background-color: var(--el-color-primary);
   color: white;
   font-size: 1em;
   cursor: pointer;
+  transition: all 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: var(--el-color-success);
 }
 </style>

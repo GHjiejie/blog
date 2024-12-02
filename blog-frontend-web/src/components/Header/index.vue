@@ -17,10 +17,14 @@
       <div class="blogsearch">
         <SearchBlog></SearchBlog>
       </div>
-      <div class="useravatar">
+      <div class="useravatar" @click="userLogin">
         <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
       </div>
     </div>
+
+    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
+      <Login></Login>
+    </el-dialog>
   </div>
 
 </template>
@@ -28,6 +32,9 @@
 <script setup>
 import { ref } from 'vue';
 import SearchBlog from '@/components/Search/index.vue';
+import Login from '@/pages/Login/index.vue';
+
+const loginVisible = ref(false);
 
 const menuList = ref([
   { name: '首页', path: '/' },
@@ -36,14 +43,26 @@ const menuList = ref([
 ]);
 
 const keywords = ref('');
+
+const userLogin = () => {
+
+  loginVisible.value = true;
+};
 </script>
 
 <style scoped lang="scss">
+:deep(.el-dialog) {
+  --el-dialog-bg-color: none;
+  --el-dialog-box-shadow: none;
+
+}
+
 .headerContainer {
   position: fixed; // 设置为固定定位
   top: 0; // 固定在顶部
   left: 0; // 从左边开始
-  width: 100%; // 全宽
+  width: 100vw; // 全宽
+  overflow: hidden;
   z-index: 1000; // 确保在其他内容上方
 
   display: flex;
@@ -103,9 +122,13 @@ const keywords = ref('');
     }
 
     .useravatar {
-      el-avatar {
+      .el-avatar {
         width: 40px; // 头像大小
         height: 40px;
+
+        &:hover {
+          cursor: pointer; // 鼠标悬停时显示手型
+        }
       }
     }
   }

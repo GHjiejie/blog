@@ -122,9 +122,10 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 	return &pb.LoginResponse{
 		Token: token,
 		User: &pb.User{
-			UserId:    user.ID,
-			Username:  user.Username,
-			Role:      pb.Role(user.Role),
+			UserId:   user.ID,
+			Username: user.Username,
+			Role:     pb.Role(user.Role),
+
 			CreatedAt: timestamppb.New(user.CreatedAt),
 			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		},

@@ -12,6 +12,7 @@
     "@kangc/v-md-editor": "^2.3.18",
     "axios": "^1.7.8",
     "clipboard": "^2.0.11",
+    "crypto-js": "^4.2.0",
     "element-plus": "^2.9.0",
     "fast-glob": "^3.3.2",
     "install": "^0.13.0",
