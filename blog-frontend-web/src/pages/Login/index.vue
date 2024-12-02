@@ -1,21 +1,22 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <h1>Login</h1>
+      <h1>登录</h1>
       <input type="text" v-model="userForm.username" placeholder="Username" />
       <input type="password" v-model="userForm.password" placeholder="Password" />
-      <button @click="handleLogin">login</button>
-      <el-button @click="handleRegister" link>Register</el-button>
+      <button @click="handleLogin">登录</button>
+      <el-button @click="handleRegister" link>注册</el-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, defineEmits } from "vue";
 import { login } from "@/apis/user.js";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import cache from "@/utils/cache";
+const emits = defineEmits(["loginSuccess"]);
 const userForm = reactive({
   username: "admin",
   password: "12345",
@@ -35,9 +36,10 @@ const handleLogin = async () => {
       cache.sessionSet("userId", res.data.user.userId);
       cache.sessionSet("user", userForm.username);
       cache.sessionSet("userRole", res.data.user.role);
+      cache.sessionSet("avatar", res.data.user.avatar);
+      cache.sessionSet("isLogin", true);
       ElMessage.success("登录成功");
-      // 跳转到根目录
-      router.push("/");
+      emits("loginSuccess", res.data.user);
     } else {
       ElMessage.error("账号或者密码错误");
     }

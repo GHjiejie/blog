@@ -18,43 +18,59 @@
         <SearchBlog></SearchBlog>
       </div>
       <div class="useravatar" @click="userLogin">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <!-- <el-avatar :src="src" /> -->
+        <template v-if="isLogin || computedIsLogin" :src="userInfo.avatar"></template>
+        <template v-else>
+          <el-avatar :src="src" />
+        </template>
       </div>
     </div>
 
     <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
-      <Login></Login>
+      <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
   </div>
 
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import SearchBlog from '@/components/Search/index.vue';
 import Login from '@/pages/Login/index.vue';
+import cache from "@/utils/cache";
 
+const src = ref('https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
 const loginVisible = ref(false);
-
+const userInfo = ref({});
 const menuList = ref([
   { name: '首页', path: '/' },
   { name: '归档', path: '/archive' },
   { name: '关于', path: '/about' }
 ]);
 
+const isLogin = ref(false);
+const computedIsLogin = computed(() => {
+  return cache.sessionGet("isLogin");
+});
+
 const keywords = ref('');
 
-const userLogin = () => {
 
+const userLogin = () => {
   loginVisible.value = true;
 };
+
+const handleLogin = (user) => {
+  loginVisible.value = false;
+  userInfo.value = user;
+  src.value = userInfo.value.avatar;
+}
 </script>
 
 <style scoped lang="scss">
 :deep(.el-dialog) {
   --el-dialog-bg-color: none;
   --el-dialog-box-shadow: none;
-
 }
 
 .headerContainer {

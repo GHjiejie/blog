@@ -632,6 +632,10 @@
           "$ref": "#/definitions/pbStatus",
           "title": "用户状态"
         },
+        "avatar": {
+          "type": "string",
+          "title": "用户头像"
+        },
         "created_at": {
           "type": "string",
           "format": "date-time",

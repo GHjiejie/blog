@@ -184,10 +184,12 @@ message User {
     Role role = 5;
     // 用户状态
     Status status = 6;
+    // 用户头像
+    string avatar = 7;
     // 创建时间
-    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp created_at = 8;
     // 更新时间
-    google.protobuf.Timestamp updated_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
 }
 
 // 用户注册请求（或者·叫用户新增请求，只有管理员才有权限）
@@ -198,7 +200,6 @@ message RegisterRequest {
     string password = 2;
     // 用户角色
     Role role = 3;
-
 }
 
 // 用户注册响应
