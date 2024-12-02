@@ -23,10 +23,7 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <UserComment
-            :author-info="authorInfo"
-            :article-info="articleDetail"
-          ></UserComment>
+          <UserComment :author-info="authorInfo" :article-info="articleDetail"></UserComment>
         </div>
       </div>
     </div>
@@ -48,6 +45,8 @@ const preview = ref(null);
 
 const authorId = ref(0);
 const authorInfo = ref({});
+
+
 
 // const goBack = () => {
 //   router.go(-1);
@@ -102,7 +101,7 @@ const getArticleDetail = async () => {
     authorId.value = data.articleInfo.authorId;
     const res = await getUserById({ userId: data.articleInfo.authorId });
     authorInfo.value = res.data.user;
-  } catch (error) {}
+  } catch (error) { }
 };
 // 监听路由变化，文章浏览量+1
 watch(
@@ -122,6 +121,7 @@ watch(
 .articleDetail {
   display: flex;
   flex-direction: column;
+
   // .header {
   //   position: fixed;
   //   top: 0;
@@ -138,6 +138,7 @@ watch(
   //   }
   // }
   .content {
+
     // margin-top: 50px;
     .left {
       position: fixed;
@@ -145,24 +146,30 @@ watch(
       max-height: 100vh;
       overflow-y: auto;
       padding: 20px;
-      border-right: 1px solid var(--el-color-primary-light-5);
+
+
       // 隐藏滚动条
       &::-webkit-scrollbar {
         display: none;
       }
+
       .anchors {
         a {
           display: block;
           margin-bottom: 10px;
           cursor: pointer;
+
           &:hover {
             color: var(--el-color-primary);
           }
         }
       }
     }
+
     .right {
       margin-left: 20%;
+      border-left: 1px solid var(--el-color-primary-light-5);
+
       .footer {
         position: fixed;
         bottom: 0;

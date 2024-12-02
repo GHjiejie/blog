@@ -5,8 +5,7 @@
         <div class="avatar">
           <el-avatar
             src="https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            alt="avatar"
-          />
+            alt="avatar" />
         </div>
         <div class="authorName">
           <span>{{ props.authorInfo.username }}</span>
@@ -16,40 +15,41 @@
 
     <div class="right">
       <div class="feedbackInfo">
-        <div class="view">
-          <el-icon>
-            <View />
-          </el-icon>
+        <FeedBack :articleInfo="props.articleInfo"></FeedBack>
+        <!-- <div class="view">
+          <svg-icon iconClass="icon-view" className="icon"></svg-icon>
           <span>{{ props.articleInfo.viewCount }}</span>
         </div>
 
-        <div class="like">
-          <el-icon>
-            <Star />
-          </el-icon>
-          <!-- <span>{{ item.likeCount }}</span> -->
-          <span>{{ props.articleInfo.likeCount }}</span>
-        </div>
+        <div class="like" @click="handleClickLike">
+          <template v-if="!likeStatus">
+            <svg-icon iconClass="icon-like" className="icon"></svg-icon>
+          </template>
+<template v-else>
+            <svg-icon iconClass="icon-like-active" className="icon"></svg-icon>
+          </template>
+<span>{{ props.articleInfo.likeCount }}</span>
+</div>
 
-        <div class="comment">
-          <el-icon>
-            <ChatLineRound />
-          </el-icon>
-
-          {{ props.articleInfo.commentCount }}
-        </div>
+<div class="comment">
+  <svg-icon iconClass="icon-comment" className="icon"></svg-icon>
+  {{ props.articleInfo.commentCount }}
+</div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { Star, ChatLineRound, View } from "@element-plus/icons-vue";
-
+import { ref } from "vue";
+import FeedBack from "@/components/Feedback/index.vue";
+// import { ELMessage } from 'element-plus';
 const props = defineProps({
   authorInfo: Object,
   articleInfo: Object,
 });
+
+
 </script>
 
 <style scoped lang="scss">
@@ -93,28 +93,7 @@ const props = defineProps({
     margin-left: auto; // 右侧内容靠右
     display: flex;
 
-    .feedbackInfo {
-      display: flex;
 
-      .view,
-      .like,
-      .comment {
-        display: flex;
-        align-items: center; // 垂直居中
-        margin-left: 20px; // 每个图标之间间距
-
-        .el-icon {
-          margin-right: 5px; // 图标右边距
-          font-size: 16px; // 图标大小
-          color: #999; // 图标颜色
-        }
-
-        span {
-          font-size: 12px;
-          color: #999;
-        }
-      }
-    }
   }
 }
 </style>

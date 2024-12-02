@@ -1,11 +1,7 @@
 <template>
   <div class="articleContainer">
     <div class="articleList">
-      <div
-        class="ArticleItem"
-        v-for="(item, index) in articleList"
-        :key="index"
-      >
+      <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -31,26 +27,7 @@
 
           <!-- 文章浏览消息包括点赞，评论，浏览量等 -->
           <div class="articleView">
-            <div class="view">
-              <el-icon>
-                <View />
-              </el-icon>
-              <span>{{ item.viewCount }}</span>
-            </div>
-
-            <div class="like">
-              <el-icon>
-                <Star />
-              </el-icon>
-              <span>{{ item.likeCount }}</span>
-            </div>
-
-            <div class="comment">
-              <el-icon>
-                <ChatLineRound />
-              </el-icon>
-              <span>{{ item.commentCount }}</span>
-            </div>
+            <FeedBack :articleInfo="item"></FeedBack>
           </div>
         </div>
       </div>
@@ -61,8 +38,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getArticleList } from "@/apis/articles";
-import { Star, ChatLineRound, View } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import FeedBack from "@/components/Feedback/index.vue";
 const router = useRouter();
 const text = ref("");
 
@@ -172,6 +149,7 @@ onMounted(async () => {
             line-clamp: 3;
             -webkit-box-orient: vertical;
             word-wrap: break-word;
+
             &:hover {
               color: var(--el-color-primary); // 鼠标悬停时颜色变化
             }
@@ -203,18 +181,9 @@ onMounted(async () => {
           div {
             display: flex;
             align-items: center;
-            gap: 6px; // 稍微增加间隔
+            gap: 3px; // 稍微增加间隔
             font-size: 13px;
             color: #777;
-
-            .el-icon {
-              font-size: 14px; // 图标略微增大
-
-              &:hover {
-                cursor: pointer;
-                color: var(--el-color-primary); // 鼠标悬停时颜色变化
-              }
-            }
 
             span {
               color: #555;
