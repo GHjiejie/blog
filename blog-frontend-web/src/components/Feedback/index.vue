@@ -27,6 +27,15 @@
       <svg-icon iconClass="icon-comment" className="icon"></svg-icon>
       <span> {{ props.articleInfo.commentCount }}</span>
     </div>
+
+    <el-drawer
+      v-model="commentVisible"
+      title=""
+      :with-header="false"
+      size="30%"
+    >
+      <CommentPanel></CommentPanel>
+    </el-drawer>
   </div>
 </template>
 
@@ -35,14 +44,15 @@ import { ref, watch } from "vue";
 import cache from "@/utils/cache";
 import { ElMessage } from "element-plus";
 import { cancelArticleLikeCount, addArticleLikeCount } from "@/apis/articles";
+import CommentPanel from "./comment.vue";
 const props = defineProps({
   articleInfo: Object,
   activePosition: String,
   isLike: Boolean,
 });
 
+const commentVisible = ref(false);
 let likeStatus = props.isLike;
-
 const userId = cache.sessionGet("userId");
 // 用户点赞事件
 const handleClickLike = async () => {
@@ -92,8 +102,7 @@ const handleClickComment = () => {
     });
     return;
   }
-  // 跳转到文章详情页面
-  // router.push(`/article/${props.articleInfo.articleId}`);
+  commentVisible.value = true;
 };
 
 watch(
@@ -108,6 +117,10 @@ watch(
 </script>
 
 <style scoped lang="scss">
+:deep(.el-drawer__body) {
+  padding: 0;
+}
+
 .feedback {
   display: flex;
 
