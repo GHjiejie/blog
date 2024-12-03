@@ -11,10 +11,10 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <UserComment
+          <ArticleDetailFooter
             :author-info="authorInfo"
             :article-info="articleDetail"
-          ></UserComment>
+          ></ArticleDetailFooter>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@ import { ref, onMounted, Comment, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getArticleById, addArticleViewCount } from "@/apis/articles";
 import { getUserById } from "@/apis/user";
-import UserComment from "@/pages/Article/components/comment.vue";
+import ArticleDetailFooter from "@/pages/Article/components/articleDetailFooter.vue";
 const route = useRoute();
 // const router = useRouter();
 const articleDetail = ref({});

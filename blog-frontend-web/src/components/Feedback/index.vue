@@ -5,19 +5,19 @@
       <span>{{ props.articleInfo.viewCount }}</span>
     </div>
 
-    <!-- <div
+    <div
       v-if="props.activePosition !== 'articleList'"
       class="like"
       @click="handleClickLike"
     >
-      <template v-if="!likeStatus">
-        <svg-icon iconClass="icon-like" className="icon"></svg-icon>
-      </template>
-      <template v-else>
+      <template v-if="likeStatus">
         <svg-icon iconClass="icon-like-active" className="icon"></svg-icon>
       </template>
+      <template v-else>
+        <svg-icon iconClass="icon-like" className="icon"></svg-icon>
+      </template>
       <span>{{ props.articleInfo.likeCount }}</span>
-    </div> -->
+    </div>
 
     <div
       v-if="props.activePosition !== 'articleList'"
@@ -31,20 +31,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import cache from "@/utils/cache";
 import { ElMessage } from "element-plus";
 import { cancelArticleLikeCount, addArticleLikeCount } from "@/apis/articles";
 const props = defineProps({
   articleInfo: Object,
   activePosition: String,
+  isLike: Boolean,
 });
-console.log("shuchu", props);
+
+let likeStatus = props.isLike;
 
 const userId = cache.sessionGet("userId");
-
-const likeStatus = ref(false);
-
 // 用户点赞事件
 const handleClickLike = async () => {
   // 首先要判断用户是否登录，如果没有登录，提示用户登录
@@ -56,14 +55,14 @@ const handleClickLike = async () => {
     return;
   }
 
-  if (likeStatus.value) {
+  if (likeStatus) {
     const res = await cancelArticleLikeCount({
       articleId: props.articleInfo.articleId,
       userId: userId,
     });
     if (res.status == 200) {
       console.log(res);
-      likeStatus.value = false;
+      likeStatus = false;
       props.articleInfo.likeCount--;
     } else {
       ElMessage.error("取消点赞失败");
@@ -75,7 +74,7 @@ const handleClickLike = async () => {
     });
     if (res.status == 200) {
       console.log(res);
-      likeStatus.value = true;
+      likeStatus = true;
       props.articleInfo.likeCount++;
     } else {
       ElMessage.error("点赞失败");
@@ -96,6 +95,16 @@ const handleClickComment = () => {
   // 跳转到文章详情页面
   // router.push(`/article/${props.articleInfo.articleId}`);
 };
+
+watch(
+  () => props.isLike,
+  (newVal) => {
+    likeStatus = newVal;
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <style scoped lang="scss">

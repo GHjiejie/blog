@@ -1,6 +1,5 @@
 import httpRequest from "@/request/index";
 
-
 // 获取已经发布的文章列表
 export function getArticleList(params) {
   return httpRequest({
@@ -41,5 +40,14 @@ export function cancelArticleLikeCount(data) {
     url: `/v1/articles/cancelLikeArticle`,
     method: "post",
     data: data,
+  });
+}
+
+// 查询用户是否点赞过文章
+export function getArticleLikeStatus(params) {
+  console.log(params);
+  return httpRequest({
+    url: `/v1/articles/queryUserLikeArticle?article_id=${params.articleId}&user_id=${params.userId}`,
+    method: "get",
   });
 }

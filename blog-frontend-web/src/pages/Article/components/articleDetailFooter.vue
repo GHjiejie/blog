@@ -19,6 +19,7 @@
         <FeedBack
           :articleInfo="props.articleInfo"
           :active-position="position"
+          :is-like="isLike"
         ></FeedBack>
       </div>
     </div>
@@ -26,20 +27,48 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import FeedBack from "@/components/Feedback/index.vue";
 import cache from "@/utils/cache";
+import { getArticleLikeStatus } from "@/apis/articles";
 // import { ELMessage } from 'element-plus';
 const props = defineProps({
   authorInfo: Object,
   articleInfo: Object,
 });
 
+const isLike = ref(false);
+
 const userId = cache.sessionGet("userId");
 
-onMounted(async() => {
-  console.log("props", props);
-});
+watch(
+  () => props.articleInfo,
+  async (newVal) => {
+    if (userId) {
+      const res = await getArticleLikeStatus({
+        articleId: newVal.articleId,
+        userId: userId,
+      });
+      if (res.status == 200) {
+        console.log("判断用户是否点赞该文章", res);
+        isLike.value = true;
+      }
+    }
+  }
+);
+// onMounted(async () => {
+// 这个里面访问不到props，所以要用watch监听props的变化？？？但是这是为什么？？？？
+//   console.log("props", props);
+//   console.log("props.articleInfo", props.articleInfo);
+
+//   if (userId) {
+//     const res = await getArticleLikeStatus({
+//       articleId: props.articleInfo.articleId,
+//       userId: userId,
+//     });
+//     console.log("输出res", res);
+//   }
+// });
 
 const position = ref("articleDetail");
 </script>
