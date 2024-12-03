@@ -62,7 +62,6 @@ export function resetPassword(params) {
 
 // 根据用户id获取用户信息
 export function getUserById(params) {
-  console.log(params);
   return httpRequest({
     url: `/v1/users/${params.userId}`,
     method: "get",

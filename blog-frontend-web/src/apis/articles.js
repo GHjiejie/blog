@@ -51,3 +51,20 @@ export function getArticleLikeStatus(params) {
     method: "get",
   });
 }
+
+// 获取文章的所有评论
+export function getArticleComments(params) {
+  return httpRequest({
+    url: `/v1/articles/getArticleCommentList?article_id=${params.articleId}&page=${params.page}&pageSize=${params.pageSize}`,
+    method: "get",
+  });
+}
+
+// 发表文章评论
+export function publishArticleComment(data) {
+  return httpRequest({
+    url: `/v1/articles/publishArticleComment`,
+    method: "post",
+    data: data,
+  });
+}

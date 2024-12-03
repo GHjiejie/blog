@@ -5,8 +5,7 @@
         <div class="avatar">
           <el-avatar
             src="https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            alt="avatar"
-          />
+            alt="avatar" />
         </div>
         <div class="authorName">
           <span>{{ props.authorInfo.username }}</span>
@@ -16,11 +15,7 @@
 
     <div class="right">
       <div class="feedbackInfo">
-        <FeedBack
-          :articleInfo="props.articleInfo"
-          :active-position="position"
-          :is-like="isLike"
-        ></FeedBack>
+        <FeedBack :articleInfo="props.articleInfo" :active-position="position" :is-like="isLike"></FeedBack>
       </div>
     </div>
   </div>
@@ -79,7 +74,8 @@ const position = ref("articleDetail");
   align-items: center; // 垂直居中
   padding: 5px 20px;
   background-color: white;
-  border-top: 1px solid var(--el-color-primary-light-5); // 底部边框
+  border-top: 1px solid var(--el-color-primary-light-5); // 上边框
+
 
   .left {
     display: flex;
