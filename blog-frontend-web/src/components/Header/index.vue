@@ -17,54 +17,88 @@
       <div class="blogsearch">
         <SearchBlog></SearchBlog>
       </div>
-      <div class="useravatar" @click="userLogin">
-        <!-- <el-avatar :src="src" /> -->
-        <template v-if="isLogin || computedIsLogin" :src="userInfo.avatar"></template>
+      <div class="useravatar">
+        <template v-if="isLogin">
+          <el-avatar :src="userAvatar" @click="shwoUserInfo" />
+        </template>
         <template v-else>
-          <el-avatar :src="src" />
+          <el-avatar
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            @click="userLogin"
+          />
         </template>
       </div>
     </div>
 
-    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="loginVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
-  </div>
 
+    <el-dialog
+      v-model="userInfoVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
+      <CurrentUserInfo></CurrentUserInfo>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import SearchBlog from '@/components/Search/index.vue';
-import Login from '@/pages/Login/index.vue';
+import { computed, ref, watch } from "vue";
+import SearchBlog from "@/components/Search/index.vue";
+import CurrentUserInfo from "@/components/UserInfo/index.vue";
+import Login from "@/pages/Login/index.vue";
 import cache from "@/utils/cache";
 
-const src = ref('https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
 const loginVisible = ref(false);
+const userInfoVisible = ref(false);
 const userInfo = ref({});
 const menuList = ref([
-  { name: '首页', path: '/' },
-  { name: '归档', path: '/archive' },
-  { name: '关于', path: '/about' }
+  { name: "首页", path: "/" },
+  { name: "归档", path: "/archive" },
+  { name: "关于", path: "/about" },
 ]);
 
-const isLogin = ref(false);
-const computedIsLogin = computed(() => {
-  return cache.sessionGet("isLogin");
-});
+let userAvatar = cache.sessionGet("avatar");
 
-const keywords = ref('');
+const isLogin = cache.sessionGet("isLogin")
+  ? ref(cache.sessionGet("isLogin"))
+  : ref(false);
+isLogin.value = cache.sessionGet("isLogin");
+console.log("isLogin", isLogin.value);
 
+const keywords = ref("");
 
 const userLogin = () => {
   loginVisible.value = true;
 };
 
 const handleLogin = (user) => {
+  isLogin.value = true;
   loginVisible.value = false;
   userInfo.value = user;
-  src.value = userInfo.value.avatar;
-}
+  cache.sessionSet("userInfo", user);
+  userAvatar = user.avatar;
+};
+
+const shwoUserInfo = () => {
+  userInfoVisible.value = true;
+};
+
+watch(isLogin, (newVal) => {
+  if (newVal) {
+    userAvatar = cache.sessionGet("avatar");
+  }
+});
 </script>
 
 <style scoped lang="scss">

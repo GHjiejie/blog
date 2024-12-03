@@ -1,17 +1,5 @@
 <template>
   <div class="articleDetail">
-    <!-- <div class="header">
-      <div class="back">
-        <el-button
-          type="text"
-          icon="el-icon-arrow-left"
-          @click="goBack"
-          size="small"
-        >
-          返回
-        </el-button>
-      </div>
-    </div> -->
     <div class="content">
       <div class="left">
         <div class="anchors">
@@ -23,7 +11,10 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <UserComment :author-info="authorInfo" :article-info="articleDetail"></UserComment>
+          <UserComment
+            :author-info="authorInfo"
+            :article-info="articleDetail"
+          ></UserComment>
         </div>
       </div>
     </div>
@@ -45,12 +36,6 @@ const preview = ref(null);
 
 const authorId = ref(0);
 const authorInfo = ref({});
-
-
-
-// const goBack = () => {
-//   router.go(-1);
-// };
 
 onMounted(async () => {
   await getArticleDetail(route.params.id);
@@ -101,7 +86,7 @@ const getArticleDetail = async () => {
     authorId.value = data.articleInfo.authorId;
     const res = await getUserById({ userId: data.articleInfo.authorId });
     authorInfo.value = res.data.user;
-  } catch (error) { }
+  } catch (error) {}
 };
 // 监听路由变化，文章浏览量+1
 watch(
@@ -138,7 +123,6 @@ watch(
   //   }
   // }
   .content {
-
     // margin-top: 50px;
     .left {
       position: fixed;
@@ -146,7 +130,6 @@ watch(
       max-height: 100vh;
       overflow-y: auto;
       padding: 20px;
-
 
       // 隐藏滚动条
       &::-webkit-scrollbar {

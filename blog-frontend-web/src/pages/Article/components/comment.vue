@@ -5,7 +5,8 @@
         <div class="avatar">
           <el-avatar
             src="https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            alt="avatar" />
+            alt="avatar"
+          />
         </div>
         <div class="authorName">
           <span>{{ props.authorInfo.username }}</span>
@@ -16,25 +17,6 @@
     <div class="right">
       <div class="feedbackInfo">
         <FeedBack :articleInfo="props.articleInfo"></FeedBack>
-        <!-- <div class="view">
-          <svg-icon iconClass="icon-view" className="icon"></svg-icon>
-          <span>{{ props.articleInfo.viewCount }}</span>
-        </div>
-
-        <div class="like" @click="handleClickLike">
-          <template v-if="!likeStatus">
-            <svg-icon iconClass="icon-like" className="icon"></svg-icon>
-          </template>
-<template v-else>
-            <svg-icon iconClass="icon-like-active" className="icon"></svg-icon>
-          </template>
-<span>{{ props.articleInfo.likeCount }}</span>
-</div>
-
-<div class="comment">
-  <svg-icon iconClass="icon-comment" className="icon"></svg-icon>
-  {{ props.articleInfo.commentCount }}
-</div> -->
       </div>
     </div>
   </div>
@@ -48,8 +30,6 @@ const props = defineProps({
   authorInfo: Object,
   articleInfo: Object,
 });
-
-
 </script>
 
 <style scoped lang="scss">
@@ -92,8 +72,6 @@ const props = defineProps({
   .right {
     margin-left: auto; // 右侧内容靠右
     display: flex;
-
-
   }
 }
 </style>

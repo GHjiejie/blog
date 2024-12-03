@@ -1,30 +1,42 @@
 <template>
   <div class="userInfo">
     <div class="Top">
-      <div class="user-avatar">
-        <el-avatar :size="60"
-          src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-      </div>
-      <div class="user-details">
-        <div class="user-name">{{ userInfo.username }}</div>
-        <div class="user-email">{{ userInfo.email }}</div>
+      <div class="user-baseinfo">
+        <div class="user-details">
+          <el-avatar :size="60" :src="userInfo.avatar" />
+          <div class="user-name">{{ userInfo.username }}</div>
+        </div>
+        <div class="logout">
+          <el-button type="primary" @click="logout"> 登出 </el-button>
+        </div>
       </div>
     </div>
 
     <div class="media">
       <!-- github -->
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.github)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.github)"
+      >
         Github
       </el-button>
 
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.blog)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.blog)"
+      >
         Gitee
       </el-button>
 
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.weibo)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.weibo)"
+      >
         WeChat
       </el-button>
-
     </div>
 
     <div class="Footer">
@@ -36,13 +48,10 @@
   </div>
 </template>
 <script setup>
-const props = defineProps({
-  userInfo: Object,
-});
-const userInfo = props.userInfo;
-
+import cache from "@/utils/cache";
+const userInfo = cache.sessionGet("userInfo");
+console.log(userInfo);
 </script>
-
 
 <style scoped lang="scss">
 .userInfo {
@@ -51,17 +60,24 @@ const userInfo = props.userInfo;
   padding: 20px;
   max-width: 400px;
 
-
   .Top {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
 
-    .user-avatar {
+    .user-baseinfo {
+      width: 100%;
       margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
     }
 
     .user-details {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       .user-name {
         font-size: 18px;
         font-weight: bold;
@@ -104,7 +120,7 @@ const userInfo = props.userInfo;
       margin: 5px 0;
 
       &::before {
-        content: '';
+        content: "";
         display: inline-block;
         width: 12px;
         height: 12px;
