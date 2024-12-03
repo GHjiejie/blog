@@ -210,6 +210,18 @@ service articleManageService {
     };
   }
 
+  //查询用户是否点赞文章
+  rpc QueryUserLikeArticle(QueryUserLikeArticleRequest) returns (QueryUserLikeArticleResponse) {
+    option (google.api.http) = {
+      get: "/v1/articles/queryUserLikeArticle"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Query user like article"
+      description: "Query user like article"
+    };
+  }
+
   // 文章浏览数增加
   rpc ViewArticle(ViewArticleRequest) returns (ViewArticleResponse) {
     option (google.api.http) = {
@@ -662,6 +674,21 @@ message CancelLikeArticleRequest {
 
 //取消文章点赞响应
 message CancelLikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
+
+//查询用户是否点赞文章请求
+message QueryUserLikeArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+}
+
+//查询用户是否点赞文章响应
+message QueryUserLikeArticleResponse {
   // 文章唯一标识
   string message = 1;
 }

@@ -1,7 +1,11 @@
 <template>
   <div class="articleContainer">
     <div class="articleList">
-      <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
+      <div
+        class="ArticleItem"
+        v-for="(item, index) in articleList"
+        :key="index"
+      >
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -27,7 +31,7 @@
 
           <!-- 文章浏览消息包括点赞，评论，浏览量等 -->
           <div class="articleView">
-            <FeedBack :articleInfo="item"></FeedBack>
+            <FeedBack :articleInfo="item" :activePosition="position"></FeedBack>
           </div>
         </div>
       </div>
@@ -44,7 +48,7 @@ const router = useRouter();
 const page = ref(1);
 const pageSize = ref(10);
 const articleList = ref([]);
-
+const position = ref("articleList");
 
 const goArticleDetail = (articleId) => {
   router.push(`/article/${articleId}`);

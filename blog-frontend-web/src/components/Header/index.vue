@@ -88,6 +88,7 @@ const handleLogin = (user) => {
   userInfo.value = user;
   cache.sessionSet("userInfo", user);
   userAvatar = user.avatar;
+  router.push("/");
 };
 
 const shwoUserInfo = () => {

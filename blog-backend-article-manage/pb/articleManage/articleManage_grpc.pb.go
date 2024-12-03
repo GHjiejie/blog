@@ -36,6 +36,7 @@ const (
 	ArticleManageService_LikeArticleComment_FullMethodName      = "/articleManage.articleManageService/LikeArticleComment"
 	ArticleManageService_LikeArticle_FullMethodName             = "/articleManage.articleManageService/LikeArticle"
 	ArticleManageService_CancelLikeArticle_FullMethodName       = "/articleManage.articleManageService/CancelLikeArticle"
+	ArticleManageService_QueryUserLikeArticle_FullMethodName    = "/articleManage.articleManageService/QueryUserLikeArticle"
 	ArticleManageService_ViewArticle_FullMethodName             = "/articleManage.articleManageService/ViewArticle"
 )
 
@@ -73,6 +74,8 @@ type ArticleManageServiceClient interface {
 	LikeArticle(ctx context.Context, in *LikeArticleRequest, opts ...grpc.CallOption) (*LikeArticleResponse, error)
 	// 取消文章点赞
 	CancelLikeArticle(ctx context.Context, in *CancelLikeArticleRequest, opts ...grpc.CallOption) (*CancelLikeArticleResponse, error)
+	// 查询用户是否点赞文章
+	QueryUserLikeArticle(ctx context.Context, in *QueryUserLikeArticleRequest, opts ...grpc.CallOption) (*QueryUserLikeArticleResponse, error)
 	// 文章浏览数增加
 	ViewArticle(ctx context.Context, in *ViewArticleRequest, opts ...grpc.CallOption) (*ViewArticleResponse, error)
 }
@@ -235,6 +238,16 @@ func (c *articleManageServiceClient) CancelLikeArticle(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *articleManageServiceClient) QueryUserLikeArticle(ctx context.Context, in *QueryUserLikeArticleRequest, opts ...grpc.CallOption) (*QueryUserLikeArticleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryUserLikeArticleResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_QueryUserLikeArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *articleManageServiceClient) ViewArticle(ctx context.Context, in *ViewArticleRequest, opts ...grpc.CallOption) (*ViewArticleResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ViewArticleResponse)
@@ -279,6 +292,8 @@ type ArticleManageServiceServer interface {
 	LikeArticle(context.Context, *LikeArticleRequest) (*LikeArticleResponse, error)
 	// 取消文章点赞
 	CancelLikeArticle(context.Context, *CancelLikeArticleRequest) (*CancelLikeArticleResponse, error)
+	// 查询用户是否点赞文章
+	QueryUserLikeArticle(context.Context, *QueryUserLikeArticleRequest) (*QueryUserLikeArticleResponse, error)
 	// 文章浏览数增加
 	ViewArticle(context.Context, *ViewArticleRequest) (*ViewArticleResponse, error)
 	mustEmbedUnimplementedArticleManageServiceServer()
@@ -335,6 +350,9 @@ func (UnimplementedArticleManageServiceServer) LikeArticle(context.Context, *Lik
 }
 func (UnimplementedArticleManageServiceServer) CancelLikeArticle(context.Context, *CancelLikeArticleRequest) (*CancelLikeArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelLikeArticle not implemented")
+}
+func (UnimplementedArticleManageServiceServer) QueryUserLikeArticle(context.Context, *QueryUserLikeArticleRequest) (*QueryUserLikeArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryUserLikeArticle not implemented")
 }
 func (UnimplementedArticleManageServiceServer) ViewArticle(context.Context, *ViewArticleRequest) (*ViewArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ViewArticle not implemented")
@@ -630,6 +648,24 @@ func _ArticleManageService_CancelLikeArticle_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleManageService_QueryUserLikeArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryUserLikeArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).QueryUserLikeArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_QueryUserLikeArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).QueryUserLikeArticle(ctx, req.(*QueryUserLikeArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ArticleManageService_ViewArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ViewArticleRequest)
 	if err := dec(in); err != nil {
@@ -714,6 +750,10 @@ var ArticleManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CancelLikeArticle",
 			Handler:    _ArticleManageService_CancelLikeArticle_Handler,
+		},
+		{
+			MethodName: "QueryUserLikeArticle",
+			Handler:    _ArticleManageService_QueryUserLikeArticle_Handler,
 		},
 		{
 			MethodName: "ViewArticle",

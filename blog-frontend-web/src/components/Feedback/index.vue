@@ -5,7 +5,11 @@
       <span>{{ props.articleInfo.viewCount }}</span>
     </div>
 
-    <div class="like" @click="handleClickLike">
+    <!-- <div
+      v-if="props.activePosition !== 'articleList'"
+      class="like"
+      @click="handleClickLike"
+    >
       <template v-if="!likeStatus">
         <svg-icon iconClass="icon-like" className="icon"></svg-icon>
       </template>
@@ -13,45 +17,70 @@
         <svg-icon iconClass="icon-like-active" className="icon"></svg-icon>
       </template>
       <span>{{ props.articleInfo.likeCount }}</span>
-    </div>
+    </div> -->
 
-    <div class="comment" @click="handleClickComment">
+    <div
+      v-if="props.activePosition !== 'articleList'"
+      class="comment"
+      @click="handleClickComment"
+    >
       <svg-icon iconClass="icon-comment" className="icon"></svg-icon>
-      {{ props.articleInfo.commentCount }}
+      <span> {{ props.articleInfo.commentCount }}</span>
     </div>
   </div>
-
 </template>
 
 <script setup>
 import { ref } from "vue";
 import cache from "@/utils/cache";
 import { ElMessage } from "element-plus";
+import { cancelArticleLikeCount, addArticleLikeCount } from "@/apis/articles";
 const props = defineProps({
   articleInfo: Object,
+  activePosition: String,
 });
+console.log("shuchu", props);
+
+const userId = cache.sessionGet("userId");
 
 const likeStatus = ref(false);
 
 // 用户点赞事件
-const handleClickLike = () => {
+const handleClickLike = async () => {
   // 首先要判断用户是否登录，如果没有登录，提示用户登录
   if (!cache.sessionGet("authorization")) {
     ElMessage({
-      message: "请先登录",
+      message: "请先登录哦",
       type: "warning",
     });
     return;
   }
 
   if (likeStatus.value) {
-    likeStatus.value = false;
-    props.articleInfo.likeCount--;
+    const res = await cancelArticleLikeCount({
+      articleId: props.articleInfo.articleId,
+      userId: userId,
+    });
+    if (res.status == 200) {
+      console.log(res);
+      likeStatus.value = false;
+      props.articleInfo.likeCount--;
+    } else {
+      ElMessage.error("取消点赞失败");
+    }
   } else {
-    likeStatus.value = true;
-    props.articleInfo.likeCount++;
+    const res = await addArticleLikeCount({
+      articleId: props.articleInfo.articleId,
+      userId: userId,
+    });
+    if (res.status == 200) {
+      console.log(res);
+      likeStatus.value = true;
+      props.articleInfo.likeCount++;
+    } else {
+      ElMessage.error("点赞失败");
+    }
   }
-
 };
 
 // 用户评论事件
@@ -59,7 +88,7 @@ const handleClickComment = () => {
   // 首先要判断用户是否登录，如果没有登录，提示用户登录
   if (!cache.sessionGet("authorization")) {
     ElMessage({
-      message: "请先登录",
+      message: "请先登录哦",
       type: "warning",
     });
     return;
@@ -79,8 +108,6 @@ const handleClickComment = () => {
     display: flex;
     align-items: center; // 垂直居中
     margin-left: 20px; // 每个图标之间间距
-
-
 
     span {
       padding-left: 3px;

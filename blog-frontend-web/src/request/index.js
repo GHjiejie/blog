@@ -1,18 +1,21 @@
 import axios from "axios";
+import caches from "@/utils/cache";
+const auth= caches.getToken();
+console.log("auth",auth);
 const service = axios.create({
   baseURL: "",
   timeout: 5000,
   withCredentials: true,
+  headers:{
+    "Authorization":auth
+  }
 });
 
 // Add a request interceptor
 service.interceptors.request.use(
   function (config) {
-    // 在发送请求之前我们需要进行token的检查
-
-    // console.log("interceptors request", token);
-
-    // Do something before request is sent
+    
+    
     return config;
   },
   function (error) {

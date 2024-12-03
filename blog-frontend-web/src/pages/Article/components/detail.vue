@@ -31,6 +31,7 @@ const route = useRoute();
 // const router = useRouter();
 const articleDetail = ref({});
 const titles = ref([]);
+const position = ref("articleDetail");
 
 const preview = ref(null);
 

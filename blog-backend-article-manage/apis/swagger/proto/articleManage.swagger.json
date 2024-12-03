@@ -450,6 +450,48 @@
         ]
       }
     },
+    "/v1/articles/queryUserLikeArticle": {
+      "get": {
+        "summary": "Query user like article",
+        "description": "Query user like article",
+        "operationId": "articleManageService_QueryUserLikeArticle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/articleManageQueryUserLikeArticleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "article_id",
+            "description": "文章唯一标识.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "user_id",
+            "description": "点赞者ID.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ArticleManage"
+        ]
+      }
+    },
     "/v1/articles/reviewArticle": {
       "post": {
         "summary": "Review article",
@@ -1090,6 +1132,16 @@
         }
       },
       "title": "查询文章响应"
+    },
+    "articleManageQueryUserLikeArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "文章唯一标识"
+        }
+      },
+      "title": "查询用户是否点赞文章响应"
     },
     "articleManageReviewArticleRequest": {
       "type": "object",

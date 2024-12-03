@@ -1,5 +1,6 @@
 import httpRequest from "@/request/index";
 
+
 // 获取已经发布的文章列表
 export function getArticleList(params) {
   return httpRequest({
@@ -20,6 +21,24 @@ export function getArticleById(params) {
 export function addArticleViewCount(data) {
   return httpRequest({
     url: `/v1/articles/viewArticle`,
+    method: "post",
+    data: data,
+  });
+}
+
+// 文章点赞
+export function addArticleLikeCount(data) {
+  return httpRequest({
+    url: `/v1/articles/likeArticle`,
+    method: "post",
+    data: data,
+  });
+}
+
+// 取消文章点赞
+export function cancelArticleLikeCount(data) {
+  return httpRequest({
+    url: `/v1/articles/cancelLikeArticle`,
     method: "post",
     data: data,
   });

@@ -181,3 +181,27 @@ func (s *ArticleServer) ViewArticle(ctx context.Context, req *articlepb.ViewArti
 		Message: "view article success",
 	}, nil
 }
+
+// 查询用户是否已经点赞文章
+
+func (s *ArticleServer) QueryUserLikeArticle(ctx context.Context, req *articlepb.QueryUserLikeArticleRequest) (*articlepb.QueryUserLikeArticleResponse, error) {
+	logger := log.WithFields(log.Fields{
+		"api": "QueryUserLikeArticle",
+	})
+	logger.Infof("QueryUserLikeArticle request with articleId(%d) and userId(%d)", req.GetArticleId(), req.GetUserId())
+	// 接下来要做的就是在数据库中查询用户是否已经点赞文章
+	articleId := req.GetArticleId()
+	userId := req.GetUserId()
+
+	// 查询用户是否已经点赞
+	_, err := s.DBEngine.GetArticleLike(articleId, userId)
+	if err != nil {
+		logger.Errorf("failed to get article like with err(%s)", err.Error())
+		return nil, err
+	}
+	return &articlepb.QueryUserLikeArticleResponse{
+		Message: "user already like article",
+	}, nil
+
+	// return nil, status.Errorf(codes.Unimplemented, "method QueryUserLikeArticle not implemented")
+}

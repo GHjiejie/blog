@@ -31,7 +31,8 @@ EnginePaths = [
     "/v1/web/articles/publishArticleComment",
     "/v1/articles/cancelLikeArticle",
     "/v1/articles/likeArticle",
-    "/v1/articles/viewArticle"
+    "/v1/articles/viewArticle",
+    "/v1/articles/queryUserLikeArticle"
 
 ]
 

@@ -16,20 +16,32 @@
 
     <div class="right">
       <div class="feedbackInfo">
-        <FeedBack :articleInfo="props.articleInfo"></FeedBack>
+        <FeedBack
+          :articleInfo="props.articleInfo"
+          :active-position="position"
+        ></FeedBack>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import FeedBack from "@/components/Feedback/index.vue";
+import cache from "@/utils/cache";
 // import { ELMessage } from 'element-plus';
 const props = defineProps({
   authorInfo: Object,
   articleInfo: Object,
 });
+
+const userId = cache.sessionGet("userId");
+
+onMounted(async() => {
+  console.log("props", props);
+});
+
+const position = ref("articleDetail");
 </script>
 
 <style scoped lang="scss">
