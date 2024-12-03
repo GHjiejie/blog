@@ -47,6 +47,10 @@ service.interceptors.response.use(
     if (error.response.status === 401) {
       ElMessage.error("登录状态失效，请重新登录");
       router.push("/login");
+    } else if (error.response.status === 403) {
+      ElMessage.error("没有权限，请联系管理员");
+    } else {
+      ElMessage.error(error.response.data.message);
     }
     return Promise.reject(error);
   }

@@ -5,6 +5,7 @@ go 1.22.7
 toolchain go1.22.9
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
 	github.com/onrik/logrus v0.11.0
 	github.com/pelletier/go-toml/v2 v2.2.3

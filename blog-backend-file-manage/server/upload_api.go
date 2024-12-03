@@ -33,8 +33,7 @@ func (s *FileServer) uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	fileBytes, err := io.ReadAll(file)
-	logger.Infof("文件的内容是：%s", fileBytes)
-	logger.Infof("文件内容的十六进制表示：%x", fileBytes)
+
 	if err != nil {
 		logger.Errorf("Failed to read file: %v", err)
 		http.Error(w, "Failed to read file", http.StatusInternalServerError)

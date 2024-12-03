@@ -1,5 +1,3 @@
-
-
 -- // Comment 表示用户对文章的评论模型
 -- type Comment struct {
 -- 	ID           int64      `gorm:"column:id;primaryKey" json:"id"`                              // 评论ID
@@ -11,15 +9,12 @@
 -- 	DeletedAt    *time.Time `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"`         // 软删除时间
 -- 	ReviewStatus string     `gorm:"column:review_status;default:'pending'" json:"review_status"` // 评论审核状态
 -- }
-
 -- // 常量定义审核状态
 -- const (
 -- 	ReviewPending  = "pending"  // 待审核
 -- 	ReviewApproved = "approved" // 已通过
 -- 	ReviewRejected = "rejected" // 已拒绝
 -- )
-
-
 -- // Article 结构体更新以包含评论
 -- type Article struct {
 -- 	ID           int64      `gorm:"column:id;primaryKey" json:"id"`                      // 文章ID
@@ -39,9 +34,6 @@
 -- 	Comments     []Comment  `gorm:"foreignKey:ArticleId" json:"comments"`                // 新增：与评论的关系
 -- 	DeletedAt    *time.Time `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"` // 软删除时间
 -- }
-
-
-
 -- 创建article表
 CREATE TABLE IF NOT EXISTS `articles` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -53,7 +45,8 @@ CREATE TABLE IF NOT EXISTS `articles` (
     `view_count` INT(11) NOT NULL DEFAULT 0,
     `like_count` INT(11) NOT NULL DEFAULT 0,
     `comment_count` INT(11) NOT NULL DEFAULT 0,
-    `image_url` VARCHAR(255) DEFAULT NULL, -- 允许为 NULL
+    `image_url` VARCHAR(255) DEFAULT NULL,
+    -- 允许为 NULL
     `category_id` BIGINT(20) NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -64,27 +57,73 @@ CREATE TABLE IF NOT EXISTS `articles` (
     INDEX `idx_article_category_id` (`category_id`),
     INDEX `idx_article_author_id` (`author_id`),
     INDEX `idx_article_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-
--- 创建comment表
-CREATE TABLE IF NOT EXISTS `comments` (
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+-- 创建文章点赞记录表
+CREATE TABLE IF NOT EXISTS `article_likes` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
     `article_id` BIGINT(20) NOT NULL,
     `user_id` BIGINT(20) NOT NULL,
-    `content` TEXT NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL,
-    `review_status` VARCHAR(255) NOT NULL DEFAULT 'pending',
     PRIMARY KEY (`id`),
+    INDEX `idx_article_like_article_id` (`article_id`),
+    INDEX `idx_article_like_user_id` (`user_id`),
+    CONSTRAINT `fk_article_like_article` FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_article_like_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+-- 创建comment表
+CREATE TABLE IF NOT EXISTS `comments` (
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+    -- 评论ID，主键，自增
+    `article_id` BIGINT(20) NOT NULL,
+    -- 关联的文章ID
+    `user_id` BIGINT(20) NOT NULL,
+    -- 发表评论的用户ID
+    `content` TEXT NOT NULL,
+    -- 评论内容
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- 创建时间，默认为当前时间
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    -- 更新时间，自动更新为当前时间
+    `deleted_at` DATETIME DEFAULT NULL,
+    -- 软删除时间（用于标记删除）
+    `review_status` TINYINT NOT NULL DEFAULT 0,
+    -- 审核状态，默认为0
+    `like_count` INT(11) NOT NULL DEFAULT 0,
+    -- 新增：评论点赞数量，默认为0
+    PRIMARY KEY (`id`),
+    -- 主键约束
     INDEX `idx_comment_article_id` (`article_id`),
+    -- 针对 article_id 的索引
     INDEX `idx_comment_user_id` (`user_id`),
+    -- 针对 user_id 的索引
     INDEX `idx_comment_deleted_at` (`deleted_at`),
-    CONSTRAINT `chk_comment_review_status` CHECK (`review_status` IN ('pending', 'approved', 'rejected')),
+    -- 针对 deleted_at 的索引
     CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
+    -- 外键约束，关联 articles 表
+    CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE -- 外键约束，关联 users 表
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+-- 创建comment_like表
+CREATE TABLE IF NOT EXISTS `comment_likes` (
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+    -- 点赞ID，主键，自增
+    `article_id` BIGINT(20) NOT NULL,
+    -- 关联的文章ID
+    `comment_id` BIGINT(20) NOT NULL,
+    -- 关联的评论ID
+    `user_id` BIGINT(20) NOT NULL,
+    -- 点赞的用户ID
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- 创建时间，默认为当前时间
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    -- 更新时间，自动更新为当前时间
+    PRIMARY KEY (`id`),
+    -- 主键约束
+    INDEX `idx_comment_like_comment_id` (`comment_id`),
+    -- 针对 comment_id 的索引
+    INDEX `idx_comment_like_user_id` (`user_id`),
+    -- 针对 user_id 的索引
+    CONSTRAINT `fk_comment_like_comment` FOREIGN KEY (`comment_id`) REFERENCES `comments`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    -- 外键约束，关联 comments 表
+    CONSTRAINT `fk_comment_like_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE -- 外键约束，关联 users 表
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

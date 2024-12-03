@@ -66,6 +66,12 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 		logger.Errorf("failed to open database: %v", err)
 		return nil, err
 	}
+
+	// 进行数据库的迁移操作
+	if err := gormDB.AutoMigrate(&Article{}, &Comment{}, &CommentLike{}, &ArticleLike{}); err != nil {
+		logger.Errorf("failed to migrate schema: %v", err)
+		return nil, err
+	}
 	// 设置数据库连接池
 	if err := setupDbConnPool(gormDB); err != nil {
 		logger.Errorf("failed to setup db connection pool: %v", err)
@@ -121,7 +127,7 @@ func (s *SQLDB) DeleteArticle(articleId int64) error {
 	return nil
 }
 
-// 获取文章列表
+// 获取文章列表（管理员）
 func (s *SQLDB) GetArticleList(page, pageSize int32) ([]Article, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "GetArticleList",
@@ -130,6 +136,20 @@ func (s *SQLDB) GetArticleList(page, pageSize int32) ([]Article, error) {
 	offset := (page - 1) * pageSize
 	if err := s.db.Offset(int(offset)).Limit(int(pageSize)).Find(&articleList).Error; err != nil {
 		logger.Errorf("failed to get article list: %v", err)
+		return nil, err
+	}
+	return articleList, nil
+}
+
+// 获取文章列表（用户）
+func (s *SQLDB) GetArticleListByAuthor(userId, page, pageSize int32) ([]Article, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetArticleListByAuthor",
+	})
+	var articleList []Article
+	offset := (page - 1) * pageSize
+	if err := s.db.Where("author_id = ?", userId).Offset(int(offset)).Limit(int(pageSize)).Find(&articleList).Error; err != nil {
+		logger.Errorf("failed to get article list by author: %v", err)
 		return nil, err
 	}
 	return articleList, nil
@@ -171,4 +191,199 @@ func (s *SQLDB) GetArticleDetail(articleId int64) (Article, error) {
 		return Article{}, err
 	}
 	return article, nil
+}
+
+// 更新文章评论数
+func (s *SQLDB) UpdateArticleCommentCount(articleId, updateCount int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpdateArticleCommentCount",
+	})
+	if err := s.db.Model(&Article{}).Where("id = ?", articleId).Update("comment_count", gorm.Expr("comment_count + ?", updateCount)).Error; err != nil {
+		logger.Errorf("failed to update article comment count: %v", err)
+		return err
+	}
+	return nil
+}
+
+/*
+api for web
+*/
+
+// 获取已发布的文章列表
+func (s *SQLDB) GetPublishedArticleList(page, pageSize int32) ([]Article, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetPublishedArticleList",
+	})
+	var articleList []Article
+	offset := (page - 1) * pageSize
+	if err := s.db.Where("status = ?", 1).Offset(int(offset)).Limit(int(pageSize)).Find(&articleList).Error; err != nil {
+		logger.Errorf("failed to get published article list: %v", err)
+		return nil, err
+	}
+	return articleList, nil
+}
+
+// 创建文章评论
+func (s *SQLDB) CreateArticleComment(articleId, userId int64, content string) (Comment, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "CreateArticleComment",
+	})
+	comment := Comment{
+		ArticleId: articleId,
+		UserId:    userId,
+		Content:   content,
+	}
+	if err := s.db.Create(&comment).Error; err != nil {
+		logger.Errorf("failed to create article comment: %v", err)
+		return Comment{}, err
+	}
+	return comment, nil
+}
+
+// 获取文章评论总数
+func (s *SQLDB) GetArticleCommentCount(articleId int64) (int64, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetArticleCommentCount",
+	})
+	var count int64
+	if err := s.db.Model(&Comment{}).Where("article_id = ?", articleId).Count(&count).Error; err != nil {
+		logger.Errorf("failed to get article comment count: %v", err)
+		return 0, err
+	}
+	return count, nil
+}
+
+// 获取文章评论列表（按时间倒叙排列）
+func (s *SQLDB) GetArticleCommentList(articleId int64, page, pageSize int32) ([]Comment, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetArticleCommentList",
+	})
+	var commentList []Comment
+	offset := (page - 1) * pageSize
+	if err := s.db.Where("article_id = ?", articleId).Offset(int(offset)).Limit(int(pageSize)).Find(&commentList).Error; err != nil {
+		logger.Errorf("failed to get article comment list: %v", err)
+		return nil, err
+	}
+	return commentList, nil
+}
+
+// 更新评论点赞数
+func (s *SQLDB) UpdateCommentLikeCount(commentId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpdateCommentLikeCount",
+	})
+	if err := s.db.Model(&Comment{}).Where("id = ?", commentId).Update("like_count", gorm.Expr("like_count + ?", 1)).Error; err != nil {
+		logger.Errorf("failed to update comment like count: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 更新评论来源(comment_likes)表
+func (s *SQLDB) UpDateCommentLike(commentId, userId, articleId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpDateCommentLike",
+	})
+	commentLike := CommentLike{
+		CommentId: commentId,
+		UserId:    userId,
+		ArticleId: articleId,
+	}
+	if err := s.db.Create(&commentLike).Error; err != nil {
+		logger.Errorf("failed to update comment like: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 删除文章评论
+func (s *SQLDB) DeleteArticleComment(commentId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "DeleteArticleComment",
+	})
+	if err := s.db.Delete(&Comment{}, commentId).Error; err != nil {
+		logger.Errorf("failed to delete article comment: %v", err)
+		return err
+	}
+	return nil
+
+}
+
+// 删除点赞记录
+func (s *SQLDB) DeleteCommentLike(articleId, commentId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "DeleteCommentLike",
+	})
+	// 根据articleId和commentId删除点赞记录
+	if err := s.db.Where("article_id = ? AND comment_id = ?", articleId, commentId).Delete(&CommentLike{}).Error; err != nil {
+		logger.Errorf("failed to delete comment like: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 查询用户是否点赞
+func (s *SQLDB) GetArticleLike(articleId, userId int64) (ArticleLike, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetArticleLike",
+	})
+	var like ArticleLike
+
+	if err := s.db.Where("article_id = ? AND user_id = ?", articleId, userId).First(&like).Error; err != nil {
+		logger.Errorf("failed to get article like: %v", err)
+		return ArticleLike{}, err
+	}
+	return like, nil
+}
+
+// 创建点赞记录
+func (s *SQLDB) CreateArticleLike(articleId, userId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "CreateArticleLike",
+	})
+	like := ArticleLike{
+		ArticleId: articleId,
+		UserId:    userId,
+	}
+	if err := s.db.Create(&like).Error; err != nil {
+		logger.Errorf("failed to create article like: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 更新文章点赞数（思考怎么做限流？？？）
+func (s *SQLDB) UpdateArticleLikeCount(articleId, updateCount int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpdateArticleLikeCount",
+	})
+	if err := s.db.Model(&Article{}).Where("id = ?", articleId).Update("like_count", gorm.Expr("like_count + ?", updateCount)).Error; err != nil {
+		logger.Errorf("failed to update article like count: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 删除文章点赞记录
+func (s *SQLDB) DeleteArticleLike(articleId, userId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "DeleteArticleLike",
+	})
+	if err := s.db.Where("article_id = ? AND user_id = ?", articleId, userId).Delete(&ArticleLike{}).Error; err != nil {
+		logger.Errorf("failed to delete article like: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 更新文章浏览次数
+func (s *SQLDB) UpdateArticleViewCount(articleId, updateCount int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "UpdateArticleViewCount",
+	})
+	if err := s.db.Model(&Article{}).Where("id = ?", articleId).Update("view_count", gorm.Expr("view_count + ?", updateCount)).Error; err != nil {
+		logger.Errorf("failed to update article view count: %v", err)
+		return err
+	}
+	return nil
 }

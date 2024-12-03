@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"github.com/golang/protobuf/ptypes/any"
 	log "github.com/sirupsen/logrus"
@@ -15,8 +16,15 @@ import (
 // 设置无需验证的路径
 var NotNeedAuthorizationPaths = map[string]bool{
 	"/v1/users/login":    true,
+	"/v1/users/logout":   true,
 	"/v1/users/register": true,
 	"/v1/captchas":       true,
+	// 以v1/web开头的都不需要验证(使用正则表达式)
+	"^/v1/web.*":                     true,
+	"/v1/articles/getArticleDetail/": true,
+	// 匹配/v1/users/数字结尾的路径: true,
+	"^/v1/users/[0-9]+$":       true,
+	"/v1/articles/viewArticle": true,
 }
 
 const (
@@ -43,7 +51,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 		// 从请求体中获取用户信息
 		// username := r.Header.Get("username")
 		// 判断当前接口是否需要进行鉴权验证
-		if needAuthorizations(r.URL.Path, r.Method) {
+		if needAuthorizations(r.URL.Path) {
 			var (
 				username  string
 				userToken string
@@ -87,7 +95,7 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 			}
 
 			username = claims.Username
-			logger.Infof("token解析成功, 输出获取的claims: %v", claims)
+			// logger.Infof("token解析成功, 输出获取的claims: %v", claims)
 
 			// 我们直接进行权限验证
 			permitted, err := userPermit.CheckPermission(username, r.URL.Path, r.Method)
@@ -148,53 +156,18 @@ func (s *BlogServer) Tracing(nextHandle http.Handler, userPermit *casbinpermit.P
 				}
 				return
 			}
-			// nextHandle.ServeHTTP(w, r)
-
-			// 如果首次校验失败,则重新从数据库加载策略,然后再次进行校验
-			// if !permitted {
-			// 	if err := userPermit.Enforcer.LoadPolicy(); err != nil {
-			// 		isOk, _ := userPermit.CheckPermission(username, r.URL.Path, r.Method)
-			// 		logger.Debugf("user(%s) permission 2nd checking result, permit(%v)", username, isOk)
-			// 		if isOk {
-			// 			nextHandle.ServeHTTP(w, r)
-			// 		}
-			// 	}
-			// 	logger.Errorf("%s does not have permission to %s %s", username, r.Method, r.URL.Path)
-			// 	newerr := status.New(
-			// 		codes.PermissionDenied,
-			// 		fmt.Sprintf("%s does not have permission to %s %s", username, r.Method, r.URL.Path),
-			// 	)
-			// 	body := ErrorBody{
-			// 		Error:   newerr.Message(),
-			// 		Message: newerr.Message(),
-			// 		Code:    int32(newerr.Code()),
-			// 		Details: newerr.Proto().GetDetails(),
-			// 	}
-			// 	msg, err := json.Marshal(body)
-			// 	if err != nil {
-			// 		logger.Errorf("marshal error body failed with err(%s)", err.Error())
-			// 	}
-			// 	w.Header().Set("Content-Type", "application/json")
-			// 	w.WriteHeader(http.StatusForbidden)
-			// 	_, err = w.Write(msg)
-			// 	if err != nil {
-			// 		logger.Errorf("failed to write msg with err(%s)", err.Error())
-			// 	}
-			// 	return
-			// }
 		} else {
-			log.Info("当前接口无需进行鉴权验证")
 			nextHandle.ServeHTTP(w, r)
 		}
 	})
 }
 
-func needAuthorizations(urlPath, method string) bool {
-	log.Info("判断当前接口是否需要进行鉴权验证")
-	log.Infof("urlPath: %s, method: %s", urlPath, method)
+func needAuthorizations(urlPath string) bool {
 	need := true
 	for path := range NotNeedAuthorizationPaths {
-		if path == urlPath {
+		match, _ := regexp.MatchString(path, urlPath)
+		if match {
+			log.Debugf("[%s] no need to authorization, continue...", urlPath)
 			need = false
 			break
 		}

@@ -48,6 +48,12 @@ const routes = [
         name: "File",
         component: () => import("@/pages/File/index.vue"),
       },
+      // 用户中心
+      {
+        path: "/personal",
+        name: "Personal",
+        component: () => import("@/pages/PersonalCenter/index.vue"),
+      },
     ],
   },
   {

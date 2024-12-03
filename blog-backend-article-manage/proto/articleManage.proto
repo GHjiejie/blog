@@ -64,6 +64,9 @@ service articleManageService {
       description: "Get article list"
     };
   }
+  
+  
+  
   // 文章的模糊查询
   rpc QueryArticle(QueryArticleRequest) returns (QueryArticleResponse) {
     option (google.api.http) = {
@@ -100,6 +103,140 @@ service articleManageService {
       description: "Review article"
     };
   }
+
+  /*
+  api for web 
+  */
+
+  //获取已发布的文章列表
+  rpc GetPublishedArticleList(GetPublishedArticleListRequest) returns (GetPublishedArticleListResponse) {
+    option (google.api.http) = {
+      get: "/v1/web/articles/getPublishedArticleList"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage For Web"]
+      summary: "Get published article list"
+      description: "Get published article list"
+    };
+  }
+
+  /*
+  评论
+  */
+
+  // 获取文章评论列表
+  rpc GetArticleCommentList(GetArticleCommentListRequest) returns (GetArticleCommentListResponse) {
+    option (google.api.http) = {
+      get: "/v1/articles/getArticleCommentList"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["CommentManage"]
+      summary: "Get article comment list"
+      description: "Get article comment list"
+    };
+  }
+
+  // 发布文章评论
+  rpc PublishArticleComment(PublishArticleCommentRequest) returns (PublishArticleCommentResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/publishArticleComment"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["CommentManage"]
+      summary: "Publish article comment"
+      description: "Publish article comment"
+    };
+  }
+
+  // 删除文章评论
+  rpc DeleteArticleComment(DeleteArticleCommentRequest) returns (DeleteArticleCommentResponse) {
+    option (google.api.http) = {
+      delete: "/v1/articles/deleteArticleComment/{comment_id}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["CommentManage"]
+      summary: "Delete article comment"
+      description: "Delete article comment"
+    };
+  }
+
+  // 获取文章评论详情
+  rpc GetArticleCommentDetail(GetArticleCommentDetailRequest) returns (GetArticleCommentDetailResponse) {
+    option (google.api.http) = {
+      get: "/v1/articles/getArticleCommentDetail/{comment_id}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["CommentManage"]
+      summary: "Get article comment detail"
+      description: "Get article comment detail"
+    };
+  }
+  //点赞文章评论
+  rpc LikeArticleComment(LikeArticleCommentRequest) returns (LikeArticleCommentResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/likeArticleComment"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["CommentManage"]
+      summary: "Like article comment"
+      description: "Like article comment"
+    };
+  }
+
+  // 文章点赞数增加
+  rpc LikeArticle(LikeArticleRequest) returns (LikeArticleResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/likeArticle"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Like article"
+      description: "Like article"
+    };
+  }
+  //取消文章点赞
+  rpc CancelLikeArticle(CancelLikeArticleRequest) returns (CancelLikeArticleResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/cancelLikeArticle"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Cancel like article"
+      description: "Cancel like article"
+    };
+  }
+
+  //查询用户是否点赞文章
+  rpc QueryUserLikeArticle(QueryUserLikeArticleRequest) returns (QueryUserLikeArticleResponse) {
+    option (google.api.http) = {
+      get: "/v1/articles/queryUserLikeArticle"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "Query user like article"
+      description: "Query user like article"
+    };
+  }
+
+  // 文章浏览数增加
+  rpc ViewArticle(ViewArticleRequest) returns (ViewArticleResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/viewArticle"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["ArticleManage"]
+      summary: "View article"
+      description: "View article"
+    };
+  }
+
+
+
 }
 
 /*
@@ -108,7 +245,7 @@ service articleManageService {
 
 */
 
-enum Status {
+enum ArticleStatus {
   // 草稿
   DRAFT = 0;
   // 已发布
@@ -140,7 +277,7 @@ message ArticleInfo {
   string tag = 5;
 
   // 文章状态，如“draft”, “published”等
-  Status status = 6;
+  ArticleStatus status = 6;
 
   // 文章浏览次数
   int32 view_count = 7;
@@ -188,7 +325,7 @@ message ArticleListInfo {
   string tag = 5;
 
   // 文章状态，如“draft”, “published”等
-  Status status = 6;
+  ArticleStatus status = 6;
 
   // 文章浏览次数
   int32 view_count = 7;
@@ -236,6 +373,26 @@ message GetArticleListResponse {
   int32 total = 2;
 }
 
+// 获取已发布的文章列表请求
+message GetPublishedArticleListRequest {
+  // 页码
+  int32 page = 1;
+  // 每页数量
+  int32 pageSize = 2;
+}
+
+// 获取已发布的文章列表响应
+message  GetPublishedArticleListResponse {
+  // 文章列表
+  repeated ArticleListInfo article_list = 1;
+  // 总数
+  int32 total = 2;
+}
+
+
+
+
+
 // 发布文章请求
 message PublishArticleRequest {
   // 文章标题
@@ -251,7 +408,7 @@ message PublishArticleRequest {
   string tag = 4;
 
   // 文章状态，如“draft”, “published”等
-  Status status = 5;
+  ArticleStatus status = 5;
 
   // 文章封面图 URL
   string image_url = 6;
@@ -287,7 +444,7 @@ message UpdateArticleRequest {
   string tag = 5;
 
   // 文章状态，如“draft”, “published”等
-  string status = 6;
+  ArticleStatus status = 6;
 
   // 文章封面图 URL
   string image_url = 7;
@@ -349,7 +506,7 @@ message ReviewArticleRequest {
   // 文章唯一标识
   int64 article_id = 1;
   // 文章状态，如“draft”, “published”等
-  Status status = 2;
+  ArticleStatus status = 2;
 }
 
 // 文章审核响应
@@ -358,6 +515,198 @@ message ReviewArticleResponse {
   string message = 1;
 }
 
+
+/*
+-----------文章评论请求与响应参数-----------
+*/
+
+enum CommentStatus {
+// 已发布
+  C_PUBLISHED = 0;
+  // 已删除
+  C_DELETED = 1;
+  // 审核中
+  C_REVIEWING = 2;
+  // 审核未通过
+  C_REVIEW_FAILED = 3;
+  // 审核通过
+  C_REVIEW_PASSED = 4;
+}
+
+// 文章评论基本信息
+message ArticleCommentInfo {
+  // 评论唯一标识
+  int64 id = 1;
+
+  // 文章唯一标识
+  int64 article_id = 2;
+
+  // 评论内容
+  string content = 3;
+
+  // 评论者ID
+  int64 user_id = 4;
+
+  // 评论状态
+  CommentStatus status = 5;
+
+  //点赞次数
+  int32 like_count = 6;
+
+  // 评论时间
+  google.protobuf.Timestamp created_at = 7;
+
+  // 评论更新时间
+  google.protobuf.Timestamp updated_at = 8;
+
+  // 软删除时间
+  google.protobuf.Timestamp deleted_at = 9;
+}
+
+// 获取文章评论列表请求
+message GetArticleCommentListRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 页码
+  int32 page = 2;
+
+  // 每页数量
+  int32 pageSize = 3;
+}
+
+// 获取文章评论列表响应
+message GetArticleCommentListResponse {
+  // 文章评论列表
+  repeated ArticleCommentInfo comment_list = 1;
+
+  // 总数
+  int32 total = 2;
+}
+
+// 发布文章评论请求
+message PublishArticleCommentRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 评论内容
+  string content = 2;
+
+  // 评论者ID
+  int64 user_id = 3;
+}
+
+// 发布文章评论响应
+message PublishArticleCommentResponse {
+  // 评论唯一标识
+  string message = 1;
+}
+
+// 删除文章评论请求
+message DeleteArticleCommentRequest {
+  // 评论唯一标识
+  int64 comment_id = 1;
+
+  int64 article_id = 2;
+}
+
+// 删除文章评论响应
+message DeleteArticleCommentResponse {
+  // 评论唯一标识
+  string message = 1;
+}
+
+// 获取文章评论详情请求
+message GetArticleCommentDetailRequest {
+  // 评论唯一标识
+  int64 comment_id = 1;
+}
+
+// 获取文章评论详情响应
+message GetArticleCommentDetailResponse {
+  // 评论详情
+  ArticleCommentInfo comment_info = 1;
+}
+
+// 点赞文章评论请求
+message LikeArticleCommentRequest {
+  // 评论唯一标识
+  int64 comment_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+
+  //文章ID
+  int64 article_id = 3;
+}
+
+// 点赞文章评论响应
+message LikeArticleCommentResponse {
+  // 评论唯一标识
+  string message = 1;
+}
+
+
+// 文章点赞数增加请求
+message LikeArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+}
+
+// 文章点赞数增加响应
+message LikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
+
+
+//取消文章点赞请求
+message CancelLikeArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+}
+
+//取消文章点赞响应
+message CancelLikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
+
+//查询用户是否点赞文章请求
+message QueryUserLikeArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 点赞者ID
+  int64 user_id = 2;
+}
+
+//查询用户是否点赞文章响应
+message QueryUserLikeArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
+
+// 文章浏览数增加请求
+message ViewArticleRequest {
+  // 文章唯一标识
+  int64 article_id = 1;
+
+  // 浏览者ID
+  int64 user_id = 2;
+}
+
+// 文章浏览数增加响应
+message ViewArticleResponse {
+  // 文章唯一标识
+  string message = 1;
+}
 
 
 

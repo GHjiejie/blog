@@ -11,6 +11,9 @@ type User struct {
 	Password  string    `gorm:"column:password"            json:"password"`
 	Role      pb.Role   `gorm:"column:role"                     json:"role"`
 	Token     string    `gorm:"column:token"                     json:"token"`
+	Email     string    `gorm:"column:email"                     json:"email"`
+	Phone     string    `gorm:"column:phone"                     json:"phone"`
+	Avatar    string    `gorm:"column:avatar"                    json:"avatar"`
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoCreateTime" json:"updated_at"`
 }

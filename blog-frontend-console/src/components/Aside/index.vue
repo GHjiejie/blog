@@ -32,7 +32,7 @@
         </el-menu-item>
 
       </el-sub-menu>
-      <el-menu-item index="/user">
+      <el-menu-item v-if="cache.sessionGet('userRole') === 'ADMIN'" index="/user">
         <el-icon>
           <User />
         </el-icon>
@@ -50,11 +50,20 @@
         </el-icon>
         <span>文件管理</span>
       </el-menu-item>
+      <el-menu-item index="/personal">
+        <el-icon>
+          <User />
+        </el-icon>
+        <span>个人中心</span>
+      </el-menu-item>
+
+
     </el-menu>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
+import cache from "@/utils/cache";
 import {
   Menu as IconMenu,
   ChatLineRound,
