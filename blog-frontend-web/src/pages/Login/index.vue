@@ -34,7 +34,7 @@ const handleLogin = async () => {
     if (res.status == 200) {
       cache.setToken(res.data.token);
       cache.sessionSet("userId", res.data.user.userId);
-      cache.sessionSet("user", userForm.username);
+      cache.sessionSet("username", userForm.username);
       cache.sessionSet("userRole", res.data.user.role);
       cache.sessionSet("avatar", res.data.user.avatar);
       cache.sessionSet("isLogin", true);

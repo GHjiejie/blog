@@ -16,6 +16,7 @@ import (
 // 设置无需验证的路径
 var NotNeedAuthorizationPaths = map[string]bool{
 	"/v1/users/login":    true,
+	"/v1/users/logout":   true,
 	"/v1/users/register": true,
 	"/v1/captchas":       true,
 	// 以v1/web开头的都不需要验证(使用正则表达式)

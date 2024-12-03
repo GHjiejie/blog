@@ -15,7 +15,7 @@
       <span>{{ props.articleInfo.likeCount }}</span>
     </div>
 
-    <div class="comment">
+    <div class="comment" @click="handleClickComment">
       <svg-icon iconClass="icon-comment" className="icon"></svg-icon>
       {{ props.articleInfo.commentCount }}
     </div>
@@ -25,13 +25,24 @@
 
 <script setup>
 import { ref } from "vue";
+import cache from "@/utils/cache";
+import { ElMessage } from "element-plus";
 const props = defineProps({
   articleInfo: Object,
 });
 
 const likeStatus = ref(false);
+
+// 用户点赞事件
 const handleClickLike = () => {
   // 首先要判断用户是否登录，如果没有登录，提示用户登录
+  if (!cache.sessionGet("authorization")) {
+    ElMessage({
+      message: "请先登录",
+      type: "warning",
+    });
+    return;
+  }
 
   if (likeStatus.value) {
     likeStatus.value = false;
@@ -41,6 +52,20 @@ const handleClickLike = () => {
     props.articleInfo.likeCount++;
   }
 
+};
+
+// 用户评论事件
+const handleClickComment = () => {
+  // 首先要判断用户是否登录，如果没有登录，提示用户登录
+  if (!cache.sessionGet("authorization")) {
+    ElMessage({
+      message: "请先登录",
+      type: "warning",
+    });
+    return;
+  }
+  // 跳转到文章详情页面
+  // router.push(`/article/${props.articleInfo.articleId}`);
 };
 </script>
 

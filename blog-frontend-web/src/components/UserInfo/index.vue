@@ -7,7 +7,7 @@
           <div class="user-name">{{ userInfo.username }}</div>
         </div>
         <div class="logout">
-          <el-button type="primary" @click="logout"> 登出 </el-button>
+          <el-button type="primary" @click="handleLogout"> 登出 </el-button>
         </div>
       </div>
     </div>
@@ -49,8 +49,36 @@
 </template>
 <script setup>
 import cache from "@/utils/cache";
+import { logout } from "@/apis/user.js";
+import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const emits = defineEmits(["logoutSuccess"]);
+const router = useRouter();
 const userInfo = cache.sessionGet("userInfo");
-console.log(userInfo);
+
+const userId = cache.sessionGet("userId");
+// 登出操作
+const handleLogout = async () => {
+  try {
+    const res = await logout({ userId });
+    console.log(res);
+    if (res.status == 200) {
+      ElMessage.success("登出成功!");
+      cache.removeToken();
+      cache.sessionRemove("userInfo");
+      cache.sessionRemove("userId");
+      cache.sessionRemove("userRole");
+      cache.sessionRemove("username");
+      cache.sessionRemove("avatar");
+      cache.sessionRemove("isLogin");
+      emits("logoutSuccess");
+    } else {
+      ElMessage.error("登出失败");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
 
 <style scoped lang="scss">

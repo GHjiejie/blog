@@ -47,7 +47,7 @@
       center
       :show-close="false"
     >
-      <CurrentUserInfo></CurrentUserInfo>
+      <CurrentUserInfo @logout-success="handleLogout"></CurrentUserInfo>
     </el-dialog>
   </div>
 </template>
@@ -92,6 +92,11 @@ const handleLogin = (user) => {
 
 const shwoUserInfo = () => {
   userInfoVisible.value = true;
+};
+
+const handleLogout = () => {
+  isLogin.value = false;
+  userInfoVisible.value = false;
 };
 
 watch(isLogin, (newVal) => {
