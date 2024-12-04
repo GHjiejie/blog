@@ -54,6 +54,8 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
         ('p','articles-get','/v1/articles/getArticleDetail/*','GET'),  
         ('p','article-review','/v1/articles/reviewArticle','POST'),
         ('p','article-query', '/v1/articles/queryArticle', 'GET'),
+        ('p','article-like', '/v1/articles/likeArticle', 'POST'),
+        ('p','article-dislike', '/v1/articles/cancelLikeArticle', 'POST'),
     --- comment api ---
         ('p','comment-create','/v1/articles/publishArticleComment','POST'),
         ('p','comment-list','/v1/articles/getArticleCommentList','GET'),
@@ -95,6 +97,8 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
         ('g', 'user-normal-policy', 'comment-like', ''),
         ('g', 'user-normal-policy', 'comment-query', ''),
         ('g', 'user-normal-policy', 'articles-web-list', ''),
+        ('g', 'user-normal-policy', 'article-like', ''),
+        ('g', 'user-normal-policy', 'article-dislike',''),
 
     
         ('g', 'user-admin-policy', 'admin-policy', ''),

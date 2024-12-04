@@ -5,7 +5,11 @@
       <span>{{ props.articleInfo.viewCount }}</span>
     </div>
 
-    <div v-if="props.activePosition !== 'articleList'" class="like" @click="handleClickLike">
+    <div
+      v-if="props.activePosition !== 'articleList'"
+      class="like"
+      @click="handleClickLike"
+    >
       <template v-if="likeStatus">
         <svg-icon iconClass="icon-like-active" className="icon"></svg-icon>
       </template>
@@ -15,12 +19,21 @@
       <span>{{ props.articleInfo.likeCount }}</span>
     </div>
 
-    <div v-if="props.activePosition !== 'articleList'" class="comment" @click="handleClickComment">
+    <div
+      v-if="props.activePosition !== 'articleList'"
+      class="comment"
+      @click="handleClickComment"
+    >
       <svg-icon iconClass="icon-comment" className="icon"></svg-icon>
       <span> {{ props.articleInfo.commentCount }}</span>
     </div>
 
-    <el-drawer v-model="commentVisible" title="" :with-header="false" size="30%">
+    <el-drawer
+      v-model="commentVisible"
+      title=""
+      :with-header="false"
+      size="30%"
+    >
       <CommentPanel :article-id="props.articleInfo.articleId"></CommentPanel>
     </el-drawer>
   </div>

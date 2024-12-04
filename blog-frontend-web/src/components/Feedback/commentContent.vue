@@ -116,7 +116,7 @@ watch(
 .comment-content {
   display: flex;
   padding: 10px;
-  border-bottom: 1px solid var(--el-color-primary-light-5);
+  // border-bottom: 1px solid var(--el-color-primary-light-5);
 
   .comment-content-left {
     width: 50px;

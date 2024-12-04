@@ -96,9 +96,12 @@ onMounted(async () => {
       page: page.value,
       pageSize: pageSize.value,
     });
-    commentList.value = data.commentList;
-    total.value = data.total;
-    console.log("评论列表", commentList.value);
+    if (data.commentList.length === 0) {
+      hasMore.value = false;
+    } else {
+      commentList.value = data.commentList;
+      total.value = data.total;
+    }
   } catch (error) {}
 });
 </script>

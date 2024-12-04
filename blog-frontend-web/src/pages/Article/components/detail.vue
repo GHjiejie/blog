@@ -11,7 +11,10 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <ArticleDetailFooter :author-info="authorInfo" :article-info="articleDetail"></ArticleDetailFooter>
+          <ArticleDetailFooter
+            :author-info="authorInfo"
+            :article-info="articleDetail"
+          ></ArticleDetailFooter>
         </div>
       </div>
     </div>
@@ -84,7 +87,7 @@ const getArticleDetail = async () => {
     authorId.value = data.articleInfo.authorId;
     const res = await getUserById({ userId: data.articleInfo.authorId });
     authorInfo.value = res.data.user;
-  } catch (error) { }
+  } catch (error) {}
 };
 // 监听路由变化，文章浏览量+1
 watch(
