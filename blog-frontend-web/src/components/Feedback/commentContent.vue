@@ -21,10 +21,18 @@
           {{ commentInfo.content }}
         </p>
         <!-- 根据溢出状态和展开状态显示按钮 -->
-        <el-button v-if="isOverflow && !isExpanded" type="text" @click="showMore">
+        <el-button
+          v-if="isOverflow && !isExpanded"
+          type="text"
+          @click="showMore"
+        >
           展开
         </el-button>
-        <el-button v-if="isOverflow && isExpanded" type="text" @click="showLess">
+        <el-button
+          v-if="isOverflow && isExpanded"
+          type="text"
+          @click="showLess"
+        >
           收起
         </el-button>
       </div>
@@ -37,24 +45,23 @@ import { ref, onMounted, nextTick, watch } from "vue";
 import { getUserById } from "@/apis/user";
 
 const props = defineProps({
-  commentInfo: Object
+  commentInfo: Object,
 });
 
 const userInfo = ref({});
-
 const commentRef = ref(null); // 绑定的文本元素
 const isExpanded = ref(false); // 是否展开状态
 const isOverflow = ref(false); // 是否溢出状态
 
 // 展开功能
 const showMore = () => {
-  commentRef.value.style.webkitLineClamp = "none";
+  commentRef.value.style.webkitLineClamp = "none"; // 展开时不限制行数
   isExpanded.value = true;
 };
 
 // 收起功能
 const showLess = () => {
-  commentRef.value.style.webkitLineClamp = "3";
+  commentRef.value.style.webkitLineClamp = "3"; // 恢复限制为三行
   isExpanded.value = false;
 };
 
@@ -76,7 +83,7 @@ const getUser = async (userId) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 // 初始加载时检测溢出状态
 onMounted(() => {
@@ -97,27 +104,19 @@ watch(
 watch(
   () => props.commentInfo,
   async () => {
-    await getUser(props.commentInfo.userId)
-  }, {
-  immediate: true
-}
+    await getUser(props.commentInfo.userId);
+  },
+  {
+    immediate: true,
+  }
 );
 </script>
-
-
 
 <style scoped lang="scss">
 .comment-content {
   display: flex;
-  // flex-direction: column;
   padding: 10px;
   border-bottom: 1px solid var(--el-color-primary-light-5);
-
-  .comment-content-list {
-    display: flex;
-    margin-bottom: 10px;
-    // flex-direction: column;
-  }
 
   .comment-content-left {
     width: 50px;
@@ -161,25 +160,22 @@ watch(
           color: #999;
         }
       }
-
-      .comment-content-right-header-right {
-        .comment-content-right-header-right-like {
-          font-size: 14px;
-          cursor: pointer;
-        }
-      }
     }
 
     .comment-content-right-center {
       p {
         font-size: 14px;
-        // 设置显示行数
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
+        overflow: hidden; /* 隐藏溢出内容 */
+        text-overflow: ellipsis; /* 超出内容显示省略号 */
+        display: -webkit-box; /* 弹性盒子，结合 line-clamp 实现多行省略 */
+        -webkit-box-orient: vertical; /* 垂直排列 */
+        -webkit-line-clamp: 3; /* 限制显示的行数为3 */
+        line-height: 1.5em; /* 每行的高度 */
         transition: all 0.3s;
+
+        /* 新增属性 */
+        word-break: break-word; /* 自动换行，支持超长单词 */
+        white-space: normal; /* 文本超过宽度时换行 */
       }
     }
   }

@@ -22,7 +22,7 @@
       <div class="comment-footer-input">
         <el-input
           v-model="inputText"
-          type="text"
+          type="textarea"
           placeholder="请输入评论内容"
         />
       </div>
