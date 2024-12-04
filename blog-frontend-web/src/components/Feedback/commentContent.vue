@@ -15,11 +15,27 @@
             {{ commentInfo.createdAt }}
           </div>
         </div>
+        <div class="comment-content-right-header-right">
+          <svg-icon
+            iconClass="icon-comment"
+            className="icon"
+            @click="replyComment"
+          ></svg-icon>
+        </div>
       </div>
       <div class="comment-content-right-center">
         <p ref="commentRef">
           {{ commentInfo.content }}
         </p>
+        <!-- <textarea name="" id="" v-if="replyState"></textarea> -->
+        <div class="replyContainer" v-if="replyState" contenteditable="true">
+          <div class="publishCommentReply">
+            <!-- <el-button type="primary" @click="publishReply" text
+              >回复</el-button
+            > -->
+          </div>
+        </div>
+
         <!-- 根据溢出状态和展开状态显示按钮 -->
         <el-button
           v-if="isOverflow && !isExpanded"
@@ -53,6 +69,13 @@ const commentRef = ref(null); // 绑定的文本元素
 const isExpanded = ref(false); // 是否展开状态
 const isOverflow = ref(false); // 是否溢出状态
 
+const replyState = ref(false); // 回复状态
+
+const replyComment = () => {
+  // console.log("回复评论");
+  replyState.value = !replyState.value;
+};
+
 // 展开功能
 const showMore = () => {
   commentRef.value.style.webkitLineClamp = "none"; // 展开时不限制行数
@@ -76,6 +99,7 @@ const checkOverflow = () => {
   }
 };
 
+// 获取评论的用户的消息
 const getUser = async (userId) => {
   try {
     const { data } = await getUserById({ userId });
@@ -113,10 +137,11 @@ watch(
 </script>
 
 <style scoped lang="scss">
+// 设置滚动条样式
+
 .comment-content {
   display: flex;
   padding: 10px;
-  // border-bottom: 1px solid var(--el-color-primary-light-5);
 
   .comment-content-left {
     width: 50px;
@@ -176,6 +201,17 @@ watch(
         /* 新增属性 */
         word-break: break-word; /* 自动换行，支持超长单词 */
         white-space: normal; /* 文本超过宽度时换行 */
+      }
+      .replyContainer {
+        width: 100%;
+        height: 100px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+        overflow-y: auto;
+        word-break: break-all;
+        white-space: normal;
       }
     }
   }
