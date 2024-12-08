@@ -297,7 +297,7 @@ func (s *ArticleServer) QueryArticle(ctx context.Context, req *articlepb.QueryAr
 	}
 
 	// 查询文章
-	articleList, err := s.DBEngine.GetArticleListByTag(keyword)
+	articleList, err := s.DBEngine.GetArticleListByKeyWord(keyword)
 	if err != nil {
 		logger.Errorf("failed to get article list with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "failed to get article list: %v", err)

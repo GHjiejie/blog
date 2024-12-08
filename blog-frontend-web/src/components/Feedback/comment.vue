@@ -14,7 +14,7 @@
     </div>
     <div class="comment-footer">
       <div class="comment-footer-input">
-        <el-input v-model="inputText" type="textarea" placeholder="请输入评论内容" />
+        <el-input v-model="inputText" placeholder="请输入评论内容" />
       </div>
       <div class="comment-footer-button">
         <el-button type="primary" @click="publishComment">发表</el-button>
@@ -110,8 +110,7 @@ onMounted(async () => {
   .comment-header {
     padding: 10px;
     height: 50px;
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--el-color-primary-light-5);
 
     .comment-header-title {
       font-size: 16px;

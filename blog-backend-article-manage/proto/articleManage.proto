@@ -478,6 +478,8 @@ message DeleteArticleResponse {
 message QueryArticleRequest {
   // 查询关键字
   string keyword = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
 }
 
 // 查询文章响应

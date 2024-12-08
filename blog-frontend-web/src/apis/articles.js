@@ -68,3 +68,13 @@ export function publishArticleComment(data) {
     data: data,
   });
 }
+
+// 查询文章
+export function queryArticle(params) {
+  console.log(params);
+  return httpRequest({
+    // url: `v1/articles/queryArticle?keyword=${params.keyword}&page=${params.page}&pageSize=${params.pageSize}`,
+    url: `/v1/articles/queryArticle?keyword=${params.keyword}`,
+    method: "get",
+  });
+}

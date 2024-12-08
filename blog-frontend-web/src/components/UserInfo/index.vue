@@ -14,34 +14,22 @@
 
     <div class="media">
       <!-- github -->
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.github)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.github)">
         Github
       </el-button>
 
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.blog)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.blog)">
         Gitee
       </el-button>
 
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.weibo)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.weibo)">
         WeChat
       </el-button>
     </div>
 
     <div class="Footer">
       <div class="user-id">ID: {{ userInfo.userId }}</div>
-      <div class="user-role">Role:{{ userInfo.role }}</div>
+      <!-- <div class="user-role">Role:{{ userInfo.role }}</div> -->
       <div class="user-email">Email:3426571530@qq.com</div>
       <div class="user-phone">Phone:18196576670</div>
     </div>
@@ -106,6 +94,7 @@ const handleLogout = async () => {
       display: flex;
       align-items: center;
       gap: 10px;
+
       .user-name {
         font-size: 18px;
         font-weight: bold;

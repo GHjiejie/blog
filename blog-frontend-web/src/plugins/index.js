@@ -1,6 +1,7 @@
 // import { VMdEditor, VMdPreview } from './mdEditor'
 import VMdPreview from "./mdPreview";
 import VMdEditor from "./mdEditor";
+// import KeyboardPlugin from "./ctrlK/index";
 
 const pluginList = [VMdPreview, VMdEditor];
 const plugins = {

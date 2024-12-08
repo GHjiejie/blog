@@ -155,18 +155,33 @@ func (s *SQLDB) GetArticleListByAuthor(userId, page, pageSize int32) ([]Article,
 	return articleList, nil
 }
 
-// 根据tag查询文章
-func (s *SQLDB) GetArticleListByTag(tag string) ([]Article, error) {
+// 根据keyword查询文章
+func (s *SQLDB) GetArticleListByKeyWord(tag string) ([]Article, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "GetArticleListByTag",
 	})
 	var articleList []Article
-	if err := s.db.Where("tag = ?", tag).Find(&articleList).Error; err != nil {
-		logger.Errorf("failed to get article list by tag: %v", err)
+
+	// 使用 OR 条件查询，tag 匹配或者 title 包含 keyword
+	if err := s.db.Where("tag = ? OR title LIKE ?", tag, "%"+tag+"%").Find(&articleList).Error; err != nil {
+		logger.Errorf("failed to get article list by tag or keyword: %v", err)
 		return nil, err
 	}
+
 	return articleList, nil
 }
+
+// func (s *SQLDB) GetArticleListByTag(tag string) ([]Article, error) {
+// 	logger := log.WithFields(log.Fields{
+// 		"module": "GetArticleListByTag",
+// 	})
+// 	var articleList []Article
+// 	if err := s.db.Where("tag = ?", tag).Find(&articleList).Error; err != nil {
+// 		logger.Errorf("failed to get article list by tag: %v", err)
+// 		return nil, err
+// 	}
+// 	return articleList, nil
+// }
 
 // 更新文章
 func (s *SQLDB) UpdateArticle(articleInfo Article) error {

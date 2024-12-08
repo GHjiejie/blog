@@ -27,6 +27,7 @@ var NotNeedAuthorizationPaths = map[string]bool{
 	"/v1/articles/viewArticle":                 true,
 	"/v1/articles/getArticleCommentList":       true,
 	"/v1/web/articles/getPublishedArticleList": true,
+	"/v1/articles/queryArticle":                true,
 }
 
 const (

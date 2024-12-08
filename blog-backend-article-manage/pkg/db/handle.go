@@ -18,7 +18,7 @@ type Handle interface {
 	// 获取文章列表(用户)
 	GetArticleListByAuthor(userId, page, pageSize int32) ([]Article, error)
 	// 根据tag查询文章
-	GetArticleListByTag(tag string) ([]Article, error)
+	GetArticleListByKeyWord(tag string) ([]Article, error)
 	// 更新文章
 	UpdateArticle(articleInfo Article) error
 	// 根据文章ID获取文章详情
