@@ -33,7 +33,6 @@ EnginePaths = [
     "/v1/articles/likeArticle",
     "/v1/articles/viewArticle",
     "/v1/articles/queryUserLikeArticle"
-
 ]
 
 [DBConfig]

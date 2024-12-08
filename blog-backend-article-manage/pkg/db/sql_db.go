@@ -253,14 +253,14 @@ func (s *SQLDB) GetArticleCommentCount(articleId int64) (int64, error) {
 	return count, nil
 }
 
-// 获取文章评论列表（按时间倒叙排列）
+// 获取文章评论列表（按时间排列）
 func (s *SQLDB) GetArticleCommentList(articleId int64, page, pageSize int32) ([]Comment, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "GetArticleCommentList",
 	})
 	var commentList []Comment
 	offset := (page - 1) * pageSize
-	if err := s.db.Where("article_id = ?", articleId).Offset(int(offset)).Limit(int(pageSize)).Find(&commentList).Error; err != nil {
+	if err := s.db.Where("article_id = ?", articleId).Order("created_at DESC").Offset(int(offset)).Limit(int(pageSize)).Find(&commentList).Error; err != nil {
 		logger.Errorf("failed to get article comment list: %v", err)
 		return nil, err
 	}

@@ -13,11 +13,7 @@
 
     <div class="right">
       <div class="feedbackInfo">
-        <FeedBack
-          :articleInfo="props.articleInfo"
-          :active-position="position"
-          :is-like="isLike"
-        ></FeedBack>
+        <FeedBack :articleInfo="props.articleInfo" :active-position="position" :is-like="isLike"></FeedBack>
       </div>
     </div>
   </div>
@@ -28,6 +24,8 @@ import { ref, onMounted, watch } from "vue";
 import FeedBack from "@/components/Feedback/index.vue";
 import cache from "@/utils/cache";
 import { getArticleLikeStatus } from "@/apis/articles";
+import { useRoute } from "vue-router";
+const route = useRoute();
 // import { ELMessage } from 'element-plus';
 const props = defineProps({
   authorInfo: Object,
@@ -41,7 +39,7 @@ const isLike = ref(false);
 const userId = cache.sessionGet("userId");
 
 watch(
-  () => props.articleInfo,
+  () => route.params.id,
   async (newVal) => {
     if (userId) {
       const res = await getArticleLikeStatus({

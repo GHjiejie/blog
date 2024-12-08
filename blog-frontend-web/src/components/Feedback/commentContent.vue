@@ -15,13 +15,10 @@
             {{ commentInfo.createdAt }}
           </div>
         </div>
-        <div class="comment-content-right-header-right">
-          <svg-icon
-            iconClass="icon-comment"
-            className="icon"
-            @click="replyComment"
-          ></svg-icon>
-        </div>
+        <!-- 进行回复的评论操作，暂时不做 -->
+        <!-- <div class="comment-content-right-header-right">
+          <svg-icon iconClass="icon-comment" className="icon" @click="replyComment"></svg-icon>
+        </div> -->
       </div>
       <div class="comment-content-right-center">
         <p ref="commentRef">
@@ -37,18 +34,10 @@
         </div>
 
         <!-- 根据溢出状态和展开状态显示按钮 -->
-        <el-button
-          v-if="isOverflow && !isExpanded"
-          type="text"
-          @click="showMore"
-        >
+        <el-button v-if="isOverflow && !isExpanded" type="text" @click="showMore">
           展开
         </el-button>
-        <el-button
-          v-if="isOverflow && isExpanded"
-          type="text"
-          @click="showLess"
-        >
+        <el-button v-if="isOverflow && isExpanded" type="text" @click="showLess">
           收起
         </el-button>
       </div>
@@ -190,18 +179,27 @@ watch(
     .comment-content-right-center {
       p {
         font-size: 14px;
-        overflow: hidden; /* 隐藏溢出内容 */
-        text-overflow: ellipsis; /* 超出内容显示省略号 */
-        display: -webkit-box; /* 弹性盒子，结合 line-clamp 实现多行省略 */
-        -webkit-box-orient: vertical; /* 垂直排列 */
-        -webkit-line-clamp: 3; /* 限制显示的行数为3 */
-        line-height: 1.5em; /* 每行的高度 */
+        overflow: hidden;
+        /* 隐藏溢出内容 */
+        text-overflow: ellipsis;
+        /* 超出内容显示省略号 */
+        display: -webkit-box;
+        /* 弹性盒子，结合 line-clamp 实现多行省略 */
+        -webkit-box-orient: vertical;
+        /* 垂直排列 */
+        -webkit-line-clamp: 3;
+        /* 限制显示的行数为3 */
+        line-height: 1.5em;
+        /* 每行的高度 */
         transition: all 0.3s;
 
         /* 新增属性 */
-        word-break: break-word; /* 自动换行，支持超长单词 */
-        white-space: normal; /* 文本超过宽度时换行 */
+        word-break: break-word;
+        /* 自动换行，支持超长单词 */
+        white-space: normal;
+        /* 文本超过宽度时换行 */
       }
+
       .replyContainer {
         width: 100%;
         height: 100px;

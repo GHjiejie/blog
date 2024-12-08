@@ -4,27 +4,17 @@
       <div class="comment-header-title">评论:{{ total }}</div>
     </div>
     <div class="comment-center">
-      <div
-        v-for="(item, index) in commentList"
-        :key="index"
-        class="comment-content-list"
-      >
+      <div v-for="(item, index) in commentList" :key="index" class="comment-content-list">
         <CommentContent :commentInfo="item"></CommentContent>
       </div>
       <div class="showMore">
-        <el-button v-if="hasMore" type="text" @click="showMore"
-          >查看更多</el-button
-        >
+        <el-button v-if="hasMore" type="text" @click="showMore">查看更多</el-button>
         <el-button v-else type="text" disabled>没有更多了</el-button>
       </div>
     </div>
     <div class="comment-footer">
       <div class="comment-footer-input">
-        <el-input
-          v-model="inputText"
-          type="textarea"
-          placeholder="请输入评论内容"
-        />
+        <el-input v-model="inputText" type="textarea" placeholder="请输入评论内容" />
       </div>
       <div class="comment-footer-button">
         <el-button type="primary" @click="publishComment">发表</el-button>
@@ -70,7 +60,7 @@ const publishComment = async () => {
       commentList.value = data.commentList;
       total.value = data.total;
     }
-  } catch (error) {}
+  } catch (error) { }
 };
 const showMore = async () => {
   try {
@@ -86,7 +76,7 @@ const showMore = async () => {
     }
     commentList.value = [...commentList.value, ...data.commentList];
     total.value = data.total;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 onMounted(async () => {
@@ -102,7 +92,7 @@ onMounted(async () => {
       commentList.value = data.commentList;
       total.value = data.total;
     }
-  } catch (error) {}
+  } catch (error) { }
 });
 </script>
 
@@ -135,6 +125,7 @@ onMounted(async () => {
     overflow-y: auto;
     height: calc(100vh - 100px);
   }
+
   .showMore {
     text-align: center;
     margin-top: 10px;
