@@ -1,11 +1,7 @@
 <template>
   <div class="articleContainer">
     <div class="articleList">
-      <div
-        class="ArticleItem"
-        v-for="(item, index) in articleList"
-        :key="index"
-      >
+      <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -35,7 +31,11 @@
           </div>
         </div>
       </div>
+      <div class="loadmore">
+        <el-button type="primary" size="medium" @click="loadMore" text>{{ loadInfo }}</el-button>
+      </div>
     </div>
+    <el-backtop :right="50" :bottom="100" />
   </div>
 </template>
 
@@ -49,9 +49,35 @@ const page = ref(1);
 const pageSize = ref(10);
 const articleList = ref([]);
 const position = ref("articleList");
+const loadInfo = ref("加载更多");
+
+
+
+
+
 
 const goArticleDetail = (articleId) => {
   router.push(`/article/${articleId}`);
+};
+
+const loadMore = async () => {
+  page.value++;
+  try {
+    const { data } = await getArticleList({
+      page: page.value,
+      pageSize: pageSize.value,
+    });
+    console.log('data', data)
+    if (data.articleList.length === 0) {
+      loadInfo.value = "没有更多了";
+      return;
+    } else {
+      articleList.value = articleList.value.concat(data.articleList);
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 onMounted(async () => {
@@ -61,6 +87,12 @@ onMounted(async () => {
       pageSize: pageSize.value,
     });
     console.log(data);
+    if (data.articleList.length === 0) {
+      ElMessage({
+        message: "暂无数据",
+        type: "info",
+      });
+    }
     articleList.value = data.articleList;
   } catch (error) {
     console.log(error);
@@ -189,6 +221,12 @@ onMounted(async () => {
         }
       }
     }
+  }
+
+  .loadmore {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; // 增加顶部间距
   }
 }
 </style>

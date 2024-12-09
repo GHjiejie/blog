@@ -10,11 +10,29 @@ import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { queryArticle } from '@/apis/articles'
 const keywords = ref('')
+const page = ref(1)
+const pageSize = ref(10)
+const searchResults = ref([])
 
 // 监听用户按下的键盘事件，当用户按下 Ctrl + K 时，触发搜索事件：
-const handleSearch = async () => {
-  const res = await queryArticle({ keyword: keywords.value })
+
+const performSearch = async () => {
+  const res = await queryArticle({
+    keyword: keywords.value,
+    page: page.value,
+    pageSize: pageSize.value
+  })
+  searchResults.value = res.data
 }
+
+
+
+const handleSearch = async () => {
+  await performSearch()
+  console.log('Search results:', searchResults.value)
+}
+
+
 </script>
 
 <style scoped lang="scss">
