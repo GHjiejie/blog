@@ -6,9 +6,10 @@ import "@/styles/main.scss";
 import router from "./router/index.js";
 import plugins from "@/plugins";
 import JsonViewer from "vue3-json-viewer";
-// if you used v1.0.5 or latster ,you should add import "vue3-json-viewer/dist/index.css"
 import "vue3-json-viewer/dist/index.css";
+import i18n from "./utils/i18n";
 const app = createApp(App);
+app.use(i18n);
 app.use(router);
 app.use(plugins);
 app.use(JsonViewer);

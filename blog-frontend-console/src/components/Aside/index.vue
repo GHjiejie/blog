@@ -20,7 +20,6 @@
             </el-icon>
             <span>文章列表</span>
           </template>
-
         </el-menu-item>
         <el-menu-item index="/article/articlePublish">
           <template #title>
@@ -30,9 +29,11 @@
             <span>发布文章</span>
           </template>
         </el-menu-item>
-
       </el-sub-menu>
-      <el-menu-item v-if="cache.sessionGet('userRole') === 'ADMIN'" index="/user">
+      <el-menu-item
+        v-if="cache.sessionGet('userRole') === 'ADMIN'"
+        index="/user"
+      >
         <el-icon>
           <User />
         </el-icon>
@@ -56,8 +57,12 @@
         </el-icon>
         <span>个人中心</span>
       </el-menu-item>
-
-
+      <el-menu-item index="/i18n">
+        <el-icon>
+          <User />
+        </el-icon>
+        <span>国际化</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -71,7 +76,7 @@ import {
   User,
   Document,
   List,
-  UploadFilled
+  UploadFilled,
 } from "@element-plus/icons-vue";
 </script>
 
@@ -80,5 +85,6 @@ import {
   border-right: none;
 }
 
-.aside {}
+.aside {
+}
 </style>

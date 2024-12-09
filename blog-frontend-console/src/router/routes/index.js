@@ -54,6 +54,12 @@ const routes = [
         name: "Personal",
         component: () => import("@/pages/PersonalCenter/index.vue"),
       },
+      {
+        // 国际化
+        path: "/i18n",
+        name: "I18n",
+        component: () => import("@/pages/I18n/index.vue"),
+      },
     ],
   },
   {
