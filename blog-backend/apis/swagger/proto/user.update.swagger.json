@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "user Update API",
+    "version": "1.0.0",
+    "description": "An API to update user with tags"
+  },
+  "paths": {
+    "/v1/users/update": {
+      "post": {
+        "description": "user update api",
+        "operationId": "updateUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to be uploaded"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The ID of the user who uploaded the file"
+                  },
+                  "username": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "An optional tag associated with the file"
+                  },
+                  "email": {
+                    "type": "integer",
+                    "format": "string",
+                    "description": "The ID of the user who uploaded the file"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "format": "int64",
+                    "description": "The phone number of the user"
+                  }
+                },
+                "required": ["avatar", "username", "email", "phone"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User update successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "avatar": {
+                      "type": "string",
+                      "description": "The name of the uploaded file"
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The address of the uploaded file"
+                    },
+                    "email": {
+                      "type": "integer",
+                      "format": "string",
+                      "description": "The size of the uploaded file in bytes"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "format": "int64",
+                      "description": "The phone number of the user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "user update failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

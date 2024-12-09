@@ -141,7 +141,7 @@ func (s *BlogServer) prepareServer() error {
 			httpmux.Handle(path, s.Tracing(engine_articles, s.casbinPermit))
 		}
 	}
-
+	httpmux.HandleFunc("/v1/users/update", s.updateUserHandler)
 	httpmux.Handle("/v1/", s.Tracing(rmux, s.casbinPermit))
 
 	// 创建 HTTP 服务器

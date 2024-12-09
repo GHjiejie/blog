@@ -2,9 +2,24 @@
   <div class="container">
     <div class="Top"></div>
     <div class="Center">
-      <el-table :data="filterTableData" size="large" :height="maxHeight" :highlight-current-row="false">
-        <el-table-column fixed="left" prop="articleId" label="文章ID" width="120" />
-        <el-table-column property="title" label="文章标题" width="200" show-overflow-tooltip />
+      <el-table
+        :data="filterTableData"
+        size="large"
+        :height="maxHeight"
+        :highlight-current-row="false"
+      >
+        <el-table-column
+          fixed="left"
+          prop="articleId"
+          label="文章ID"
+          width="120"
+        />
+        <el-table-column
+          property="title"
+          label="文章标题"
+          width="200"
+          show-overflow-tooltip
+        />
         <!-- <el-table-column prop="title" label="文章标题" width="200" /> -->
         <el-table-column prop="tag" label="文件标签" width="150">
           <template #default="{ row }">
@@ -15,21 +30,38 @@
         </el-table-column>
         <el-table-column prop="status" label="文章状态" width="120">
           <template #default="{ row }">
-            <span :class="getStatusClass(row.status)" id="statusText">{{ getArticleStatus(row.status) }}</span>
+            <span :class="getStatusClass(row.status)" id="statusText">{{
+              getArticleStatus(row.status)
+            }}</span>
           </template>
         </el-table-column>
 
         <el-table-column prop="updatedAt" label="更新时间" width="200" />
         <el-table-column fixed="right" width="200">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="输入文章作者ID" />
+            <el-input
+              v-model="search"
+              size="small"
+              placeholder="输入文章作者ID"
+            />
           </template>
           <template #default="{ row }">
-            <el-button :disabled="row.role === 'ADMIN'" link type="success" size="small"
-              @click="reviewArticle(row.articleId)">
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="success"
+              size="small"
+              @click="reviewArticle(row.articleId)"
+            >
               审核
             </el-button>
-            <el-button :disabled="row.role === 'ADMIN'" link type="danger" size="small" @click="handelDelArticle(row)">
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="danger"
+              size="small"
+              @click="handelDelArticle(row)"
+            >
               删除
             </el-button>
           </template>
@@ -37,10 +69,16 @@
       </el-table>
     </div>
     <div class="Footer">
-      <el-button type="primary" @click="handleNextPage()" size="small">加载更多</el-button>
+      <el-button type="primary" @click="handleNextPage()" size="small"
+        >加载更多</el-button
+      >
     </div>
   </div>
-  <articleReview ref="articleReviewRef" :article-id="articleReviewId" @changeArticleStatus="updateArticleStatus">
+  <articleReview
+    ref="articleReviewRef"
+    :article-id="articleReviewId"
+    @changeArticleStatus="updateArticleStatus"
+  >
   </articleReview>
 </template>
 <script setup>
@@ -64,13 +102,20 @@ onMounted(async () => {
 
 const getStatusClass = (status) => {
   return {
-    'published': status === 'PUBLISHED',
-    'deleted': status === 'DELETED',
-    'review-passed': status === 'REVIEW_PASSED',
-    'review-failed': status === 'REVIEW_FAILED',
-    'reviewing': status === 'REVIEWING',
-    'draft': status === 'DRAFT',
-    'default': !['PUBLISHED', 'DELETED', 'REVIEW_PASSED', 'REVIEW_FAILED', 'REVIEWING', 'DRAFT'].includes(status)
+    published: status === "PUBLISHED",
+    deleted: status === "DELETED",
+    "review-passed": status === "REVIEW_PASSED",
+    "review-failed": status === "REVIEW_FAILED",
+    reviewing: status === "REVIEWING",
+    draft: status === "DRAFT",
+    default: ![
+      "PUBLISHED",
+      "DELETED",
+      "REVIEW_PASSED",
+      "REVIEW_FAILED",
+      "REVIEWING",
+      "DRAFT",
+    ].includes(status),
   };
 };
 
@@ -107,7 +152,9 @@ const getArticleListData = async () => {
       return;
     }
     articleList.value = [...articleList.value, ...data.articleList];
-  } catch (error) { }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // 删除文章
@@ -128,7 +175,7 @@ const handelDelArticle = (row) => {
         );
       }
     })
-    .catch(() => { });
+    .catch(() => {});
 };
 
 // 加载更多
@@ -171,7 +218,6 @@ const handleNextPage = async () => {
 .default {
   color: black;
 }
-
 
 .container {
   display: flex;

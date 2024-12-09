@@ -67,7 +67,7 @@
     <input type="file" style="display: none;" ref="uploadImgRef" @change="imgChange"></input>
     <input type="file" style="display: none;" ref="uploadLocalFileRef" @change="fileChange" accept=".md">
   </div>
-  <fileList ref="fileListRef" :file-id="viewFileId" @selectOnlineFile="handleOnlineFile"></fileList>
+  <fileList ref="fileListRef" :file-id="viewFileId" @select-online-file="handleOnlineFile"></fileList>
 </template>
 <script setup>
 import { reactive, ref } from 'vue';

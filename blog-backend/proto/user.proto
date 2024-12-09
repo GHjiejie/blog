@@ -185,7 +185,7 @@ message User {
     // 用户状态
     Status status = 6;
     // 用户头像
-    string avatar = 7;
+    bytes avatar = 7;
     // 创建时间
     google.protobuf.Timestamp created_at = 8;
     // 更新时间

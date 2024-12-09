@@ -6,42 +6,75 @@
           <el-avatar :size="60" :src="userInfo.avatar" />
           <div class="user-name">{{ userInfo.username }}</div>
         </div>
-        <div class="logout">
-          <el-button type="primary" @click="handleLogout"> 登出 </el-button>
+        <div class="operation">
+          <!-- <el-button type="primary" @click="handleLogout"> 登出 </el-button> -->
+          <el-dropdown placement="bottom">
+            <el-button> 操作 </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleLogout">登出</el-dropdown-item>
+                <el-dropdown-item @click="editUser">编辑</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
     </div>
 
     <div class="media">
       <!-- github -->
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.github)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.github)"
+      >
         Github
       </el-button>
 
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.blog)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.blog)"
+      >
         Gitee
       </el-button>
 
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.weibo)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.weibo)"
+      >
         WeChat
       </el-button>
     </div>
 
     <div class="Footer">
       <div class="user-id">ID: {{ userInfo.userId }}</div>
-      <!-- <div class="user-role">Role:{{ userInfo.role }}</div> -->
+      <div class="user-role">Role:{{ userInfo.role }}</div>
       <div class="user-email">Email:3426571530@qq.com</div>
       <div class="user-phone">Phone:18196576670</div>
     </div>
+
+    <el-dialog
+      v-model="editUserdVisible"
+      title="Shipping address"
+      width="50%"
+      :show-close="false"
+    >
+      <editUserPanel />
+    </el-dialog>
   </div>
 </template>
 <script setup>
+import { ref, defineEmits } from "vue";
 import cache from "@/utils/cache";
 import { logout } from "@/apis/user.js";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import editUserPanel from "./component/editUser.vue";
 const emits = defineEmits(["logoutSuccess"]);
 const router = useRouter();
+const editUserdVisible = ref(false);
 const userInfo = cache.sessionGet("userInfo");
 
 const userId = cache.sessionGet("userId");
@@ -66,6 +99,11 @@ const handleLogout = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+// 编辑用户操作
+const editUser = () => {
+  editUserdVisible.value = true;
 };
 </script>
 

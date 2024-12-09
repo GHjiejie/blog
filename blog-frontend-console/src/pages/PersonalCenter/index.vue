@@ -2,8 +2,10 @@
   <div class="userInfo">
     <div class="Top">
       <div class="user-avatar">
-        <el-avatar :size="60"
-          src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
+        <el-avatar
+          :size="60"
+          src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        />
       </div>
       <div class="user-details">
         <div class="user-name">{{ userInfo.username }}</div>
@@ -13,18 +15,29 @@
 
     <div class="media">
       <!-- github -->
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.github)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.github)"
+      >
         Github
       </el-button>
 
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.blog)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.blog)"
+      >
         Gitee
       </el-button>
 
-      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.weibo)">
+      <el-button
+        type="text"
+        icon="el-icon-link"
+        @click="openLink(userInfo.weibo)"
+      >
         WeChat
       </el-button>
-
     </div>
 
     <div class="Footer">
@@ -36,11 +49,11 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 import { getUserById } from "@/apis/user";
 import { ElMessage } from "element-plus";
 import cache from "@/utils/cache";
-const userInfo = ref({})
+const userInfo = ref({});
 onMounted(async () => {
   try {
     const { data } = await getUserById({
@@ -53,14 +66,12 @@ onMounted(async () => {
 });
 </script>
 
-
 <style scoped lang="scss">
 .userInfo {
   background-color: var(--color-background);
 
   padding: 20px;
   max-width: 400px;
-
 
   .Top {
     display: flex;
@@ -114,7 +125,7 @@ onMounted(async () => {
       margin: 5px 0;
 
       &::before {
-        content: '';
+        content: "";
         display: inline-block;
         width: 12px;
         height: 12px;
