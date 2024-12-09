@@ -22,54 +22,53 @@
           <el-avatar :src="userAvatar" @click="shwoUserInfo" />
         </template>
         <template v-else>
-          <el-avatar
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            @click="userLogin"
-          />
+          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" @click="userLogin" />
         </template>
       </div>
     </div>
 
-    <el-dialog
-      v-model="loginVisible"
-      title=""
-      width="500"
-      center
-      :show-close="false"
-    >
+    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
       <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
 
-    <el-dialog
-      v-model="userInfoVisible"
-      title=""
-      width="500"
-      center
-      :show-close="false"
-    >
+    <el-dialog v-model="userInfoVisible" title="" width="500" center :show-close="false">
       <CurrentUserInfo @logout-success="handleLogout"></CurrentUserInfo>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import SearchBlog from "@/components/Search/index.vue";
 import CurrentUserInfo from "@/components/UserInfo/index.vue";
 import Login from "@/pages/Login/index.vue";
 import cache from "@/utils/cache";
+import { logout, getUserById } from "@/apis/user.js";
+import { getFileUrl } from "@/utils/fileFilter";
 
 const loginVisible = ref(false);
 const userInfoVisible = ref(false);
 const userInfo = ref({});
+const userId = ref('')
+let userAvatar = ref("");
 const menuList = ref([
   { name: "首页", path: "/" },
   { name: "归档", path: "/archive" },
   { name: "关于", path: "/about" },
 ]);
 
-let userAvatar = cache.sessionGet("avatar");
+onMounted(async () => {
+  if (cache.sessionGet('userId')) {
+    userId.value = cache.sessionGet('userId')
+    await getUser(userId.value)
+  }
+})
 
+const getUser = async (userId) => {
+  const res = await getUserById({ userId });
+  userInfo.value = res.data.user;
+  userAvatar.value = getFileUrl(userInfo.value.avatar, 'image/jpeg')
+}
 const isLogin = cache.sessionGet("isLogin")
   ? ref(cache.sessionGet("isLogin"))
   : ref(false);
@@ -85,10 +84,9 @@ const handleLogin = (user) => {
   isLogin.value = true;
   loginVisible.value = false;
   userInfo.value = user;
-  cache.sessionSet("userInfo", user);
-  userAvatar = user.avatar;
+  userAvatar.value = cache.sessionGet("userAvatar");
   // router.push("/");
-  // location.reload();
+  location.reload();
 };
 
 const shwoUserInfo = () => {
@@ -100,9 +98,10 @@ const handleLogout = () => {
   userInfoVisible.value = false;
 };
 
-watch(isLogin, (newVal) => {
+watch(userAvatar, (newVal) => {
   if (newVal) {
-    userAvatar = cache.sessionGet("avatar");
+    console.log("newVal", newVal);
+    userAvatar.value = newVal;
   }
 });
 </script>

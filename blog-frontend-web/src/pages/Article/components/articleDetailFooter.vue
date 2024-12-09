@@ -3,10 +3,10 @@
     <div class="left">
       <div class="authorInfo">
         <div class="avatar">
-          <el-avatar :src="props.authorInfo.avatar" alt="avatar" />
+          <el-avatar :src="src" alt="avatar" />
         </div>
         <div class="authorName">
-          <span>{{ props.authorInfo.username }}</span>
+          <span>{{ userInfo.username }}</span>
         </div>
       </div>
     </div>
@@ -24,19 +24,29 @@ import { ref, onMounted, watch } from "vue";
 import FeedBack from "@/components/Feedback/index.vue";
 import cache from "@/utils/cache";
 import { getArticleLikeStatus } from "@/apis/articles";
+import { getFileUrl } from "@/utils/fileFilter";
 import { useRoute } from "vue-router";
+import { getUserById } from "@/apis/user.js";
 const route = useRoute();
 // import { ELMessage } from 'element-plus';
 const props = defineProps({
-  authorInfo: Object,
   articleInfo: Object,
 });
-
-console.log("props", props);
-
+const src = ref('')
 const isLike = ref(false);
+const userInfo = ref({});
 
 const userId = cache.sessionGet("userId");
+
+onMounted(async () => {
+  await getUser();
+})
+const getUser = async () => {
+  const res = await getUserById({ userId });
+  userInfo.value = res.data.user;
+  src.value = getFileUrl(userInfo.value.avatar, 'image/jpeg')
+}
+
 
 watch(
   () => route.params.id,

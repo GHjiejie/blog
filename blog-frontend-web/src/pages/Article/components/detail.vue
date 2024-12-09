@@ -11,7 +11,7 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <ArticleDetailFooter :author-info="authorInfo" :article-info="articleDetail"></ArticleDetailFooter>
+          <ArticleDetailFooter :article-info="articleDetail"></ArticleDetailFooter>
         </div>
       </div>
     </div>

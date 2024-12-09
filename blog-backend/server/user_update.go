@@ -16,40 +16,21 @@ func (s *BlogServer) updateUserHandler(w http.ResponseWriter, r *http.Request) {
 		"api": "updateUser",
 	})
 	// 解析表单数据
-	err := r.ParseMultipartForm(10 << 20) //限制最大上传10MB
+	err := r.ParseMultipartForm(10 << 20) // 限制最大上传10MB
 	if err != nil {
 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
 		return
 	}
 
-	avatar, _, err := r.FormFile("avatar") // 获取上传的文件
-	if err != nil {
-		http.Error(w, "Unable to retrieve file", http.StatusBadRequest)
-		return
-	}
-
-	defer avatar.Close()
-
-	avatarBytes, err := io.ReadAll(avatar)
-	if err != nil {
-		logger.Errorf("Failed to read file: %v", err)
-		http.Error(w, "Failed to read file", http.StatusInternalServerError)
-		return
-	}
 	// 获取formdata里面的username
 	username := r.FormValue("username")
-	// 获取formdata里面的password
+	// 获取formdata里面的email
 	email := r.FormValue("email")
+	// 获取formdata里面的phone
 	phone := r.FormValue("phone")
+	// 获取formdata里面的userId
 	userId := r.FormValue("userId")
 
-	userInfo := db.User{
-		Username: username,
-		Email:    email,
-		Phone:    phone,
-		Avatar:   avatarBytes,
-	}
-	// 然后更新用户的个人消息
 	userIdInt64, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
 		logger.Errorf("Failed to convert userId to int64: %v", err)
@@ -57,13 +38,29 @@ func (s *BlogServer) updateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := s.DBEngine.UserUpdate(userIdInt64, map[string]interface{}{
-		"username":   userInfo.Username,
-		"email":      userInfo.Email,
-		"phone":      userInfo.Phone,
-		"avatar":     userInfo.Avatar,
+	// 创建一个map来存储要更新的字段
+	updateFields := map[string]interface{}{
+		"username":   username,
+		"email":      email,
+		"phone":      phone,
 		"updated_at": time.Now(),
-	}); err != nil {
+	}
+
+	// 获取上传的文件
+	avatar, _, err := r.FormFile("avatar")
+	if err == nil {
+		defer avatar.Close()
+		avatarBytes, err := io.ReadAll(avatar)
+		if err != nil {
+			logger.Errorf("Failed to read file: %v", err)
+			http.Error(w, "Failed to read file", http.StatusInternalServerError)
+			return
+		}
+		updateFields["avatar"] = avatarBytes
+	}
+
+	// 更新用户的个人信息
+	if err := s.DBEngine.UserUpdate(userIdInt64, updateFields); err != nil {
 		logger.Errorf("Failed to update user: %v", err)
 		http.Error(w, "Failed to update user", http.StatusInternalServerError)
 		return
@@ -76,8 +73,9 @@ func (s *BlogServer) updateUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to get user", http.StatusInternalServerError)
 		return
 	}
+
 	// 创建一个新的user对象，用于返回给前端
-	userInfo = db.User{
+	userInfo := db.User{
 		Username: user.Username,
 		Email:    user.Email,
 		Phone:    user.Phone,
@@ -108,5 +106,4 @@ func (s *BlogServer) updateUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-
 }

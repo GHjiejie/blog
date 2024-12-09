@@ -2,7 +2,7 @@
   <div class="comment-content">
     <div class="comment-content-left">
       <div class="avatar">
-        <img :src="userInfo.avatar" alt="" />
+        <img :src="src" alt="" />
       </div>
     </div>
     <div class="comment-content-right">
@@ -48,10 +48,12 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from "vue";
 import { getUserById } from "@/apis/user";
+import { getFileUrl } from "@/utils/fileFilter";
 
 const props = defineProps({
   commentInfo: Object,
 });
+const src = ref("");
 
 const userInfo = ref({});
 const commentRef = ref(null); // 绑定的文本元素
@@ -93,6 +95,7 @@ const getUser = async (userId) => {
   try {
     const { data } = await getUserById({ userId });
     userInfo.value = data.user;
+    src.value = getFileUrl(userInfo.value.avatar, "image/jpeg");
   } catch (error) {
     console.log(error);
   }

@@ -3,7 +3,7 @@
     <div class="Top">
       <div class="user-baseinfo">
         <div class="user-details">
-          <el-avatar :size="60" :src="cache.sessionGet('avatar')" />
+          <el-avatar :size="60" :src="src" />
           <div class="user-name">{{ userInfo.username }}</div>
         </div>
         <div class="operation">
@@ -21,63 +21,59 @@
       </div>
     </div>
 
-    <div class="media">
-      <!-- github -->
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.github)"
-      >
+    <!-- <div class="media">
+
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.github)">
         Github
       </el-button>
 
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.blog)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.blog)">
         Gitee
       </el-button>
 
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.weibo)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.weibo)">
         WeChat
       </el-button>
-    </div>
+    </div> -->
 
     <div class="Footer">
       <div class="user-id">ID: {{ userInfo.userId }}</div>
       <div class="user-role">Role:{{ userInfo.role }}</div>
-      <div class="user-email">Email:{{ cache.sessionGet("userEmail") }}</div>
-      <div class="user-phone">Phone:{{ cache.sessionGet("userPhone") }}</div>
+      <div class="user-email">Email:{{ userInfo.email }}</div>
+      <div class="user-phone">Phone:{{ userInfo.phone }}</div>
     </div>
 
-    <el-dialog
-      v-model="editUserdVisible"
-      title="Shipping address"
-      width="50%"
-      :show-close="false"
-    >
+    <el-dialog v-model="editUserdVisible" title="" width="40%" :show-close="false">
       <editUserPanel @updateSuccess="handleUpdateSuccess" />
     </el-dialog>
   </div>
 </template>
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, watch, onMounted } from "vue";
 import cache from "@/utils/cache";
-import { logout } from "@/apis/user.js";
+import { logout, getUserById } from "@/apis/user.js";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { getFileUrl } from "@/utils/fileFilter";
 import editUserPanel from "./component/editUser.vue";
 const emits = defineEmits(["logoutSuccess"]);
-const router = useRouter();
 const editUserdVisible = ref(false);
-const userInfo = cache.sessionGet("userInfo");
+const userInfo = ref({});
+// const userAvatar = getFileUrl(userInfo.avatar, "image/jpeg");
+
 
 const userId = cache.sessionGet("userId");
+const src = ref('')
+
+onMounted(async () => {
+  await getUser()
+});
+
+const getUser = async () => {
+  const res = await getUserById({ userId });
+  userInfo.value = res.data.user;
+  src.value = getFileUrl(userInfo.value.avatar, 'image/jpeg')
+}
 // 登出操作
 const handleLogout = async () => {
   try {
@@ -106,10 +102,15 @@ const editUser = () => {
   editUserdVisible.value = true;
 };
 
-const handleUpdateSuccess = () => {
+const handleUpdateSuccess = async () => {
+  console.log("更新成功");
   editUserdVisible.value = false;
-  location.reload();
+  // location.reload();
+  await getUser();
+  location.reload()
 };
+
+
 </script>
 
 <style scoped lang="scss">
