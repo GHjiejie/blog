@@ -17,24 +17,17 @@
           ref="avatarRef"
           style="display: none"
         />
-        <el-avatar
-          :size="100"
-          :src="editUserForm.avatar"
-          @click="handleAvatar"
-        />
+        <el-avatar :size="100" :src="src" @click="handleAvatar" />
       </div>
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="editUserForm.username" disabled />
+        <el-input v-model="editUserForm.username" />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="editUserForm.email" />
       </el-form-item>
 
-      <el-form-item label="Github" prop="github">
-        <el-input v-model="editUserForm.github" />
-      </el-form-item>
-      <el-form-item label="Gitee" prop="blog">
-        <el-input v-model="editUserForm.blog" />
+      <el-form-item label="手机号" prop="phone">
+        <el-input v-model="editUserForm.phone" />
       </el-form-item>
 
       <el-form-item>
@@ -46,29 +39,35 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getUserById } from "@/apis/user";
-import { ElMessage } from "element-plus";
+import { getUserById, updateUser } from "@/apis/user";
 import cache from "@/utils/cache";
-import { useRouter } from "vue-router";
 
 const avatarRef = ref(null);
+const src = ref(cache.sessionGet("avatar"));
 
-const editUserForm = ref({});
+const editUserForm = ref({
+  username: "",
+  email: "",
+  userId: "",
+  phone: "",
+});
 const editUserRules = ref({
-  email: [
-    { required: true, message: "请输入邮箱", trigger: "blur" },
-    {
-      type: "email",
-      message: "请输入正确的邮箱地址",
-      trigger: ["blur", "change"],
-    },
-  ],
-  github: [{ required: false, message: "请输入Github地址", trigger: "blur" }],
-  blog: [{ required: false, message: "请输入Gitee地址", trigger: "blur" }],
+  username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+  github: [{ required: true, message: "请输入手机号", trigger: "blur" }],
 });
 
 const handleAvatar = () => {
   avatarRef.value.click();
+};
+
+const avatarChange = (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = (e) => {
+    src.value = e.target.result;
+  };
 };
 
 onMounted(async () => {
@@ -82,7 +81,29 @@ onMounted(async () => {
   }
 });
 
-const editUser = async () => {};
+const editUser = async () => {
+  try {
+    // 创建formdata对象
+    const formData = new FormData();
+    // 添加数据
+    formData.append("userId", cache.sessionGet("userId"));
+    formData.append("username", editUserForm.value.username);
+    formData.append("email", editUserForm.value.email);
+    formData.append("avatar", avatarRef.value.files[0]);
+    formData.append("phone", editUserForm.value.phone);
+
+    const res = await updateUser(formData);
+    console.log("用户修改信息", res);
+    if (res.status == 200) {
+      // cache.sessionSet("avatar", res.data.user.avatar);
+      // cache.sessionSet("username", res.data.user.username);
+      // cache.sessionSet("email", res.data.user.email);
+      ElMessage.success("修改成功");
+    } else {
+      ElMessage.error("修改失败");
+    }
+  } catch (error) {}
+};
 </script>
 
 <style scoped lang="scss">

@@ -22,16 +22,31 @@
           <el-avatar :src="userAvatar" @click="shwoUserInfo" />
         </template>
         <template v-else>
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" @click="userLogin" />
+          <el-avatar
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            @click="userLogin"
+          />
         </template>
       </div>
     </div>
 
-    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="loginVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
 
-    <el-dialog v-model="userInfoVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="userInfoVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <CurrentUserInfo @logout-success="handleLogout"></CurrentUserInfo>
     </el-dialog>
   </div>
@@ -60,9 +75,6 @@ const isLogin = cache.sessionGet("isLogin")
   : ref(false);
 isLogin.value = cache.sessionGet("isLogin");
 
-
-
-
 const keywords = ref("");
 
 const userLogin = () => {
@@ -76,8 +88,7 @@ const handleLogin = (user) => {
   cache.sessionSet("userInfo", user);
   userAvatar = user.avatar;
   // router.push("/");
-  location.reload();
-
+  // location.reload();
 };
 
 const shwoUserInfo = () => {

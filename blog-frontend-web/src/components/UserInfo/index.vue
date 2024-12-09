@@ -3,7 +3,7 @@
     <div class="Top">
       <div class="user-baseinfo">
         <div class="user-details">
-          <el-avatar :size="60" :src="userInfo.avatar" />
+          <el-avatar :size="60" :src="cache.sessionGet('avatar')" />
           <div class="user-name">{{ userInfo.username }}</div>
         </div>
         <div class="operation">

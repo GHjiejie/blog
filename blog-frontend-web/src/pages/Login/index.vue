@@ -3,7 +3,11 @@
     <div class="login-card">
       <h1>登录</h1>
       <input type="text" v-model="userForm.username" placeholder="Username" />
-      <input type="password" v-model="userForm.password" placeholder="Password" />
+      <input
+        type="password"
+        v-model="userForm.password"
+        placeholder="Password"
+      />
       <button @click="handleLogin">登录</button>
       <el-button @click="handleRegister" link>注册</el-button>
     </div>
@@ -16,6 +20,7 @@ import { login } from "@/apis/user.js";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import cache from "@/utils/cache";
+import { getFileUrl } from "@/utils/fileFilter";
 const emits = defineEmits(["loginSuccess"]);
 const userForm = reactive({
   username: "admin",
@@ -32,18 +37,19 @@ const handleLogin = async () => {
     // console.log("输出userForm", userForm);
     const res = await login(userForm);
     if (res.status == 200) {
+      const avatar = res.data.user.avatar;
       cache.setToken(res.data.token);
       cache.sessionSet("userId", res.data.user.userId);
       cache.sessionSet("username", userForm.username);
       cache.sessionSet("userRole", res.data.user.role);
-      cache.sessionSet("avatar", res.data.user.avatar);
+      cache.sessionSet("avatar", getFileUrl(avatar, "image/jpeg"));
       cache.sessionSet("isLogin", true);
       ElMessage.success("登录成功");
       emits("loginSuccess", res.data.user);
     } else {
       ElMessage.error("账号或者密码错误");
     }
-  } catch (error) { }
+  } catch (error) {}
 };
 const handleRegister = () => {
   router.push("/register");
@@ -67,7 +73,6 @@ const handleRegister = () => {
   flex-direction: column;
   align-items: center;
   width: 350px;
-
 }
 
 h1 {

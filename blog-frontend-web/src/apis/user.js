@@ -67,3 +67,15 @@ export function getUserById(params) {
     method: "get",
   });
 }
+
+// 更新用户接口
+export function updateUser(data) {
+  return httpRequest({
+    url: `/v1/users/update`,
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
