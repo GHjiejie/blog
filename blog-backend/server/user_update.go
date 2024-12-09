@@ -109,6 +109,4 @@ func (s *BlogServer) updateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 将response转换为json格式并返回给前端
-
 }

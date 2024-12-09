@@ -51,8 +51,8 @@
     <div class="Footer">
       <div class="user-id">ID: {{ userInfo.userId }}</div>
       <div class="user-role">Role:{{ userInfo.role }}</div>
-      <div class="user-email">Email:3426571530@qq.com</div>
-      <div class="user-phone">Phone:18196576670</div>
+      <div class="user-email">Email:{{ cache.sessionGet("userEmail") }}</div>
+      <div class="user-phone">Phone:{{ cache.sessionGet("userPhone") }}</div>
     </div>
 
     <el-dialog
@@ -61,7 +61,7 @@
       width="50%"
       :show-close="false"
     >
-      <editUserPanel />
+      <editUserPanel @updateSuccess="handleUpdateSuccess" />
     </el-dialog>
   </div>
 </template>
@@ -104,6 +104,11 @@ const handleLogout = async () => {
 // 编辑用户操作
 const editUser = () => {
   editUserdVisible.value = true;
+};
+
+const handleUpdateSuccess = () => {
+  editUserdVisible.value = false;
+  location.reload();
 };
 </script>
 

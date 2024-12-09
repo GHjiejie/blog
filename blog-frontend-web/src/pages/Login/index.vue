@@ -42,6 +42,8 @@ const handleLogin = async () => {
       cache.sessionSet("userId", res.data.user.userId);
       cache.sessionSet("username", userForm.username);
       cache.sessionSet("userRole", res.data.user.role);
+      cache.sessionSet("userEmail", res.data.user.email);
+      cache.sessionSet("userPhone", res.data.user.phone);
       cache.sessionSet("avatar", getFileUrl(avatar, "image/jpeg"));
       cache.sessionSet("isLogin", true);
       ElMessage.success("登录成功");

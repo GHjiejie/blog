@@ -38,10 +38,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineEmits } from "vue";
 import { getUserById, updateUser } from "@/apis/user";
 import cache from "@/utils/cache";
-
+import { getFileUrl } from "@/utils/fileFilter";
+const emits = defineEmits(["updateSuccess"]);
 const avatarRef = ref(null);
 const src = ref(cache.sessionGet("avatar"));
 
@@ -95,10 +96,11 @@ const editUser = async () => {
     const res = await updateUser(formData);
     console.log("用户修改信息", res);
     if (res.status == 200) {
-      // cache.sessionSet("avatar", res.data.user.avatar);
-      // cache.sessionSet("username", res.data.user.username);
-      // cache.sessionSet("email", res.data.user.email);
-      ElMessage.success("修改成功");
+      cache.sessionSet("avatar", getFileUrl(res.data.user.avatar));
+      cache.sessionSet("username", res.data.username);
+      cache.sessionSet("userEmail", res.data.email);
+      cache.sessionSet("userPhone", res.data.phone);
+      emits("updateSuccess");
     } else {
       ElMessage.error("修改失败");
     }
