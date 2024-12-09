@@ -1,5 +1,5 @@
 <template>
-  <div class="articleContainer">
+  <div class="articleContainer" ref="articleContainerRef">
     <div class="articleList">
       <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
         <!-- 文章封面图片 -->
@@ -50,15 +50,15 @@ const pageSize = ref(10);
 const articleList = ref([]);
 const position = ref("articleList");
 const loadInfo = ref("加载更多");
-
-
-
-
-
+const articleContainerRef = ref(null);
 
 const goArticleDetail = (articleId) => {
   router.push(`/article/${articleId}`);
 };
+
+// 监听用户按下的键盘事件，当用户按下 Ctrl + K 时，触发搜索事件：
+
+
 
 const loadMore = async () => {
   page.value++;
@@ -81,6 +81,8 @@ const loadMore = async () => {
 };
 
 onMounted(async () => {
+
+
   try {
     const { data } = await getArticleList({
       page: page.value,

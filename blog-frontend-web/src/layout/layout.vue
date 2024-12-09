@@ -4,7 +4,9 @@
       <Header />
     </el-header>
     <el-main>
-      <router-view />
+      <KeepAlive>
+        <router-view />
+      </KeepAlive>
     </el-main>
   </el-container>
 </template>
