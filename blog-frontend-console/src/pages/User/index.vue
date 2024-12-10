@@ -8,8 +8,18 @@
       </button>
     </div>
     <div class="Center">
-      <el-table :data="filterTableData" size="large" :height="maxHeight" :highlight-current-row="false">
-        <el-table-column fixed="left" prop="userId" label="用户ID" width="120" />
+      <el-table
+        :data="filterTableData"
+        size="large"
+        :height="maxHeight"
+        :highlight-current-row="false"
+      >
+        <el-table-column
+          fixed="left"
+          prop="userId"
+          label="用户ID"
+          width="120"
+        />
         <el-table-column prop="username" label="用户名" width="200" />
         <el-table-column prop="role" label="角色" width="150">
           <template #default="{ row }">
@@ -19,7 +29,9 @@
 
         <el-table-column prop="status" label="状态" width="120">
           <template #default="{ row }">
-            <el-tag v-if="row.status === 'NORMAL'" type="success" round>正常</el-tag>
+            <el-tag v-if="row.status === 'NORMAL'" type="success" round
+              >正常</el-tag
+            >
             <el-tag v-else type="danger" round>禁用</el-tag>
           </template>
         </el-table-column>
@@ -27,27 +39,52 @@
         <!-- <el-table-column prop="email" label="邮箱" width="120" />
         <el-table-column prop="phone" label="手机号" width="120" /> -->
 
-        <el-table-column prop="createdAt" label="创建时间" width="300" />
+        <el-table-column prop="createdAt" label="创建时间" width="300">
+          <template #default="{ row }">
+            {{ dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" min-width="150">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="Type to search" />
+            <el-input
+              v-model="search"
+              size="small"
+              placeholder="Type to search"
+            />
           </template>
           <template #default="{ row }">
-            <el-button :disabled="row.role === 'ADMIN'" link type="danger" size="small"
-              @click="handelDelUser(row, row.userId)">
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="danger"
+              size="small"
+              @click="handelDelUser(row, row.userId)"
+            >
               删除
             </el-button>
-            <el-button :disabled="row.role === 'ADMIN'" link type="warning" size="small"
-              @click="handlePWDReset(row.userId)">密码重置</el-button>
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="warning"
+              size="small"
+              @click="handlePWDReset(row.userId)"
+              >密码重置</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="Footer">
-      <el-button type="primary" @click="handleNextPage()" size="small">加载更多</el-button>
+      <el-button type="primary" @click="handleNextPage()" size="small"
+        >加载更多</el-button
+      >
     </div>
   </div>
-  <AddUser ref="addUserRef" :user-id="userId" @success="handleAddUser"></AddUser>
+  <AddUser
+    ref="addUserRef"
+    :user-id="userId"
+    @success="handleAddUser"
+  ></AddUser>
 </template>
 
 <script setup>
@@ -59,7 +96,7 @@ import {
   resetPassword,
   registerUser,
 } from "@/apis/user";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, dayjs } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 
 let page = ref(1);
@@ -100,7 +137,7 @@ const getUserListData = async () => {
       UserListData.value = res.data.users;
       userCount.value = res.data.total;
     }
-  } catch (error) { }
+  } catch (error) {}
 };
 // 用户密码重置
 const handlePWDReset = async (userId) => {
@@ -118,7 +155,7 @@ const handlePWDReset = async (userId) => {
         if (res.status === 200) {
           ElMessage.success("重置成功");
         }
-      } catch (error) { }
+      } catch (error) {}
     })
     .catch(() => {
       ElMessage.info("已取消重置");
@@ -145,7 +182,7 @@ const handelDelUser = async (rowInfo, userId) => {
             (item) => item.userId !== userId
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     })
     .catch(() => {
       ElMessage.info("已取消删除");

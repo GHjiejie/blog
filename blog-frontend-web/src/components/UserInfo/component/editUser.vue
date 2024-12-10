@@ -1,14 +1,27 @@
 <template>
   <div class="editUser">
-    <el-form :model="editUserForm" :rules="editUserRules" ref="editUserFormRef" label-width="80px">
+    <el-form
+      :model="editUserForm"
+      :rules="editUserRules"
+      ref="editUserFormRef"
+      label-width="80px"
+    >
       <!-- 用户头像 -->
       <div class="avatar">
-        <input type="file" name="" id="" @change="avatarChange" accept="image/*" ref="avatarRef"
-          style="display: none" />
-        <el-avatar :size="100"
+        <input
+          type="file"
+          name=""
+          id=""
+          @change="avatarChange"
+          accept="image/*"
+          ref="avatarRef"
+          style="display: none"
+        />
+        <el-avatar
+          :size="100"
           src="https://images.pexels.com/photos/920220/pexels-photo-920220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-          @click="handleAvatar" />
-
+          @click="handleAvatar"
+        />
       </div>
       <el-form-item label="用户名" prop="username">
         <el-input v-model="editUserForm.username" />
@@ -35,7 +48,7 @@ import cache from "@/utils/cache";
 import { getFileUrl } from "@/utils/fileFilter";
 const emits = defineEmits(["updateSuccess"]);
 const avatarRef = ref(null);
-const src = ref('');
+const src = ref("");
 src.value = cache.sessionGet("userAvatar");
 
 const editUserForm = ref({
@@ -82,11 +95,14 @@ const editUser = async () => {
     formData.append("userId", cache.sessionGet("userId"));
     formData.append("username", editUserForm.value.username);
     formData.append("email", editUserForm.value.email);
-    formData.append("avatar", avatarRef.value.files[0] !== undefined ? avatarRef.value.files[0] : null);
+    formData.append(
+      "avatar",
+      avatarRef.value.files[0] !== undefined ? avatarRef.value.files[0] : null
+    );
     formData.append("phone", editUserForm.value.phone);
 
     const res = await updateUser(formData);
-    console.log('resjkfjs', res)
+    console.log("resjkfjs", res);
     emits("updateSuccess");
     console.log("用户修改信息", res);
     cache.sessionSet("userAvatar", getFileUrl(res.data.avatar, "image/jpeg"));
@@ -94,9 +110,7 @@ const editUser = async () => {
     cache.sessionSet("username", res.data.username);
     cache.sessionSet("userEmail", res.data.email);
     cache.sessionSet("userPhone", res.data.phone);
-
-
-  } catch (error) { }
+  } catch (error) {}
 };
 </script>
 

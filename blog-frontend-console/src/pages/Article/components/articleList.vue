@@ -36,7 +36,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="updatedAt" label="更新时间" width="200" />
+        <el-table-column prop="updatedAt" label="更新时间" width="200">
+          <template #default="{ row }">
+            {{ dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" width="200">
           <template #header>
             <el-input
@@ -84,7 +88,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getArticleList, deleteArticle } from "@/apis/articles";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { ElMessageBox, ElMessage, dayjs } from "element-plus";
 import articleReview from "./articleReview.vue";
 import { getArticleStatus } from "@/utils/articles";
 const page = ref(1);

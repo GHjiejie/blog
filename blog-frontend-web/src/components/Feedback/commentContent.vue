@@ -12,7 +12,7 @@
             {{ userInfo.username }}
           </div>
           <div class="comment-content-right-header-left-time">
-            {{ commentInfo.createdAt }}
+            {{ dayjs(commentInfo.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
           </div>
         </div>
         <!-- 进行回复的评论操作，暂时不做 -->
@@ -34,10 +34,18 @@
         </div>
 
         <!-- 根据溢出状态和展开状态显示按钮 -->
-        <el-button v-if="isOverflow && !isExpanded" type="text" @click="showMore">
+        <el-button
+          v-if="isOverflow && !isExpanded"
+          type="text"
+          @click="showMore"
+        >
           展开
         </el-button>
-        <el-button v-if="isOverflow && isExpanded" type="text" @click="showLess">
+        <el-button
+          v-if="isOverflow && isExpanded"
+          type="text"
+          @click="showLess"
+        >
           收起
         </el-button>
       </div>
@@ -49,6 +57,7 @@
 import { ref, onMounted, nextTick, watch } from "vue";
 import { getUserById } from "@/apis/user";
 import { getFileUrl } from "@/utils/fileFilter";
+import { dayjs } from "element-plus";
 
 const props = defineProps({
   commentInfo: Object,

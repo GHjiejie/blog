@@ -33,7 +33,11 @@
         </el-table-column>
         <el-table-column prop="fileType" label="文件类型" width="200" />
 
-        <el-table-column prop="createdAt" label="创建时间" width="200" />
+        <el-table-column prop="createdAt" label="创建时间" width="200">
+          <template #default="{ row }">
+            {{ dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" width="200">
           <template #header>
             <el-input v-model="search" size="small" placeholder="搜索" />
@@ -85,7 +89,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getFileList, deleteFile, getFileById } from "@/apis/file";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, dayjs } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { getFileSize } from "@/utils/calculation";
 import fileView from "./components/fileView.vue";

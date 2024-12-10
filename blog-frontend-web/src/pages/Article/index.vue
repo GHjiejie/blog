@@ -1,7 +1,11 @@
 <template>
   <div class="articleContainer" ref="articleContainerRef">
     <div class="articleList">
-      <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
+      <div
+        class="ArticleItem"
+        v-for="(item, index) in articleList"
+        :key="index"
+      >
         <!-- 文章封面图片 -->
         <div class="left">
           <div class="articleCoverImg">
@@ -17,7 +21,9 @@
           </div>
           <div class="articleInfo">
             <div class="creatAt">
-              <span>{{ item.createdAt }}</span>
+              <span>
+                {{ dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+              </span>
             </div>
 
             <div class="tag">
@@ -32,7 +38,9 @@
         </div>
       </div>
       <div class="loadmore">
-        <el-button type="primary" size="medium" @click="loadMore" text>{{ loadInfo }}</el-button>
+        <el-button type="primary" size="medium" @click="loadMore" text>{{
+          loadInfo
+        }}</el-button>
       </div>
     </div>
     <el-backtop :right="50" :bottom="100" />
@@ -43,6 +51,7 @@
 import { ref, onMounted } from "vue";
 import { getArticleList } from "@/apis/articles";
 import { useRouter } from "vue-router";
+import { dayjs } from "element-plus";
 import FeedBack from "@/components/Feedback/index.vue";
 const router = useRouter();
 const page = ref(1);
@@ -58,8 +67,6 @@ const goArticleDetail = (articleId) => {
 
 // 监听用户按下的键盘事件，当用户按下 Ctrl + K 时，触发搜索事件：
 
-
-
 const loadMore = async () => {
   page.value++;
   try {
@@ -67,22 +74,19 @@ const loadMore = async () => {
       page: page.value,
       pageSize: pageSize.value,
     });
-    console.log('data', data)
+    console.log("data", data);
     if (data.articleList.length === 0) {
       loadInfo.value = "没有更多了";
       return;
     } else {
       articleList.value = articleList.value.concat(data.articleList);
     }
-
   } catch (error) {
     console.log(error);
   }
 };
 
 onMounted(async () => {
-
-
   try {
     const { data } = await getArticleList({
       page: page.value,

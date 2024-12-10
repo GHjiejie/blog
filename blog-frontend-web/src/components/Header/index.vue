@@ -22,16 +22,31 @@
           <el-avatar :src="userAvatar" @click="shwoUserInfo" />
         </template>
         <template v-else>
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" @click="userLogin" />
+          <el-avatar
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            @click="userLogin"
+          />
         </template>
       </div>
     </div>
 
-    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="loginVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
 
-    <el-dialog v-model="userInfoVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="userInfoVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <CurrentUserInfo @logout-success="handleLogout"></CurrentUserInfo>
     </el-dialog>
   </div>
@@ -49,26 +64,26 @@ import { getFileUrl } from "@/utils/fileFilter";
 const loginVisible = ref(false);
 const userInfoVisible = ref(false);
 const userInfo = ref({});
-const userId = ref('')
+const userId = ref("");
 let userAvatar = ref("");
 const menuList = ref([
-  { name: "首页", path: "/" },
-  { name: "归档", path: "/archive" },
-  { name: "关于", path: "/about" },
+  // { name: "首页", path: "/" },
+  // { name: "归档", path: "/archive" },
+  // { name: "关于", path: "/about" },
 ]);
 
 onMounted(async () => {
-  if (cache.sessionGet('userId')) {
-    userId.value = cache.sessionGet('userId')
-    await getUser(userId.value)
+  if (cache.sessionGet("userId")) {
+    userId.value = cache.sessionGet("userId");
+    await getUser(userId.value);
   }
-})
+});
 
 const getUser = async (userId) => {
   const res = await getUserById({ userId });
   userInfo.value = res.data.user;
-  userAvatar.value = getFileUrl(userInfo.value.avatar, 'image/jpeg')
-}
+  userAvatar.value = getFileUrl(userInfo.value.avatar, "image/jpeg");
+};
 const isLogin = cache.sessionGet("isLogin")
   ? ref(cache.sessionGet("isLogin"))
   : ref(false);
@@ -100,7 +115,6 @@ const handleLogout = () => {
 
 watch(userAvatar, (newVal) => {
   if (newVal) {
-    console.log("newVal", newVal);
     userAvatar.value = newVal;
   }
 });
