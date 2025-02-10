@@ -235,6 +235,44 @@ service articleManageService {
     };
   }
 
+  // 文章Tag管理
+  
+  // 获取Tag列表
+  rpc GetArticleTagList(GetArticleTagListRequest) returns (GetArticleTagListResponse) {
+    option (google.api.http) = {
+      get: "/v1/articles/getArticleTagList"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["TagManage"]
+      summary: "Get article tag list"
+      description: "Get article tag list"
+    };
+  }
+
+  // 添加Tag
+  rpc AddArticleTag(AddArticleTagRequest) returns (AddArticleTagResponse) {
+    option (google.api.http) = {
+      post: "/v1/articles/addArticleTag"
+      body: "*"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["TagManage"]
+      summary: "Add article tag"
+      description: "Add article tag"
+    };
+  }
+
+  // 删除Tag
+  rpc DeleteArticleTag(DeleteArticleTagRequest) returns (DeleteArticleTagResponse) {
+    option (google.api.http) = {
+      delete: "/v1/articles/deleteArticleTag/{tag_id}"
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["TagManage"]
+      summary: "Delete article tag"
+      description: "Delete article tag"
+    };
+  }
 
 
 }
@@ -709,6 +747,77 @@ message ViewArticleResponse {
   // 文章唯一标识
   string message = 1;
 }
+
+
+// 文章Tag管理
+
+// 文章Tag基本信息
+message ArticleTagInfo {
+  // Tag唯一标识
+  int64 tag_id = 1;
+
+  // Tag名称
+  string tag_name = 2;
+ 
+  // Tag分类ID(与ArticleTagCategoryInfo中的tag_category_id关联)
+  int64 tag_category_id = 3;
+
+  // Tag创建时间
+  google.protobuf.Timestamp created_at = 4;
+
+  // Tag更新时间
+  google.protobuf.Timestamp updated_at = 5;
+
+  // 软删除时间
+  google.protobuf.Timestamp deleted_at = 6;
+}
+
+// 获取Tag列表请求
+message GetArticleTagListRequest {
+  // 页码
+  int32 page = 1;
+
+  // 每页数量
+  int32 pageSize = 2;
+}
+
+// 获取Tag列表响应
+message GetArticleTagListResponse {
+  // Tag列表
+  repeated ArticleTagInfo tag_list = 1;
+
+  // 总数
+  int32 total = 2;
+}
+
+// 添加Tag请求
+message AddArticleTagRequest {
+  // Tag名称
+  string tag_name = 1;
+
+  // Tag分类ID(与ArticleTagCategoryInfo中的tag_category_id关联)
+  int64 tag_category_id = 2;
+}
+
+// 添加Tag响应
+message AddArticleTagResponse {
+  // Tag唯一标识
+  string message = 1;
+}
+
+// 删除Tag请求
+message DeleteArticleTagRequest {
+  // Tag唯一标识
+  int64 tag_id = 1;
+}
+
+// 删除Tag响应
+message DeleteArticleTagResponse {
+  // Tag唯一标识
+  string message = 1;
+}
+
+
 
 
 
