@@ -45,6 +45,12 @@
         </el-icon>
         <span>评论管理</span>
       </el-menu-item>
+      <el-menu-item index="/tag">
+        <el-icon>
+          <CollectionTag />
+        </el-icon>
+        <span>标签管理</span>
+      </el-menu-item>
       <el-menu-item index="/file">
         <el-icon>
           <Folder />
@@ -77,6 +83,7 @@ import {
   Document,
   List,
   UploadFilled,
+  CollectionTag,
 } from "@element-plus/icons-vue";
 </script>
 
