@@ -127,3 +127,14 @@ CREATE TABLE IF NOT EXISTS `comment_likes` (
     -- 外键约束，关联 comments 表
     CONSTRAINT `fk_comment_like_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE -- 外键约束，关联 users 表
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- 创建tag表
+CREATE TABLE IF NOT EXISTS `tags` (
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `category_id` BIGINT(20) NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `idx_tag_name` (`name`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

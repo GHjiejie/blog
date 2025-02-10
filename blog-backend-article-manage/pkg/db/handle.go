@@ -71,6 +71,24 @@ type Handle interface {
 
 	// 更新文章浏览次数
 	UpdateArticleViewCount(articleId, updateCount int64) error
+
+	// 查询Tag是否存在
+	GetTagByName(tagName string) error
+
+	// 创建Tag
+	CreateTag(tagName string, categoryId int64) error
+
+	// 获取Tag列表
+	GetTagList(page, pageSize int32) ([]Tag, error)
+
+	// 获取Tag总数
+	GetTagCount() (int64, error)
+
+	// 根据id查询tag
+	GetTagById(tagId int64) (Tag, error)
+
+	// 根据tag_id删除tag
+	DeleteTag(tagId int64) error
 }
 
 func NewHandler(c *config.DBConfig) (Handle, error) {

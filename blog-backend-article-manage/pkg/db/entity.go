@@ -72,3 +72,17 @@ type CommentLike struct {
 func (l *CommentLike) TableName() string {
 	return "comment_likes"
 }
+
+// 创建tag模型
+type Tag struct {
+	ID         int64      `gorm:"column:id;primaryKey" json:"id"`                      // 标签ID
+	Name       string     `gorm:"column:name;index" json:"name"`                       // 标签名称
+	CategoryId int64      `gorm:"column:category_id;index" json:"category_id"`         // 分类ID
+	CreatedAt  time.Time  `gorm:"column:created_at;autoCreateTime" json:"created_at"`  // 创建时间
+	UpdatedAt  time.Time  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`  // 更新时间
+	DeleteAt   *time.Time `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"` // 软删除时间
+}
+
+func (t *Tag) TableName() string {
+	return "tags"
+}
