@@ -50,3 +50,20 @@ export function getTags(params) {
     method: "get",
   });
 }
+
+// 新增Tag
+export function addTag(data) {
+  return httpRequest({
+    url: `/v1/articles/addArticleTag`,
+    method: "post",
+    data,
+  });
+}
+
+// 删除Tag
+export function deleteTag(params) {
+  return httpRequest({
+    url: `/v1/articles/deleteArticleTag/${params.tagId}`,
+    method: "delete",
+  });
+}
