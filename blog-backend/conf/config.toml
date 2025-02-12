@@ -32,7 +32,10 @@ EnginePaths = [
     "/v1/articles/cancelLikeArticle",
     "/v1/articles/likeArticle",
     "/v1/articles/viewArticle",
-    "/v1/articles/queryUserLikeArticle"
+    "/v1/articles/queryUserLikeArticle",
+    "/v1/articles/addArticleTag",
+    "/v1/articles/deleteArticleTag/{tag_id}",
+    "/v1/articles/getArticleTagList",
 ]
 
 [DBConfig]

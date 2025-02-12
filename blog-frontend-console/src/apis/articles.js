@@ -42,3 +42,11 @@ export function auditArticle(data) {
     data,
   });
 }
+
+// 获取所有的Tag
+export function getTags(params) {
+  return httpRequest({
+    url: `/v1/articles/getArticleTagList?page=${params.page}&pageSize=${params.pageSize}`,
+    method: "get",
+  });
+}

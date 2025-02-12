@@ -68,7 +68,7 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
 -- 设置用户组权限
 INSERT INTO `casbin_rules`(ptype,v0,v1,v2) 
     VALUES 
-    
+
         ('g', 'users-basic-policy', 'users-register', ''),
         ('g', 'users-basic-policy', 'users-login', ''),
         ('g', 'users-basic-policy', 'users-logout', ''),
