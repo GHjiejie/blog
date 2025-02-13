@@ -32,7 +32,7 @@
                     "description": "The ID of the user who uploaded the file"
                   }
                 },
-                "required": ["file", "tag", "uploaderId"]
+                "required": ["file", "uploaderId"]
               }
             }
           }

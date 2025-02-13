@@ -30,10 +30,7 @@
           </template>
         </el-menu-item>
       </el-sub-menu>
-      <el-menu-item
-        v-if="cache.sessionGet('userRole') === 'ADMIN'"
-        index="/user"
-      >
+      <el-menu-item v-if="cache.sessionGet('userRole') === 'ADMIN'" index="/user">
         <el-icon>
           <User />
         </el-icon>
@@ -63,12 +60,12 @@
         </el-icon>
         <span>个人中心</span>
       </el-menu-item>
-      <el-menu-item index="/i18n">
+      <!-- <el-menu-item index="/i18n">
         <el-icon>
           <User />
         </el-icon>
         <span>国际化</span>
-      </el-menu-item>
+      </el-menu-item> -->
     </el-menu>
   </div>
 </template>
@@ -92,6 +89,5 @@ import {
   border-right: none;
 }
 
-.aside {
-}
+.aside {}
 </style>

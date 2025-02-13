@@ -1,61 +1,190 @@
 <template>
   <div class="tag-management">
-    <div class="Top">
-      <button class="addFileBtn" @click="openAddFileDialog">
-        <el-icon>
-          <Plus />
-        </el-icon>
-      </button>
-    </div>
+
     <h1>标签管理</h1>
-    <el-collapse
-      v-model="activeNames"
-      @change="handleChange"
-      class="tag-collapse"
-    >
+    <el-collapse v-model="activeNames" @change="handleChange" class="tag-collapse">
       <el-collapse-item title="前端" name="1">
         <div class="tag-container">
-          <el-tag v-for="tag in frontEnd" :key="tag.tagId" class="tag">{{
+          <el-tag v-for="tag in frontEnd" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</el-tag>
+          }}</span></el-tag>
+
+          <el-popover placement="right" :width="250" trigger="click">
+            <template #reference>
+              <el-button style="margin-right: 16px" text type="primary">增加标签</el-button>
+            </template>
+            <el-form>
+              <el-form-item label="">
+                <el-input v-model="tagForm.tagName" placeholder="请输入标签名称"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleAddTag('1')">添加</el-button>
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-popover>
         </div>
       </el-collapse-item>
       <el-collapse-item title="后端" name="2">
         <div class="tag-container">
-          <el-tag v-for="tag in backEnd" :key="tag.tagId" class="tag">{{
+          <el-tag v-for="tag in backEnd" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</el-tag>
+          }}</span></el-tag>
+
+          <el-popover placement="right" :width="250" trigger="click">
+            <template #reference>
+              <el-button style="margin-right: 16px" text type="primary">增加标签</el-button>
+            </template>
+            <el-form>
+              <el-form-item label="">
+                <el-input v-model="tagForm.tagName" placeholder="请输入标签名称"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleAddTag('2')">添加</el-button>
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-popover>
         </div>
       </el-collapse-item>
       <el-collapse-item title="测试" name="3">
         <div class="tag-container">
-          <el-tag v-for="tag in test" :key="tag.tagId" class="tag">{{
+          <el-tag v-for="tag in test" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</el-tag>
+          }}</span></el-tag>
+
+          <el-popover placement="right" :width="250" trigger="click">
+            <template #reference>
+              <el-button style="margin-right: 16px" text type="primary">增加标签</el-button>
+            </template>
+            <el-form>
+              <el-form-item label="">
+                <el-input v-model="tagForm.tagName" placeholder="请输入标签名称"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleAddTag('3')">添加</el-button>
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-popover>
         </div>
       </el-collapse-item>
       <el-collapse-item title="运维" name="4">
         <div class="tag-container">
-          <el-tag v-for="tag in operation" :key="tag.tagId" class="tag">{{
+          <el-tag v-for="tag in operation" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</el-tag>
+          }}</span></el-tag>
+
+          <el-popover placement="right" :width="250" trigger="click">
+            <template #reference>
+              <el-button style="margin-right: 16px" text type="primary">增加标签</el-button>
+            </template>
+            <el-form>
+              <el-form-item label="">
+                <el-input v-model="tagForm.tagName" placeholder="请输入标签名称"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleAddTag('4')">添加</el-button>
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-popover>
         </div>
       </el-collapse-item>
       <el-collapse-item title="其他" name="5">
         <div class="tag-container">
-          <el-tag v-for="tag in other" :key="tag.tagId" class="tag">{{
+          <el-tag v-for="tag in other" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</el-tag>
+          }}</span></el-tag>
+
+          <el-popover placement="right" :width="250" trigger="click">
+            <template #reference>
+              <el-button style="margin-right: 16px" text type="primary">增加标签</el-button>
+            </template>
+            <el-form>
+              <el-form-item label="">
+                <el-input v-model="tagForm.tagName" placeholder="请输入标签名称"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="handleAddTag('5')">添加</el-button>
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-popover>
         </div>
       </el-collapse-item>
     </el-collapse>
   </div>
+
+
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { getTags } from "@/apis/articles";
 import { Plus } from "@element-plus/icons-vue";
+import { addTag, deleteTag } from '@/apis/articles'
+import { ElMessage, ElMessageBox } from "element-plus";
+
+
+
+const tagForm = ref({
+  tagName: "",
+});
+
+
+const resetForm = () => {
+  tagForm.value.tagName = "";
+};
+
+const deletetag = (tagId) => {
+  // 弹窗提示是否删除
+  ElMessageBox.confirm('此操作将永久删除该标签, 是否继续?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    // 确认删除
+    try {
+      const res = await deleteTag({
+        tagId
+      });
+      if (res.status === 200) {
+        ElMessage.success("删除成功");
+        // 更新到对应的分类数组中
+        tagsByCategory.value[res.data.tag.tagCategoryId].splice(tagsByCategory.value[res.data.tag.tagCategoryId].findIndex(item => item.tagId === tagId), 1);
+      }
+    } catch (error) {
+      console.error("删除标签失败", error);
+    }
+
+  }).catch(() => {
+    // 取消删除
+  });
+}
+
+const handleAddTag = async (type) => {
+  if (!tagForm.value.tagName) {
+    ElMessage.error("请输入标签名称");
+    return;
+  }
+  try {
+    const res = await addTag({
+      tagName: tagForm.value.tagName,
+      tagCategoryId: type,
+    });
+    if (res.status === 200) {
+      ElMessage.success("添加成功");
+      // 更新到对应的分类数组中
+      tagsByCategory.value[type].push(res.data.tag);
+
+    }
+
+  } catch (error) {
+    console.error("添加标签失败", error);
+  }
+
+}
 
 // 将不同分类的标签数组合并为一个响应式对象
 const tagsByCategory = ref({
@@ -78,6 +207,9 @@ const handleChange = (val) => {
   console.log(val);
 };
 
+
+
+
 // 不需要单独的 page 和 pageSize ref，直接在 API 请求中配置
 onMounted(async () => {
   try {
@@ -96,34 +228,37 @@ onMounted(async () => {
     console.error("获取标签失败", error);
   }
 });
+
+
 </script>
 
 <style scoped lang="scss">
 .tag-management {
   padding: 20px;
   font-family: Arial, sans-serif;
-  .Top {
-    position: fixed;
-    top: 50%;
-    right: 2%;
-    z-index: 999;
 
-    .addFileBtn {
-      background-color: $--color-primary-opacity7;
-      color: $--color-text;
-      border: none;
-      padding: 10px;
-      border-radius: 54% 46% 21% 79% / 52% 46% 54% 48%;
+  // .Top {
+  //   position: fixed;
+  //   top: 50%;
+  //   right: 2%;
+  //   z-index: 999;
 
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s;
-      cursor: pointer;
+  //   .addFileBtn {
+  //     background-color: $--color-primary-opacity7;
+  //     color: $--color-text;
+  //     border: none;
+  //     padding: 10px;
+  //     border-radius: 54% 46% 21% 79% / 52% 46% 54% 48%;
 
-      &:hover {
-        background-color: $--color-primary;
-      }
-    }
-  }
+  //     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  //     transition: all 0.3s;
+  //     cursor: pointer;
+
+  //     &:hover {
+  //       background-color: $--color-primary;
+  //     }
+  //   }
+  // }
 
   h1 {
     font-size: 24px;
@@ -163,7 +298,15 @@ onMounted(async () => {
   .tag-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px; /* 使用 gap 属性，提供统一的标签间距 */
+    align-items: baseline;
+    justify-content: flex-start;
+
+
+    gap: 8px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .tag {
