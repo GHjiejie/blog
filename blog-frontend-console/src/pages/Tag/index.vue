@@ -1,13 +1,13 @@
 <template>
   <div class="tag-management">
 
-    <h1>标签管理</h1>
+
     <el-collapse v-model="activeNames" @change="handleChange" class="tag-collapse">
       <el-collapse-item title="前端" name="1">
         <div class="tag-container">
           <el-tag v-for="tag in frontEnd" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</span></el-tag>
+              }}</span></el-tag>
 
           <el-popover placement="right" :width="250" trigger="click">
             <template #reference>
@@ -29,7 +29,7 @@
         <div class="tag-container">
           <el-tag v-for="tag in backEnd" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</span></el-tag>
+              }}</span></el-tag>
 
           <el-popover placement="right" :width="250" trigger="click">
             <template #reference>
@@ -51,7 +51,7 @@
         <div class="tag-container">
           <el-tag v-for="tag in test" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</span></el-tag>
+              }}</span></el-tag>
 
           <el-popover placement="right" :width="250" trigger="click">
             <template #reference>
@@ -73,7 +73,7 @@
         <div class="tag-container">
           <el-tag v-for="tag in operation" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</span></el-tag>
+              }}</span></el-tag>
 
           <el-popover placement="right" :width="250" trigger="click">
             <template #reference>
@@ -95,7 +95,7 @@
         <div class="tag-container">
           <el-tag v-for="tag in other" :key="tag.tagId" class="tag"><span @click="deletetag(tag.tagId)">{{
             tag.tagName
-          }}</span></el-tag>
+              }}</span></el-tag>
 
           <el-popover placement="right" :width="250" trigger="click">
             <template #reference>

@@ -26,6 +26,15 @@ export function deleteArticle(params) {
   });
 }
 
+export function queryArticle(params) {
+  console.log(params);
+  return httpRequest({
+    // url: `v1/articles/queryArticle?keyword=${params.keyword}&page=${params.page}&pageSize=${params.pageSize}`,
+    url: `/v1/articles/queryArticle?keyword=${params.keyword}&page=${params.page}&pageSize=${params.pageSize}`,
+    method: "get",
+  });
+}
+
 // 根据id获取文章详情
 export function getArticleById(params) {
   return httpRequest({
@@ -64,6 +73,22 @@ export function addTag(data) {
 export function deleteTag(params) {
   return httpRequest({
     url: `/v1/articles/deleteArticleTag/${params.tagId}`,
+    method: "delete",
+  });
+}
+
+// 获取文章的所有评论
+export function getArticleComments(params) {
+  return httpRequest({
+    url: `/v1/articles/getArticleCommentList?article_id=${params.articleId}&page=${params.page}&pageSize=${params.pageSize}`,
+    method: "get",
+  });
+}
+
+// 删除文章评论
+export function deleteArticleComment(params) {
+  return httpRequest({
+    url: `/v1/articles/deleteArticleComment/${params.commentId}?article_id=${params.articleId}`,
     method: "delete",
   });
 }
