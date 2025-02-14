@@ -24,16 +24,18 @@ EnginePaths = [
     "/v1/articles/getArticleDetail/{articleId}",
     "/v1/articles/reviewArticle",
     "/v1/web/articles/getPublishedArticleList",
-    "/v1/web/articles/deleteArticleComment/{comment_id}",
-    "/v1/web/articles/getArticleCommentDetail/{comment_id}",
-    "/v1/web/articles/getArticleCommentList",
-    "/v1/web/articles/likeArticleComment",
-    "/v1/web/articles/publishArticleComment",
+    "/v1/articles/deleteArticleComment/{comment_id}",
+    "/v1/articles/getArticleCommentDetail/{comment_id}",
+    "/v1/articles/getArticleCommentList",
+    "/v1/articles/likeArticleComment",
+    "/v1/articles/publishArticleComment",
     "/v1/articles/cancelLikeArticle",
     "/v1/articles/likeArticle",
     "/v1/articles/viewArticle",
-    "/v1/articles/queryUserLikeArticle"
-
+    "/v1/articles/queryUserLikeArticle",
+    "/v1/articles/addArticleTag",
+    "/v1/articles/deleteArticleTag/{tag_id}",
+    "/v1/articles/getArticleTagList",
 ]
 
 [DBConfig]
@@ -45,7 +47,9 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
-Addr = "127.0.0.1:3306"
+Addr = "localhost:3306"
+#Addr = "47.76.177.148:3306"
+
 DBName = "blog"
 #表示解析时间和设置事务隔离级别。
 #Para = "parseTime=true&tx_isolation='REPEATABLE-READ'"

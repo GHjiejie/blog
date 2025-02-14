@@ -40,7 +40,7 @@ func (s *FileServer) uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tag := r.FormValue("tag")                  // 获取文件标签
+	// tag := r.FormValue("tag")                  // 获取文件标签
 	uploaderIdStr := r.FormValue("uploaderId") // 获取上传者ID
 
 	// 转换 uploaderIdStr 为 int64
@@ -52,10 +52,10 @@ func (s *FileServer) uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fileInfo := db.UploadFile{
-		FileName:    fileHeader.Filename,
-		FileSize:    fileHeader.Size,
-		FileType:    fileHeader.Header.Get("Content-Type"),
-		Tag:         tag,
+		FileName: fileHeader.Filename,
+		FileSize: fileHeader.Size,
+		FileType: fileHeader.Header.Get("Content-Type"),
+
 		FileContent: fileBytes,
 		UploaderId:  uploaderId,
 	}
@@ -71,7 +71,6 @@ func (s *FileServer) uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 	response := map[string]interface{}{
 		"fileName": uploadedFile.FileName,
 		"bytes":    uploadedFile.FileSize,
-		"tag":      tag,
 		"message":  "File uploaded successfully",
 	}
 

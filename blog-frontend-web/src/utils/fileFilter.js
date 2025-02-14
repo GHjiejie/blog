@@ -60,7 +60,6 @@ export function base64ToBlob(base64Data, contentType) {
 // 获取文件地址
 export function getFileUrl(data, type) {
   const blob = base64ToBlob(data, type);
-  console.log("blob", blob);
   const blobUrl = URL.createObjectURL(blob);
   return blobUrl;
 }

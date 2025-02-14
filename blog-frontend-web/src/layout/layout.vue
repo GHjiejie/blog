@@ -4,7 +4,9 @@
       <Header />
     </el-header>
     <el-main>
-      <router-view />
+      <KeepAlive>
+        <router-view />
+      </KeepAlive>
     </el-main>
   </el-container>
 </template>
@@ -17,5 +19,10 @@ import Header from "@/components/Header/index.vue";
 .el-main {
   padding: 0;
   margin: 0;
+}
+
+.el-main {
+  width: 90%;
+  margin: 0 auto;
 }
 </style>

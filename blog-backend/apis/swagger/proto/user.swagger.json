@@ -634,6 +634,7 @@
         },
         "avatar": {
           "type": "string",
+          "format": "byte",
           "title": "用户头像"
         },
         "created_at": {

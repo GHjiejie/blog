@@ -38,6 +38,9 @@ const (
 	ArticleManageService_CancelLikeArticle_FullMethodName       = "/articleManage.articleManageService/CancelLikeArticle"
 	ArticleManageService_QueryUserLikeArticle_FullMethodName    = "/articleManage.articleManageService/QueryUserLikeArticle"
 	ArticleManageService_ViewArticle_FullMethodName             = "/articleManage.articleManageService/ViewArticle"
+	ArticleManageService_GetArticleTagList_FullMethodName       = "/articleManage.articleManageService/GetArticleTagList"
+	ArticleManageService_AddArticleTag_FullMethodName           = "/articleManage.articleManageService/AddArticleTag"
+	ArticleManageService_DeleteArticleTag_FullMethodName        = "/articleManage.articleManageService/DeleteArticleTag"
 )
 
 // ArticleManageServiceClient is the client API for ArticleManageService service.
@@ -78,6 +81,13 @@ type ArticleManageServiceClient interface {
 	QueryUserLikeArticle(ctx context.Context, in *QueryUserLikeArticleRequest, opts ...grpc.CallOption) (*QueryUserLikeArticleResponse, error)
 	// 文章浏览数增加
 	ViewArticle(ctx context.Context, in *ViewArticleRequest, opts ...grpc.CallOption) (*ViewArticleResponse, error)
+	// 文章Tag管理
+	// 获取Tag列表
+	GetArticleTagList(ctx context.Context, in *GetArticleTagListRequest, opts ...grpc.CallOption) (*GetArticleTagListResponse, error)
+	// 添加Tag
+	AddArticleTag(ctx context.Context, in *AddArticleTagRequest, opts ...grpc.CallOption) (*AddArticleTagResponse, error)
+	// 删除Tag
+	DeleteArticleTag(ctx context.Context, in *DeleteArticleTagRequest, opts ...grpc.CallOption) (*DeleteArticleTagResponse, error)
 }
 
 type articleManageServiceClient struct {
@@ -258,6 +268,36 @@ func (c *articleManageServiceClient) ViewArticle(ctx context.Context, in *ViewAr
 	return out, nil
 }
 
+func (c *articleManageServiceClient) GetArticleTagList(ctx context.Context, in *GetArticleTagListRequest, opts ...grpc.CallOption) (*GetArticleTagListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArticleTagListResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_GetArticleTagList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) AddArticleTag(ctx context.Context, in *AddArticleTagRequest, opts ...grpc.CallOption) (*AddArticleTagResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddArticleTagResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_AddArticleTag_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleManageServiceClient) DeleteArticleTag(ctx context.Context, in *DeleteArticleTagRequest, opts ...grpc.CallOption) (*DeleteArticleTagResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteArticleTagResponse)
+	err := c.cc.Invoke(ctx, ArticleManageService_DeleteArticleTag_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleManageServiceServer is the server API for ArticleManageService service.
 // All implementations must embed UnimplementedArticleManageServiceServer
 // for forward compatibility.
@@ -296,6 +336,13 @@ type ArticleManageServiceServer interface {
 	QueryUserLikeArticle(context.Context, *QueryUserLikeArticleRequest) (*QueryUserLikeArticleResponse, error)
 	// 文章浏览数增加
 	ViewArticle(context.Context, *ViewArticleRequest) (*ViewArticleResponse, error)
+	// 文章Tag管理
+	// 获取Tag列表
+	GetArticleTagList(context.Context, *GetArticleTagListRequest) (*GetArticleTagListResponse, error)
+	// 添加Tag
+	AddArticleTag(context.Context, *AddArticleTagRequest) (*AddArticleTagResponse, error)
+	// 删除Tag
+	DeleteArticleTag(context.Context, *DeleteArticleTagRequest) (*DeleteArticleTagResponse, error)
 	mustEmbedUnimplementedArticleManageServiceServer()
 }
 
@@ -356,6 +403,15 @@ func (UnimplementedArticleManageServiceServer) QueryUserLikeArticle(context.Cont
 }
 func (UnimplementedArticleManageServiceServer) ViewArticle(context.Context, *ViewArticleRequest) (*ViewArticleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ViewArticle not implemented")
+}
+func (UnimplementedArticleManageServiceServer) GetArticleTagList(context.Context, *GetArticleTagListRequest) (*GetArticleTagListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArticleTagList not implemented")
+}
+func (UnimplementedArticleManageServiceServer) AddArticleTag(context.Context, *AddArticleTagRequest) (*AddArticleTagResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddArticleTag not implemented")
+}
+func (UnimplementedArticleManageServiceServer) DeleteArticleTag(context.Context, *DeleteArticleTagRequest) (*DeleteArticleTagResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteArticleTag not implemented")
 }
 func (UnimplementedArticleManageServiceServer) mustEmbedUnimplementedArticleManageServiceServer() {}
 func (UnimplementedArticleManageServiceServer) testEmbeddedByValue()                              {}
@@ -684,6 +740,60 @@ func _ArticleManageService_ViewArticle_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArticleManageService_GetArticleTagList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArticleTagListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).GetArticleTagList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_GetArticleTagList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).GetArticleTagList(ctx, req.(*GetArticleTagListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_AddArticleTag_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddArticleTagRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).AddArticleTag(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_AddArticleTag_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).AddArticleTag(ctx, req.(*AddArticleTagRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleManageService_DeleteArticleTag_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArticleTagRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleManageServiceServer).DeleteArticleTag(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArticleManageService_DeleteArticleTag_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleManageServiceServer).DeleteArticleTag(ctx, req.(*DeleteArticleTagRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArticleManageService_ServiceDesc is the grpc.ServiceDesc for ArticleManageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -758,6 +868,18 @@ var ArticleManageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ViewArticle",
 			Handler:    _ArticleManageService_ViewArticle_Handler,
+		},
+		{
+			MethodName: "GetArticleTagList",
+			Handler:    _ArticleManageService_GetArticleTagList_Handler,
+		},
+		{
+			MethodName: "AddArticleTag",
+			Handler:    _ArticleManageService_AddArticleTag_Handler,
+		},
+		{
+			MethodName: "DeleteArticleTag",
+			Handler:    _ArticleManageService_DeleteArticleTag_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

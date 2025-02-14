@@ -197,7 +197,7 @@ func (s *ArticleServer) QueryUserLikeArticle(ctx context.Context, req *articlepb
 	_, err := s.DBEngine.GetArticleLike(articleId, userId)
 	if err != nil {
 		logger.Errorf("failed to get article like with err(%s)", err.Error())
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "failed to get article like with err(%s)", err.Error())
 	}
 	return &articlepb.QueryUserLikeArticleResponse{
 		Message: "user already like article",

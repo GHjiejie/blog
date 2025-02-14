@@ -51,7 +51,7 @@ const cache = {
   },
 
   sessionRemove(key) {
-    console.log("remove", key);
+    // console.log("remove", key);
     window.sessionStorage.removeItem(key);
   },
 
@@ -65,7 +65,7 @@ const cache = {
   },
   // 移除token
   removeToken() {
-    console.log("removeToken");
+    // console.log("removeToken");
     this.sessionRemove(TOKEN_KEY);
   },
 };

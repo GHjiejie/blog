@@ -68,7 +68,7 @@ func NewSQLDB(c *config.SQLPara) (Handle, error) {
 	}
 
 	// 进行数据库的迁移操作
-	if err := gormDB.AutoMigrate(&Article{}, &Comment{}, &CommentLike{}, &ArticleLike{}); err != nil {
+	if err := gormDB.AutoMigrate(&Article{}, &Comment{}, &CommentLike{}, &ArticleLike{}, &Tag{}); err != nil {
 		logger.Errorf("failed to migrate schema: %v", err)
 		return nil, err
 	}
@@ -155,18 +155,33 @@ func (s *SQLDB) GetArticleListByAuthor(userId, page, pageSize int32) ([]Article,
 	return articleList, nil
 }
 
-// 根据tag查询文章
-func (s *SQLDB) GetArticleListByTag(tag string) ([]Article, error) {
+// 根据keyword查询文章
+func (s *SQLDB) GetArticleListByKeyWord(tag string) ([]Article, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "GetArticleListByTag",
 	})
 	var articleList []Article
-	if err := s.db.Where("tag = ?", tag).Find(&articleList).Error; err != nil {
-		logger.Errorf("failed to get article list by tag: %v", err)
+
+	// 使用 OR 条件查询，tag 匹配或者 title 包含 keyword
+	if err := s.db.Where("tag = ? OR title LIKE ?", tag, "%"+tag+"%").Find(&articleList).Error; err != nil {
+		logger.Errorf("failed to get article list by tag or keyword: %v", err)
 		return nil, err
 	}
+
 	return articleList, nil
 }
+
+// func (s *SQLDB) GetArticleListByTag(tag string) ([]Article, error) {
+// 	logger := log.WithFields(log.Fields{
+// 		"module": "GetArticleListByTag",
+// 	})
+// 	var articleList []Article
+// 	if err := s.db.Where("tag = ?", tag).Find(&articleList).Error; err != nil {
+// 		logger.Errorf("failed to get article list by tag: %v", err)
+// 		return nil, err
+// 	}
+// 	return articleList, nil
+// }
 
 // 更新文章
 func (s *SQLDB) UpdateArticle(articleInfo Article) error {
@@ -253,14 +268,14 @@ func (s *SQLDB) GetArticleCommentCount(articleId int64) (int64, error) {
 	return count, nil
 }
 
-// 获取文章评论列表（按时间倒叙排列）
+// 获取文章评论列表（按时间排列）
 func (s *SQLDB) GetArticleCommentList(articleId int64, page, pageSize int32) ([]Comment, error) {
 	logger := log.WithFields(log.Fields{
 		"module": "GetArticleCommentList",
 	})
 	var commentList []Comment
 	offset := (page - 1) * pageSize
-	if err := s.db.Where("article_id = ?", articleId).Offset(int(offset)).Limit(int(pageSize)).Find(&commentList).Error; err != nil {
+	if err := s.db.Where("article_id = ?", articleId).Order("created_at DESC").Offset(int(offset)).Limit(int(pageSize)).Find(&commentList).Error; err != nil {
 		logger.Errorf("failed to get article comment list: %v", err)
 		return nil, err
 	}
@@ -386,4 +401,86 @@ func (s *SQLDB) UpdateArticleViewCount(articleId, updateCount int64) error {
 		return err
 	}
 	return nil
+}
+
+// 查看是否已经存在该tag
+func (s *SQLDB) GetTagByName(tagName string) error {
+	logger := log.WithFields(log.Fields{
+		"module": "GetTagByName",
+	})
+	var tag Tag
+	if err := s.db.Where("name = ?", tagName).First(&tag).Error; err != nil {
+		logger.Errorf("failed to get tag by name: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 创建Tag
+func (s *SQLDB) CreateTag(tagName string, categoryId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "CreateTag",
+	})
+	tag := Tag{
+		Name:       tagName,
+		CategoryId: categoryId,
+	}
+	if err := s.db.Create(&tag).Error; err != nil {
+		logger.Errorf("failed to create tag: %v", err)
+		return err
+	}
+	return nil
+}
+
+// 获取tag列表
+func (s *SQLDB) GetTagList(page, pageSize int32) ([]Tag, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetTagList",
+	})
+	var tagList []Tag
+	offset := (page - 1) * pageSize
+	if err := s.db.Offset(int(offset)).Limit(int(pageSize)).Find(&tagList).Error; err != nil {
+		logger.Errorf("failed to get tag list: %v", err)
+		return nil, err
+	}
+	return tagList, nil
+}
+
+// 获取tag总数
+func (s *SQLDB) GetTagCount() (int64, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetTagCount",
+	})
+	var count int64
+	if err := s.db.Model(&Tag{}).Count(&count).Error; err != nil {
+		logger.Errorf("failed to get tag count: %v", err)
+		return 0, err
+	}
+	return count, nil
+}
+
+// 根据id查询tag
+func (s *SQLDB) GetTagById(tagId int64) (Tag, error) {
+	logger := log.WithFields(log.Fields{
+		"module": "GetTagById",
+	})
+	var tag Tag
+	if err := s.db.First(&tag, tagId).Error; err != nil {
+		logger.Errorf("failed to get tag by id: %v", err)
+		return Tag{}, err
+	}
+	return tag, nil
+}
+
+// 根据tag_id删除tag
+func (s *SQLDB) DeleteTag(tagId int64) error {
+	logger := log.WithFields(log.Fields{
+		"module": "DeleteTag",
+	})
+	if err := s.db.Delete(&Tag{}, tagId).Error; err != nil {
+		logger.Errorf("failed to delete tag: %v", err)
+		return err
+	}
+	return nil
+
 }

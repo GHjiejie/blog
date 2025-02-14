@@ -3,60 +3,77 @@
     <div class="Top">
       <div class="user-baseinfo">
         <div class="user-details">
-          <el-avatar :size="60" :src="userInfo.avatar" />
+          <el-avatar :size="60" :src="src" />
           <div class="user-name">{{ userInfo.username }}</div>
         </div>
-        <div class="logout">
-          <el-button type="primary" @click="handleLogout"> 登出 </el-button>
+        <div class="operation">
+          <!-- <el-button type="primary" @click="handleLogout"> 登出 </el-button> -->
+          <el-dropdown placement="bottom">
+            <el-button> 操作 </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleLogout">登出</el-dropdown-item>
+                <el-dropdown-item @click="editUser">编辑</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
     </div>
 
-    <div class="media">
-      <!-- github -->
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.github)"
-      >
+    <!-- <div class="media">
+
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.github)">
         Github
       </el-button>
 
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.blog)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.blog)">
         Gitee
       </el-button>
 
-      <el-button
-        type="text"
-        icon="el-icon-link"
-        @click="openLink(userInfo.weibo)"
-      >
+      <el-button type="text" icon="el-icon-link" @click="openLink(userInfo.weibo)">
         WeChat
       </el-button>
-    </div>
+    </div> -->
 
     <div class="Footer">
       <div class="user-id">ID: {{ userInfo.userId }}</div>
       <div class="user-role">Role:{{ userInfo.role }}</div>
-      <div class="user-email">Email:3426571530@qq.com</div>
-      <div class="user-phone">Phone:18196576670</div>
+      <div class="user-email">Email:{{ userInfo.email }}</div>
+      <div class="user-phone">Phone:{{ userInfo.phone }}</div>
     </div>
+
+    <el-dialog v-model="editUserdVisible" title="" width="40%" :show-close="false">
+      <editUserPanel @updateSuccess="handleUpdateSuccess" />
+    </el-dialog>
   </div>
 </template>
 <script setup>
+import { ref, defineEmits, watch, onMounted } from "vue";
 import cache from "@/utils/cache";
-import { logout } from "@/apis/user.js";
+import { logout, getUserById } from "@/apis/user.js";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { getFileUrl } from "@/utils/fileFilter";
+import editUserPanel from "./component/editUser.vue";
 const emits = defineEmits(["logoutSuccess"]);
-const router = useRouter();
-const userInfo = cache.sessionGet("userInfo");
+const editUserdVisible = ref(false);
+const userInfo = ref({});
+// const userAvatar = getFileUrl(userInfo.avatar, "image/jpeg");
+
 
 const userId = cache.sessionGet("userId");
+const src = ref('')
+
+onMounted(async () => {
+  await getUser()
+});
+
+const getUser = async () => {
+  const res = await getUserById({ userId });
+  userInfo.value = res.data.user;
+  src.value = getFileUrl(userInfo.value.avatar, 'image/jpeg')
+}
 // 登出操作
 const handleLogout = async () => {
   try {
@@ -79,6 +96,21 @@ const handleLogout = async () => {
     console.log(error);
   }
 };
+
+// 编辑用户操作
+const editUser = () => {
+  editUserdVisible.value = true;
+};
+
+const handleUpdateSuccess = async () => {
+  console.log("更新成功");
+  editUserdVisible.value = false;
+  // location.reload();
+  await getUser();
+  location.reload()
+};
+
+
 </script>
 
 <style scoped lang="scss">
@@ -106,6 +138,7 @@ const handleLogout = async () => {
       display: flex;
       align-items: center;
       gap: 10px;
+
       .user-name {
         font-size: 18px;
         font-weight: bold;

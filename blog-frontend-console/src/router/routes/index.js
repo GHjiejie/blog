@@ -42,6 +42,12 @@ const routes = [
         name: "Comment",
         component: () => import("@/pages/Comment/index.vue"),
       },
+      // 标签管理
+      {
+        path: "/tag",
+        name: "Tag",
+        component: () => import("@/pages/Tag/index.vue"),
+      },
       // 文件管理
       {
         path: "/file",
@@ -53,6 +59,12 @@ const routes = [
         path: "/personal",
         name: "Personal",
         component: () => import("@/pages/PersonalCenter/index.vue"),
+      },
+      {
+        // 国际化
+        path: "/i18n",
+        name: "I18n",
+        component: () => import("@/pages/I18n/index.vue"),
       },
     ],
   },

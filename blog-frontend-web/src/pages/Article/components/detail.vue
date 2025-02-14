@@ -11,10 +11,7 @@
       <div class="right">
         <v-md-preview :text="articleDetail.content" ref="preview" />
         <div class="footer">
-          <UserComment
-            :author-info="authorInfo"
-            :article-info="articleDetail"
-          ></UserComment>
+          <ArticleDetailFooter :article-info="articleDetail"></ArticleDetailFooter>
         </div>
       </div>
     </div>
@@ -26,7 +23,7 @@ import { ref, onMounted, Comment, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getArticleById, addArticleViewCount } from "@/apis/articles";
 import { getUserById } from "@/apis/user";
-import UserComment from "@/pages/Article/components/comment.vue";
+import ArticleDetailFooter from "@/pages/Article/components/articleDetailFooter.vue";
 const route = useRoute();
 // const router = useRouter();
 const articleDetail = ref({});
@@ -61,6 +58,7 @@ onMounted(async () => {
   }));
 });
 
+// 处理锚点点击事件
 const handleAnchorClick = (anchor) => {
   const { lineIndex } = anchor;
 
@@ -87,13 +85,13 @@ const getArticleDetail = async () => {
     authorId.value = data.articleInfo.authorId;
     const res = await getUserById({ userId: data.articleInfo.authorId });
     authorInfo.value = res.data.user;
-  } catch (error) {}
+  } catch (error) { }
 };
 // 监听路由变化，文章浏览量+1
 watch(
   () => route.params.id,
   async (newVal, oldVal) => {
-    console.log("newVal", newVal);
+    // console.log("newVal", newVal);
     if (newVal !== oldVal) {
       await addArticleViewCount({ articleId: newVal });
     }
@@ -108,23 +106,9 @@ watch(
   display: flex;
   flex-direction: column;
 
-  // .header {
-  //   position: fixed;
-  //   top: 0;
-  //   width: 100%;
-  //   height: 50px;
-  //   display: flex;
-  //   justify-content: space-between;
-  //   align-items: center;
-  //   background-color: #282c34; // 深色背景
-  //   z-index: 999;
-  //   .back {
-  //     display: flex;
-  //     align-items: center;
-  //   }
-  // }
+  width: 100%;
+
   .content {
-    // margin-top: 50px;
     .left {
       position: fixed;
       width: 20%;

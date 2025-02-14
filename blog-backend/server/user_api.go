@@ -126,6 +126,8 @@ func (s *BlogServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 			Username:  user.Username,
 			Role:      pb.Role(user.Role),
 			Avatar:    user.Avatar,
+			Email:     user.Email,
+			Phone:     user.Phone,
 			CreatedAt: timestamppb.New(user.CreatedAt),
 			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		},
@@ -142,12 +144,12 @@ func (s *BlogServer) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.Log
 	logger.Infof("输出获取到的用户ID: %v", userID)
 	// log.Infof("输出获取到的用户ID: %v", userID)
 	// 然后我们需要去数据库中获取用户信息
-	user, err := s.DBEngine.UserGetByID(userID)
+	_, err := s.DBEngine.UserGetByID(userID)
 	if err != nil {
 		logger.Errorf("failed to get user by id with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
 	}
-	log.Infof("输出获取到的用户信息: %v", user)
+	// log.Infof("输出获取到的用户信息: %v", user)
 	// 然后我们需要去更新用户的token信息
 	err = s.DBEngine.UserUpdate(userID, map[string]interface{}{"token": ""})
 	if err != nil {
@@ -181,7 +183,7 @@ func (s *BlogServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 		logger.Errorf("failed to get user count with err(%s)", err.Error())
 		return nil, err
 	}
-	logger.Infof("获取到的用户总数: %d", userCount)
+	// logger.Infof("获取到的用户总数: %d", userCount)
 	users, err := s.DBEngine.UserList(int64(page), int64(pageSize))
 	if err != nil {
 		logger.Errorf("failed to get user list with err(%s)", err.Error())
@@ -346,6 +348,7 @@ func (s *BlogServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.G
 	// logger.Infof("输出获取到的用户ID: %v", userID)
 	// 获取用户信息
 	user, err := s.DBEngine.UserGetByID(userID)
+	// logger.Infof("输出获取到的用户信息: %v", user)
 	if err != nil {
 		logger.Errorf("failed to get user by id with err(%s)", err.Error())
 		return nil, status.Errorf(codes.Internal, "get user from db failed with err(%s)", err.Error())
@@ -357,6 +360,7 @@ func (s *BlogServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.G
 			Username:  user.Username,
 			Role:      pb.Role(user.Role),
 			Email:     user.Email,
+			Avatar:    user.Avatar,
 			Phone:     user.Phone,
 			CreatedAt: timestamppb.New(user.CreatedAt),
 			UpdatedAt: timestamppb.New(user.UpdatedAt),

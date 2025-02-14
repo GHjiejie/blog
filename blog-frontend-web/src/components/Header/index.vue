@@ -53,28 +53,41 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import SearchBlog from "@/components/Search/index.vue";
 import CurrentUserInfo from "@/components/UserInfo/index.vue";
 import Login from "@/pages/Login/index.vue";
 import cache from "@/utils/cache";
+import { logout, getUserById } from "@/apis/user.js";
+import { getFileUrl } from "@/utils/fileFilter";
 
 const loginVisible = ref(false);
 const userInfoVisible = ref(false);
 const userInfo = ref({});
+const userId = ref("");
+let userAvatar = ref("");
 const menuList = ref([
-  { name: "首页", path: "/" },
-  { name: "归档", path: "/archive" },
-  { name: "关于", path: "/about" },
+  // { name: "首页", path: "/" },
+  // { name: "归档", path: "/archive" },
+  // { name: "关于", path: "/about" },
 ]);
 
-let userAvatar = cache.sessionGet("avatar");
+onMounted(async () => {
+  if (cache.sessionGet("userId")) {
+    userId.value = cache.sessionGet("userId");
+    await getUser(userId.value);
+  }
+});
 
+const getUser = async (userId) => {
+  const res = await getUserById({ userId });
+  userInfo.value = res.data.user;
+  userAvatar.value = getFileUrl(userInfo.value.avatar, "image/jpeg");
+};
 const isLogin = cache.sessionGet("isLogin")
   ? ref(cache.sessionGet("isLogin"))
   : ref(false);
 isLogin.value = cache.sessionGet("isLogin");
-console.log("isLogin", isLogin.value);
 
 const keywords = ref("");
 
@@ -86,9 +99,9 @@ const handleLogin = (user) => {
   isLogin.value = true;
   loginVisible.value = false;
   userInfo.value = user;
-  cache.sessionSet("userInfo", user);
-  userAvatar = user.avatar;
-  router.push("/");
+  userAvatar.value = cache.sessionGet("userAvatar");
+  // router.push("/");
+  location.reload();
 };
 
 const shwoUserInfo = () => {
@@ -100,9 +113,9 @@ const handleLogout = () => {
   userInfoVisible.value = false;
 };
 
-watch(isLogin, (newVal) => {
+watch(userAvatar, (newVal) => {
   if (newVal) {
-    userAvatar = cache.sessionGet("avatar");
+    userAvatar.value = newVal;
   }
 });
 </script>

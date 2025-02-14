@@ -16,6 +16,7 @@ import { login } from "@/apis/user.js";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import cache from "@/utils/cache";
+import { getFileUrl } from "@/utils/fileFilter";
 const emits = defineEmits(["loginSuccess"]);
 const userForm = reactive({
   username: "admin",
@@ -31,12 +32,14 @@ const handleLogin = async () => {
   try {
     // console.log("输出userForm", userForm);
     const res = await login(userForm);
+    console.log("输出res", res);
     if (res.status == 200) {
+      const avatar = res.data.user.avatar;
       cache.setToken(res.data.token);
       cache.sessionSet("userId", res.data.user.userId);
       cache.sessionSet("username", userForm.username);
       cache.sessionSet("userRole", res.data.user.role);
-      cache.sessionSet("avatar", res.data.user.avatar);
+      cache.sessionSet("userAvatar", getFileUrl(avatar, "image/jpeg"));
       cache.sessionSet("isLogin", true);
       ElMessage.success("登录成功");
       emits("loginSuccess", res.data.user);
@@ -67,7 +70,6 @@ const handleRegister = () => {
   flex-direction: column;
   align-items: center;
   width: 350px;
-
 }
 
 h1 {

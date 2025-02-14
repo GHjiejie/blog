@@ -62,9 +62,20 @@ export function resetPassword(params) {
 
 // 根据用户id获取用户信息
 export function getUserById(params) {
-  console.log(params);
   return httpRequest({
     url: `/v1/users/${params.userId}`,
     method: "get",
+  });
+}
+
+// 更新用户接口
+export function updateUser(data) {
+  return httpRequest({
+    url: `/v1/users/update`,
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 }

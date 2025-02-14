@@ -1,32 +1,14 @@
 <template>
   <el-dialog v-model="visible" title="" width="500" :before-close="handleClose">
     <el-form>
-      <el-form-item label="文章标签" class="tag">
-        <el-select
-          v-model="uploadForm.tag"
-          placeholder="标签"
-          style="width: 240px"
-        >
-          <el-option-group
-            v-for="group in articleTags"
-            :key="group.label"
-            :label="group.label"
-          >
-            <el-option
-              v-for="item in group.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+      <!-- <el-form-item label="文章标签" class="tag">
+        <el-select v-model="uploadForm.tag" placeholder="标签" style="width: 240px">
+          <el-option-group v-for="group in articleTags" :key="group.label" :label="group.label">
+            <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
           </el-option-group>
         </el-select>
-      </el-form-item>
-      <input
-        type="file"
-        style="display: none"
-        ref="uploadFileRef"
-        @change="filechange"
-      />
+      </el-form-item> -->
+      <input type="file" style="display: none" ref="uploadFileRef" @change="filechange" />
       <el-form-item label="上传文件" class="file">
         <el-button type="primary" @click="handleUpload">上传文件</el-button>
       </el-form-item>
@@ -53,12 +35,12 @@ const visible = ref(false);
 
 // 提交表单
 const submitForm = async () => {
-  const { tag, uploaderId } = uploadForm; // 解构赋值
+  const { uploaderId } = uploadForm; // 解构赋值
 
-  if (!tag) {
-    ElMessage.error("请选择标签");
-    return;
-  }
+  // if (!tag) {
+  //   ElMessage.error("请选择标签");
+  //   return;
+  // }
 
   // 检查是否有文件待上传
   const file = uploadFileRef.value.files[0];
@@ -69,7 +51,7 @@ const submitForm = async () => {
 
   // 创建 formData 对象
   const formData = new FormData();
-  formData.append("tag", tag);
+
   formData.append("uploaderId", uploaderId);
   formData.append("file", file);
 

@@ -13,7 +13,7 @@
           <el-form-item label="文章标签" class="tag">
             <el-select v-model="articleFrom.tag" placeholder="标签" style="width: 240px">
               <el-option-group v-for="group in articleTags" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.label" />
               </el-option-group>
             </el-select>
           </el-form-item>
@@ -67,18 +67,18 @@
     <input type="file" style="display: none;" ref="uploadImgRef" @change="imgChange"></input>
     <input type="file" style="display: none;" ref="uploadLocalFileRef" @change="fileChange" accept=".md">
   </div>
-  <fileList ref="fileListRef" :file-id="viewFileId" @selectOnlineFile="handleOnlineFile"></fileList>
+  <fileList ref="fileListRef" :file-id="viewFileId" @select-online-file="handleOnlineFile"></fileList>
 </template>
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus'
 import { Plus, ArrowDown } from '@element-plus/icons-vue'
 import fileList from './fileList.vue';
 import { decodeBase64 } from "@/utils/fileFilter";
 import { getFileById } from '@/apis/file'
-import { publishArticle } from '@/apis/articles'
+import { publishArticle, getTags } from '@/apis/articles'
 import cache from '@/utils/cache'
-import { articleTags } from '@/utils/articles'
+
 const articleFrom = reactive({
   title: '',
   tag: '',
@@ -90,6 +90,31 @@ const uploadImgRef = ref(null);
 const uploadLocalFileRef = ref(null);
 const fileListRef = ref(null);
 
+const page = ref(1)
+const pageSize = ref(100)
+
+const articleTags = ref([{
+  label: '前端',
+  id: 1,
+  options: []
+}, {
+  label: '后端',
+  id: 2,
+  options: []
+}, {
+  label: '测试',
+  id: 3,
+  options: []
+}, {
+  label: '运维',
+  id: 4,
+  options: []
+},
+{
+  label: '其他',
+  id: 5,
+  options: []
+}])
 // 处理本地文件上传
 const fileChange = (e) => {
   const file = e.target.files[0];
@@ -119,9 +144,7 @@ const getFileContent = async (fileId) => {
   try {
     const { data } = await getFileById({ fileId });
     articleFrom.content = decodeBase64(data.fileInfo.content);
-    // articleFrom.title = data.fileInfo.fileName;
-    // articleFrom.tag = data.fileInfo.tag;
-    // articleFrom.summary = data.fileInfo.summary;
+
 
   } catch (error) {
     console.log('getFileContent error', error)
@@ -137,6 +160,29 @@ const handlePublish = async () => {
   }
 
 }
+
+const initTagList = (tags) => {
+  // 根据tagCategoryId将标签放在对应的分类中
+  tags.forEach(tag => {
+    articleTags.value[tag.tagCategoryId - 1].options.push({
+      label: tag.tagName,
+      value: tag.tagId
+    })
+  })
+
+
+}
+
+onMounted(async () => {
+  try {
+    const { data } = await getTags({ page: 1, pageSize: 100 });
+
+    initTagList(data.tagList)
+  } catch (error) {
+    console.log('获取标签失败', error)
+  }
+
+})
 </script>
 
 <style scoped lang="scss">

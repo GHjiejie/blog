@@ -1,5 +1,5 @@
 <template>
-  <div class="articleContainer">
+  <div class="articleContainer" ref="articleContainerRef">
     <div class="articleList">
       <div
         class="ArticleItem"
@@ -21,7 +21,9 @@
           </div>
           <div class="articleInfo">
             <div class="creatAt">
-              <span>{{ item.createdAt }}</span>
+              <span>
+                {{ dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+              </span>
             </div>
 
             <div class="tag">
@@ -35,7 +37,13 @@
           </div>
         </div>
       </div>
+      <div class="loadmore">
+        <el-button type="primary" size="medium" @click="loadMore" text>{{
+          loadInfo
+        }}</el-button>
+      </div>
     </div>
+    <el-backtop :right="50" :bottom="100" />
   </div>
 </template>
 
@@ -43,15 +51,39 @@
 import { ref, onMounted } from "vue";
 import { getArticleList } from "@/apis/articles";
 import { useRouter } from "vue-router";
+import { dayjs } from "element-plus";
 import FeedBack from "@/components/Feedback/index.vue";
 const router = useRouter();
 const page = ref(1);
 const pageSize = ref(10);
 const articleList = ref([]);
 const position = ref("articleList");
+const loadInfo = ref("加载更多");
+const articleContainerRef = ref(null);
 
 const goArticleDetail = (articleId) => {
   router.push(`/article/${articleId}`);
+};
+
+// 监听用户按下的键盘事件，当用户按下 Ctrl + K 时，触发搜索事件：
+
+const loadMore = async () => {
+  page.value++;
+  try {
+    const { data } = await getArticleList({
+      page: page.value,
+      pageSize: pageSize.value,
+    });
+    console.log("data", data);
+    if (data.articleList.length === 0) {
+      loadInfo.value = "没有更多了";
+      return;
+    } else {
+      articleList.value = articleList.value.concat(data.articleList);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 onMounted(async () => {
@@ -61,6 +93,12 @@ onMounted(async () => {
       pageSize: pageSize.value,
     });
     console.log(data);
+    if (data.articleList.length === 0) {
+      ElMessage({
+        message: "暂无数据",
+        type: "info",
+      });
+    }
     articleList.value = data.articleList;
   } catch (error) {
     console.log(error);
@@ -189,6 +227,12 @@ onMounted(async () => {
         }
       }
     }
+  }
+
+  .loadmore {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; // 增加顶部间距
   }
 }
 </style>

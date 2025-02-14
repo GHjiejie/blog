@@ -15,14 +15,20 @@
         </el-table-column>
         <el-table-column prop="status" label="文章状态" width="120">
           <template #default="{ row }">
-            <span :class="getStatusClass(row.status)" id="statusText">{{ getArticleStatus(row.status) }}</span>
+            <span :class="getStatusClass(row.status)" id="statusText">{{
+              getArticleStatus(row.status)
+            }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="updatedAt" label="更新时间" width="200" />
+        <el-table-column prop="updatedAt" label="更新时间" width="200">
+          <template #default="{ row }">
+            {{ dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" width="200">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="输入文章作者ID" />
+            <el-input v-model="search" size="small" placeholder="输入文章作者ID或者Tag" />
           </template>
           <template #default="{ row }">
             <el-button :disabled="row.role === 'ADMIN'" link type="success" size="small"
@@ -46,7 +52,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getArticleList, deleteArticle } from "@/apis/articles";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { ElMessageBox, ElMessage, dayjs } from "element-plus";
 import articleReview from "./articleReview.vue";
 import { getArticleStatus } from "@/utils/articles";
 const page = ref(1);
@@ -64,19 +70,26 @@ onMounted(async () => {
 
 const getStatusClass = (status) => {
   return {
-    'published': status === 'PUBLISHED',
-    'deleted': status === 'DELETED',
-    'review-passed': status === 'REVIEW_PASSED',
-    'review-failed': status === 'REVIEW_FAILED',
-    'reviewing': status === 'REVIEWING',
-    'draft': status === 'DRAFT',
-    'default': !['PUBLISHED', 'DELETED', 'REVIEW_PASSED', 'REVIEW_FAILED', 'REVIEWING', 'DRAFT'].includes(status)
+    published: status === "PUBLISHED",
+    deleted: status === "DELETED",
+    "review-passed": status === "REVIEW_PASSED",
+    "review-failed": status === "REVIEW_FAILED",
+    reviewing: status === "REVIEWING",
+    draft: status === "DRAFT",
+    default: ![
+      "PUBLISHED",
+      "DELETED",
+      "REVIEW_PASSED",
+      "REVIEW_FAILED",
+      "REVIEWING",
+      "DRAFT",
+    ].includes(status),
   };
 };
 
 const filterTableData = computed(() => {
   return articleList.value.filter((item) => {
-    return item.authorId.includes(search.value);
+    return item.authorId.includes(search.value) || item.tag.toLowerCase().includes(search.value.toLowerCase());
   });
 });
 
@@ -107,7 +120,9 @@ const getArticleListData = async () => {
       return;
     }
     articleList.value = [...articleList.value, ...data.articleList];
-  } catch (error) { }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // 删除文章
@@ -171,7 +186,6 @@ const handleNextPage = async () => {
 .default {
   color: black;
 }
-
 
 .container {
   display: flex;

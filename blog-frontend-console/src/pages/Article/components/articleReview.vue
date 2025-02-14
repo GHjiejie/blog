@@ -1,5 +1,11 @@
 <template>
-  <el-dialog v-model="visible" title="" width="60%" :before-close="handleClose" :show-close="false">
+  <el-dialog
+    v-model="visible"
+    title=""
+    width="60%"
+    :before-close="handleClose"
+    :show-close="false"
+  >
     <div class="articleContainer">
       <div class="Top">
         <div class="articleTitle">{{ articleInfo.title }}</div>
@@ -26,8 +32,15 @@
         <v-md-preview :text="articleInfo.content"></v-md-preview>
       </div>
       <div class="Footer">
-        <el-tag v-if="articleInfo.status === 'PUBLISHED' || articleInfo.status === 'REVIEW_PASSED'" type="danger"
-          @click="revoke">撤回</el-tag>
+        <el-tag
+          v-if="
+            articleInfo.status === 'PUBLISHED' ||
+            articleInfo.status === 'REVIEW_PASSED'
+          "
+          type="danger"
+          @click="revoke"
+          >撤回</el-tag
+        >
         <el-tag v-else @click="publish">通过</el-tag>
       </div>
     </div>
@@ -35,34 +48,33 @@
 </template>
 <script setup>
 import { ref, defineExpose, watch } from "vue";
-import { getArticleById, auditArticle } from "@/apis/articles"
-import { getUserById } from "@/apis/user"
-import { View, User } from "@element-plus/icons-vue"
+import { getArticleById, auditArticle } from "@/apis/articles";
+import { getUserById } from "@/apis/user";
+import { View, User } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 
 const emits = defineEmits(["changeArticleStatus"]);
 
-
 const props = defineProps({
   articleId: String,
-})
+});
 const visible = ref(false);
-const articleInfo = ref({})
-const userInfo = ref({})
-const userId = ref('')
-
+const articleInfo = ref({});
+const userInfo = ref({});
+const userId = ref("");
 
 // 改变弹窗的显示状态
 const changeVisible = (val) => {
   visible.value = val;
 };
 
-
-
 // 发布文章
 const publish = async () => {
   try {
-    const res = await auditArticle({ articleId: props.articleId, status: "PUBLISHED" });
+    const res = await auditArticle({
+      articleId: props.articleId,
+      status: "PUBLISHED",
+    });
 
     if (res.status === 200) {
       ElMessage.success("发布成功");
@@ -80,7 +92,10 @@ const publish = async () => {
 // 撤回文章
 const revoke = async () => {
   try {
-    const res = await auditArticle({ articleId: props.articleId, status: "DELETED" });
+    const res = await auditArticle({
+      articleId: props.articleId,
+      status: "DELETED",
+    });
 
     if (res.status === 200) {
       ElMessage.success("撤回成功");
@@ -101,7 +116,7 @@ const getArticleContentById = async (articleId) => {
     const { data } = await getArticleById({ articleId: articleId });
     articleInfo.value = data.articleInfo;
     userId.value = data.articleInfo.authorId;
-    console.log("userId", userId.value)
+    console.log("userId", userId.value);
   } catch (error) {
     console.log("获取文章内容失败：", error);
   }
@@ -109,7 +124,6 @@ const getArticleContentById = async (articleId) => {
 
 // 获取用户信息
 const getUserInfo = async (currentUserId) => {
-
   try {
     const { data } = await getUserById({ userId: currentUserId });
     userInfo.value = data.user;
@@ -120,30 +134,34 @@ const getUserInfo = async (currentUserId) => {
 
 // 监听articleId的变化，获取文章内容
 
-watch(() => props.articleId, async (newVal) => {
-  if (newVal) {
-
-    await getArticleContentById(newVal);
-  }
-}, { immediate: true });
+watch(
+  () => props.articleId,
+  async (newVal) => {
+    if (newVal) {
+      await getArticleContentById(newVal);
+    }
+  },
+  { immediate: true }
+);
 // 监听userId的变化，获取用户信息
-watch(() => userId.value, async (newVal) => {
-  if (newVal) {
-    console.log("输出用户newVal：", newVal);
-    await getUserInfo(newVal);
-  }
-}, { immediate: true });
+watch(
+  () => userId.value,
+  async (newVal) => {
+    if (newVal) {
+      console.log("输出用户newVal：", newVal);
+      await getUserInfo(newVal);
+    }
+  },
+  { immediate: true }
+);
 
 defineExpose({
   changeVisible,
 });
 </script>
 
-
-
 <style scoped lang="scss">
 /* General Dialog Styling */
-
 
 /* Article Container */
 .articleContainer {
@@ -188,7 +206,6 @@ defineExpose({
 
 .author el-icon {
   font-size: 18px;
-
 }
 
 .createAt {
@@ -200,7 +217,6 @@ defineExpose({
   display: flex;
   align-items: center;
   gap: 8px;
-
 }
 
 .viewCount el-icon {
@@ -222,8 +238,6 @@ defineExpose({
   margin-top: 20px;
   overflow-y: auto;
 }
-
-
 
 /* Footer Section */
 .Footer {
