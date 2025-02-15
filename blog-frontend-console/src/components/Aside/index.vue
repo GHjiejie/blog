@@ -36,7 +36,7 @@
         </el-icon>
         <span>用户管理</span>
       </el-menu-item>
-      <el-menu-item index="/comment">
+      <el-menu-item v-if="cache.sessionGet('userRole') === 'ADMIN'" index="/comment">
         <el-icon>
           <ChatLineRound />
         </el-icon>
