@@ -78,3 +78,11 @@ export function queryArticle(params) {
     method: "get",
   });
 }
+
+// 删除文章评论
+export function deleteArticleComment(params) {
+  return httpRequest({
+    url: `/v1/articles/deleteArticleComment/${params.commentId}?article_id=${params.articleId}`,
+    method: "delete",
+  });
+}
