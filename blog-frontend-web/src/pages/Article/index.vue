@@ -1,16 +1,12 @@
 <template>
   <div class="articleContainer" ref="articleContainerRef">
     <div class="articleList">
-      <div
-        class="ArticleItem"
-        v-for="(item, index) in articleList"
-        :key="index"
-      >
+      <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
         <!-- 文章封面图片 -->
         <div class="left">
-          <div class="articleCoverImg">
+          <!-- <div class="articleCoverImg">
             <img :src="item.imageUrl" alt="coverImg" />
-          </div>
+          </div> -->
         </div>
         <div class="right">
           <div class="title">

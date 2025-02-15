@@ -6,11 +6,11 @@
     </div>
     <div class="navbar">
       <div class="menuList">
-        <ul class="menuItem">
+        <!-- <ul class="menuItem">
           <li v-for="(item, index) in menuList" :key="index">
             <router-link :to="item.path">{{ item.name }}</router-link>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
     <div class="right">
@@ -22,31 +22,16 @@
           <el-avatar :src="userAvatar" @click="shwoUserInfo" />
         </template>
         <template v-else>
-          <el-avatar
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            @click="userLogin"
-          />
+          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" @click="userLogin" />
         </template>
       </div>
     </div>
 
-    <el-dialog
-      v-model="loginVisible"
-      title=""
-      width="500"
-      center
-      :show-close="false"
-    >
+    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
       <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
 
-    <el-dialog
-      v-model="userInfoVisible"
-      title=""
-      width="500"
-      center
-      :show-close="false"
-    >
+    <el-dialog v-model="userInfoVisible" title="" width="500" center :show-close="false">
       <CurrentUserInfo @logout-success="handleLogout"></CurrentUserInfo>
     </el-dialog>
   </div>
@@ -139,7 +124,8 @@ watch(userAvatar, (newVal) => {
   align-items: center;
   height: 70px;
   padding: 0 2rem; // 左右内边距
-  background-color: #282c34; // 深色背景
+  background: linear-gradient(to right, rgb(201, 214, 255), rgb(226, 226, 226));
+  border-bottom: 1px solid rgba(0, 0, 0, 0.093); // 底部边框
   color: white;
 
   .left {

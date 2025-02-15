@@ -86,10 +86,14 @@ const handleSearch = async () => {
 }
 
 onMounted(async () => {
+  await nextTick()
+  searchRef.value.focus()
 })
-
-
 </script>
+
+
+
+
 
 <style scoped lang="scss">
 // 设置滚动条样式

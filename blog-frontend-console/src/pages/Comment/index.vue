@@ -7,10 +7,10 @@
     <template v-if="searchStatus">
       <div class="commentTable"></div>
       <el-table :data="articleCommentData" style="width: 100%" max-height="100%">
-
         <el-table-column prop="articleId" label="文章ID" width="120" />
         <el-table-column prop="userId" label="评论者ID" width="120" />
-        <el-table-column prop="content" label="评论内容" property="address" width="240" show-overflow-tooltip>
+        <el-table-column prop="content" label="评论内容" property="address" width="240" show-overflow-tooltip
+          :tooltip-formatter="formatContent">
 
         </el-table-column>
         <el-table-column prop="likeCount" label="点赞数" width="120" />
@@ -25,7 +25,7 @@
       </el-table>
     </template>
     <template v-else>
-      <el-empty description="" />
+      <el-empty description="" />*
     </template>
   </div>
 </template>
@@ -45,6 +45,8 @@ const pageSize = ref(10);
 const articleId = ref("");
 
 const articleCommentData = ref([]);
+
+
 
 const deleteRow = async (index, rowData) => {
   console.log(index, rowData);
@@ -94,6 +96,10 @@ const searchComments = async () => {
 </script>
 
 <style scoped lang="scss">
+:deep(.el-table .el-tooltip) {
+  width: 300px;
+}
+
 .comment-manage {
   padding: 20px;
   max-height: calc(100vh - 50px);
