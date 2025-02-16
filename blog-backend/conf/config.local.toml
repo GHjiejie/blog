@@ -1,0 +1,61 @@
+# Config with toml format
+LogLevel = "debug"
+Dev = true
+HTTPEndpoint = ":8080"
+GRPCEndpoint = ":8081"
+EngineEndpointFiles="http://127.0.0.1:8090"
+EngineEndpointArticles="http://127.0.0.1:8070"
+
+
+
+#引擎路径(这里暂时不要远程调用吧)
+EnginePaths = [
+    "/v1/files/upload",
+    "/v1/files/queryFile",
+    "/v1/files/queryFileById/{fileId}",
+    "/v1/files/deleteFile/{fileId}",
+    "/v1/files/downloadFile/{fileId}",
+    "/v1/files/getFileList",
+    "/v1/articles/deleteArticle/{articleId}",
+    "/v1/articles/getArticleList",
+    "/v1/articles/publishArticle",
+    "/v1/articles/queryArticle",
+    "/v1/articles/updateArticle",
+    "/v1/articles/getArticleDetail/{articleId}",
+    "/v1/articles/reviewArticle",
+    "/v1/web/articles/getPublishedArticleList",
+    "/v1/articles/deleteArticleComment/{comment_id}",
+    "/v1/articles/getArticleCommentDetail/{comment_id}",
+    "/v1/articles/getArticleCommentList",
+    "/v1/articles/likeArticleComment",
+    "/v1/articles/publishArticleComment",
+    "/v1/articles/cancelLikeArticle",
+    "/v1/articles/likeArticle",
+    "/v1/articles/viewArticle",
+    "/v1/articles/queryUserLikeArticle",
+    "/v1/articles/addArticleTag",
+    "/v1/articles/deleteArticleTag/{tag_id}",
+    "/v1/articles/getArticleTagList",
+]
+
+[DBConfig]
+Type = "mysql"
+
+# sql parameter
+[DBConfig.SQLPara]
+#数据库的驱动，mysql,因为tiDB是兼容mysql
+DriverName = "mysql"
+User = "root:12345"
+NetMode = "tcp"
+#Addr = "localhost:3306"
+Addr = "47.121.130.155:3306"
+
+DBName = "blog"
+#表示解析时间和设置事务隔离级别。
+#Para = "parseTime=true&tx_isolation='REPEATABLE-READ'"
+Para = "charset=utf8mb4&parseTime=True&loc=Local"
+
+[UserAuth]
+TokenExpireDuration = "24h"
+SecretKey = "ffff"
+

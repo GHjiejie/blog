@@ -1,7 +1,11 @@
 <template>
   <div class="articleContainer" ref="articleContainerRef">
     <div class="articleList">
-      <div class="ArticleItem" v-for="(item, index) in articleList" :key="index">
+      <div
+        class="ArticleItem"
+        v-for="(item, index) in articleList"
+        :key="index"
+      >
         <!-- 文章封面图片 -->
         <div class="left">
           <!-- <div class="articleCoverImg">

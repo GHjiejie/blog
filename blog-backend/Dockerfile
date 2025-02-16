@@ -22,7 +22,7 @@ WORKDIR /app  # 工作目录与项目目录一致
 
 # 从构建阶段复制生成的二进制文件和配置文件
 COPY --from=builder /app/blog-backend .
-COPY --from=builder /app/conf/config.toml ./conf/  
+COPY --from=builder /app/conf/config.toml ./conf/config.toml  
 
 # 暴露应用运行的端口
 EXPOSE 8080

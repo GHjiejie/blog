@@ -47,8 +47,7 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
-Addr = "localhost:3306"
-#Addr = "47.76.177.148:3306"
+Addr = "47.121.130.155:3306"
 
 DBName = "blog"
 #表示解析时间和设置事务隔离级别。
