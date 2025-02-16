@@ -3,8 +3,8 @@ LogLevel = "debug"
 Dev = true
 HTTPEndpoint = ":8080"
 GRPCEndpoint = ":8081"
-EngineEndpointFiles="http://127.0.0.1:8090"
-EngineEndpointArticles="http://127.0.0.1:8070"
+EngineEndpointFiles="http://localhost:8090"
+EngineEndpointArticles="http://localhost:8070"
 
 
 
