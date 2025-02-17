@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   blog-file-backend:
-    image: blog-file-backend:v0.1
+    image: ghjie/blog-file-backend:v0.1
     ports:
       - "8090:8090"
     networks:
@@ -12,7 +12,7 @@ services:
       - mysql
 
   blog-article-backend:
-    image: blog-article-backend:v0.2
+    image: ghjie/blog-article-backend:v0.2
     ports:
       - "8070:8070"
     networks:
@@ -22,7 +22,7 @@ services:
       - mysql
 
   blog-backend-main:
-    image: blog-backend-main:v0.2
+    image: ghjie/blog-backend-main:v0.2
     ports:
       - "8080:8080"
     networks:
@@ -32,7 +32,7 @@ services:
       - mysql
 
   mysql:
-    image: mysql
+    image: ghjie/mysql:v0.1
     ports:
       - "3306:3306"
     networks:
