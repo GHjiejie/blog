@@ -12,7 +12,7 @@ services:
       - mysql
 
   blog-article-backend:
-    image: ghjie/blog-article-backend:v0.2
+    image: ghjie/blog-article-backend:v0.1
     ports:
       - "8070:8070"
     networks:
@@ -22,7 +22,7 @@ services:
       - mysql
 
   blog-backend-main:
-    image: ghjie/blog-backend-main:v0.2
+    image: ghjie/blog-backend-main:v0.1
     ports:
       - "8080:8080"
     networks:

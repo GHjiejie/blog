@@ -18,7 +18,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o blog-backend ./cmd/main.go
 FROM alpine:latest
 
 # 设置工作目录
-WORKDIR /app  # 工作目录与项目目录一致
+WORKDIR /app  
 
 # 从构建阶段复制生成的二进制文件和配置文件
 COPY --from=builder /app/blog-backend .
