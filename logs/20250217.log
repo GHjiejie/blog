@@ -1,0 +1,5 @@
+failed to initialize database, got error Error 1130: Host '119.145.4.82' is not allowed to connect to this MySQL server
+
+CREATE USER 'root'@'119.145.4.82' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'119.145.4.82';
+FLUSH PRIVILEGES;
