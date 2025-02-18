@@ -22,8 +22,8 @@ FROM nginx:latest
 # 将构建好的静态文件复制到 Nginx 的默认目录
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# 暴露 80 端口
-EXPOSE 9091
+# 暴露 9000 端口
+EXPOSE 9000
 
 # 可选: 如果你的 Vue 应用使用了 history 模式, 需要配置 Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
