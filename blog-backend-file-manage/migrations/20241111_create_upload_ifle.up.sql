@@ -1,5 +1,4 @@
 
--- 根据上面的结构体定义，创建数据库表
 CREATE TABLE IF NOT EXISTS files (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     file_name VARCHAR(255) NOT NULL,

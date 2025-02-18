@@ -13,21 +13,21 @@ CREATE TABLE IF NOT EXISTS `casbin_rules` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
--- admin all api
+
 INSERT INTO `casbin_rules`(ptype,v0,v1,v2) 
     VALUES 
-        -- admin user policy
+     
         ('p', 'admin-policy', '/v1/*', '*');       
         
 
---engine api policy
+
 INSERT INTO `casbin_rules`(ptype,v0,v1,v2) 
     VALUES 
         ('p', 'files-manage-all', '/v1/files/*', '*'),   
         ('p', 'articles-manage-all','/v1/articles/*', '*'), 
         ('p', 'web-all','/v1/web/*','*');     
 
--- blog backend openapi policy
+
 INSERT INTO `casbin_rules`(ptype,v0,v1,v2) 
     VALUES 
   
@@ -65,7 +65,7 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
         ('p', 'articles-web-list', '/v1/web/articles/getPublishedArticleList', 'POST');
        
 
--- 设置用户组权限
+
 INSERT INTO `casbin_rules`(ptype,v0,v1,v2) 
     VALUES 
 

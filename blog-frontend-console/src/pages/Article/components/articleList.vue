@@ -2,9 +2,24 @@
   <div class="container">
     <div class="Top"></div>
     <div class="Center">
-      <el-table :data="filterTableData" size="large" :height="maxHeight" :highlight-current-row="false">
-        <el-table-column fixed="left" prop="articleId" label="文章ID" width="120" />
-        <el-table-column property="title" label="文章标题" width="200" show-overflow-tooltip />
+      <el-table
+        :data="filterTableData"
+        size="large"
+        :height="maxHeight"
+        :highlight-current-row="false"
+      >
+        <el-table-column
+          fixed="left"
+          prop="articleId"
+          label="文章ID"
+          width="120"
+        />
+        <el-table-column
+          property="title"
+          label="文章标题"
+          width="200"
+          show-overflow-tooltip
+        />
         <!-- <el-table-column prop="title" label="文章标题" width="200" /> -->
         <el-table-column prop="tag" label="文件标签" width="150">
           <template #default="{ row }">
@@ -28,14 +43,29 @@
         </el-table-column>
         <el-table-column fixed="right" width="200">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="输入文章作者ID或者Tag" />
+            <el-input
+              v-model="search"
+              size="small"
+              placeholder="输入文章作者ID或者Tag"
+            />
           </template>
           <template #default="{ row }">
-            <el-button :disabled="row.role === 'ADMIN'" link type="success" size="small"
-              @click="reviewArticle(row.articleId)">
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="success"
+              size="small"
+              @click="reviewArticle(row.articleId)"
+            >
               审核
             </el-button>
-            <el-button :disabled="row.role === 'ADMIN'" link type="danger" size="small" @click="handelDelArticle(row)">
+            <el-button
+              :disabled="row.role === 'ADMIN'"
+              link
+              type="danger"
+              size="small"
+              @click="handelDelArticle(row)"
+            >
               删除
             </el-button>
           </template>
@@ -43,10 +73,16 @@
       </el-table>
     </div>
     <div class="Footer">
-      <el-button type="primary" @click="handleNextPage()" size="small">加载更多</el-button>
+      <el-button type="primary" @click="handleNextPage()" size="small"
+        >加载更多</el-button
+      >
     </div>
   </div>
-  <articleReview ref="articleReviewRef" :article-id="articleReviewId" @changeArticleStatus="updateArticleStatus">
+  <articleReview
+    ref="articleReviewRef"
+    :article-id="articleReviewId"
+    @changeArticleStatus="updateArticleStatus"
+  >
   </articleReview>
 </template>
 <script setup>
@@ -89,7 +125,10 @@ const getStatusClass = (status) => {
 
 const filterTableData = computed(() => {
   return articleList.value.filter((item) => {
-    return item.authorId.includes(search.value) || item.tag.toLowerCase().includes(search.value.toLowerCase());
+    return (
+      item.authorId.includes(search.value) ||
+      item.tag.toLowerCase().includes(search.value.toLowerCase())
+    );
   });
 });
 
@@ -143,7 +182,7 @@ const handelDelArticle = (row) => {
         );
       }
     })
-    .catch(() => { });
+    .catch(() => {});
 };
 
 // 加载更多

@@ -17,7 +17,7 @@
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `users` (
-    `id` int NOT NULL AUTO_INCREMENT,
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
     `username` varchar(128) NOT NULL comment '用户登录名',
     `password` varchar(128) NOT NULL comment '用户密码',
     `role` tinyint DEFAULT '1' comment '角色',
