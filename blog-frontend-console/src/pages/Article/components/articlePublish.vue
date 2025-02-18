@@ -176,7 +176,6 @@ const initTagList = (tags) => {
 onMounted(async () => {
   try {
     const { data } = await getTags({ page: 1, pageSize: 100 });
-
     initTagList(data.tagList)
   } catch (error) {
     console.log('获取标签失败', error)
