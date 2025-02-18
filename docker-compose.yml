@@ -8,8 +8,6 @@ services:
     networks:
       - app-network
     restart: always
-    depends_on:
-      - mysql
 
   blog-article-backend:
     image: ghjie/blog-article-backend:v0.1
@@ -18,8 +16,6 @@ services:
     networks:
       - app-network
     restart: always
-    depends_on:
-      - mysql
 
   blog-backend-main:
     image: ghjie/blog-backend-main:v0.1
@@ -28,21 +24,6 @@ services:
     networks:
       - app-network
     restart: always
-    depends_on:
-      - mysql
-
-  mysql:
-    image: ghjie/mysql:v0.1
-    ports:
-      - "3306:3306"
-    networks:
-      - app-network
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 12345
-      MYSQL_DATABASE: blog
-    volumes:
-      - mysql_data:/var/lib/mysql
 
 networks:
   app-network:

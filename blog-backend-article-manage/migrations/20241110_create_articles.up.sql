@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS `articles` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
@@ -10,14 +9,13 @@ CREATE TABLE IF NOT EXISTS `articles` (
     `like_count` INT(11) NOT NULL DEFAULT 0,
     `comment_count` INT(11) NOT NULL DEFAULT 0,
     `image_url` VARCHAR(255) DEFAULT NULL,
-  
     `category_id` BIGINT(20) NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `author_id` BIGINT(20) NOT NULL,
     `deleted_at` DATETIME DEFAULT NULL,
     PRIMARY KEY (`id`),
-    INDEX `idx_article_tag` (`tag`),
+    INDEX `idx_article_tag` (`tag`(255)),
     INDEX `idx_article_category_id` (`category_id`),
     INDEX `idx_article_author_id` (`author_id`),
     INDEX `idx_article_deleted_at` (`deleted_at`)
@@ -50,9 +48,11 @@ CREATE TABLE IF NOT EXISTS `comments` (
     INDEX `idx_comment_article_id` (`article_id`),
     INDEX `idx_comment_user_id` (`user_id`),
     INDEX `idx_comment_deleted_at` (`deleted_at`),
+    FULLTEXT INDEX `idx_comment_content` (`content`),
     CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE 
+    CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
 
 CREATE TABLE IF NOT EXISTS `comment_likes` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `comment_likes` (
     INDEX `idx_comment_like_comment_id` (`comment_id`),
     INDEX `idx_comment_like_user_id` (`user_id`),
     CONSTRAINT `fk_comment_like_comment` FOREIGN KEY (`comment_id`) REFERENCES `comments`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `fk_comment_like_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE -- 外键约束，关联 users 表
+    CONSTRAINT `fk_comment_like_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 
@@ -74,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `tags` (
     `name` VARCHAR(255) NOT NULL,
     `category_id` BIGINT(20) NOT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `idx_tag_name` (`name`)
+    INDEX `idx_tag_name` (`name`(255))
+    -- UNIQUE INDEX `idx_tag_name` (`name`)  Using both causes issues, and prefix lengths not supported on unique indexes
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
