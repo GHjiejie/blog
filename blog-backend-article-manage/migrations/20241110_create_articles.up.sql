@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS `articles` (
     `author_id` BIGINT(20) NOT NULL,
     `deleted_at` DATETIME DEFAULT NULL,
     PRIMARY KEY (`id`),
-    INDEX `idx_article_tag` (`tag`(255)),
+    INDEX `idx_article_tag` (`tag`(30)),
     INDEX `idx_article_category_id` (`category_id`),
-    INDEX `idx_article_author_id` (`author_id`),
-    INDEX `idx_article_deleted_at` (`deleted_at`)
+    INDEX `idx_article_author_id` (`author_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
 
 CREATE TABLE IF NOT EXISTS `article_likes` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -47,8 +47,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
     PRIMARY KEY (`id`),
     INDEX `idx_comment_article_id` (`article_id`),
     INDEX `idx_comment_user_id` (`user_id`),
-    INDEX `idx_comment_deleted_at` (`deleted_at`),
-    FULLTEXT INDEX `idx_comment_content` (`content`),
+    FULLTEXT INDEX `idx_comment_content` (`content`(50)),
     CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
@@ -76,6 +75,6 @@ CREATE TABLE IF NOT EXISTS `tags` (
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    INDEX `idx_tag_name` (`name`(255))
+    INDEX `idx_tag_name` (`name`(30))
     -- UNIQUE INDEX `idx_tag_name` (`name`)  Using both causes issues, and prefix lengths not supported on unique indexes
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
