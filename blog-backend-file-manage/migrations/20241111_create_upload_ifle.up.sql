@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS files (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     uploader_id BIGINT NOT NULL,
     INDEX idx_tag (tag(50)),
-    INDEX idx_file_type (file_type(255)),
+    INDEX idx_file_type (file_type(255))
 );
 
 

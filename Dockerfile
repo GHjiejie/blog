@@ -1,4 +1,4 @@
-FROM mysql:latest
+FROM mysql:latest 
 
 # Copy the database schema to the container
 COPY ./blog-backend/migrations/*.sql /docker-entrypoint-initdb.d/

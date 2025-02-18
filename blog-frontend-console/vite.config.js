@@ -10,7 +10,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/v1": {
-        target: "http://localhost:8080",
+        // target: "http://localhost:8080",
+        target: "http://47.121.130.155:8080",
         changeOrigin: true,
       },
     },
