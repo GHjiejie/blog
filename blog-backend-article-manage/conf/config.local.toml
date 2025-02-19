@@ -3,8 +3,8 @@ LogLevel = "debug"
 Dev = true
 HTTPEndpoint = ":8070"
 GRPCEndpoint = ":8071"
-EngineEndpointUsers="http://blog-backend-main:8080"
-EngineEndpointFiles="http://blog-file-backend:8090"
+EngineEndpointUsers="http://127.0.0.1:8080"
+EngineEndpointFiles="http://127.0.0.1:8090"
 
 
 
@@ -29,6 +29,7 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
+#Addr = "127.0.0.1:3306"
 Addr = "47.121.130.155:3306"
 DBName = "blog"
 #表示解析时间和设置事务隔离级别。

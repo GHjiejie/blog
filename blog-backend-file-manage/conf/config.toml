@@ -5,9 +5,7 @@ HTTPEndpoint = ":8090"
 GRPCEndpoint = ":8091"
 
 
-
 #引擎路径(这里暂时不要远程调用吧)
-
 
 [DBConfig]
 Type = "mysql"
@@ -18,7 +16,7 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
-Addr = "127.0.0.1:3306"
+Addr = "47.121.130.155:3306"
 DBName = "blog"
 #表示解析时间和设置事务隔离级别。
 #Para = "parseTime=true&tx_isolation='REPEATABLE-READ'"

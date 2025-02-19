@@ -1,5 +1,4 @@
 
--- 根据上面的结构体定义，创建数据库表
 CREATE TABLE IF NOT EXISTS files (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     file_name VARCHAR(255) NOT NULL,
@@ -11,8 +10,8 @@ CREATE TABLE IF NOT EXISTS files (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     uploader_id BIGINT NOT NULL,
-    INDEX idx_tag (tag),
-    INDEX idx_file_type (file_type)
+    INDEX idx_tag (tag(50)),
+    INDEX idx_file_type (file_type(255))
 );
 
 

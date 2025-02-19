@@ -3,8 +3,8 @@ LogLevel = "debug"
 Dev = true
 HTTPEndpoint = ":8080"
 GRPCEndpoint = ":8081"
-EngineEndpointFiles="http://blog-file-backend:8090"
-EngineEndpointArticles="http://blog-article-backend:8070"
+EngineEndpointFiles="http://127.0.0.1:8090"
+EngineEndpointArticles="http://127.0.0.1:8070"
 
 
 
@@ -47,6 +47,7 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
+#Addr = "localhost:3306"
 Addr = "47.121.130.155:3306"
 
 DBName = "blog"

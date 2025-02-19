@@ -1,23 +1,12 @@
 # Config with toml format
 LogLevel = "debug"
 Dev = true
-HTTPEndpoint = ":8070"
-GRPCEndpoint = ":8071"
-EngineEndpointUsers="http://blog-backend-main:8080"
-EngineEndpointFiles="http://blog-file-backend:8090"
-
+HTTPEndpoint = ":8090"
+GRPCEndpoint = ":8091"
 
 
 
 #引擎路径(这里暂时不要远程调用吧)
-EnginePaths = [
-    "/v1/files/upload",
-    "/v1/files/queryFile",
-    "/v1/files/queryFileById/{fileId}",
-    "/v1/files/deleteFile/{fileId}",
-    "/v1/files/getFileList",
-    "/v1/users/{user_id}"
-]
 
 
 [DBConfig]
@@ -29,6 +18,7 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
+#Addr = "127.0.0.1:3306"
 Addr = "47.121.130.155:3306"
 DBName = "blog"
 #表示解析时间和设置事务隔离级别。

@@ -5,7 +5,7 @@
     </div>
     <div class="comment-center">
       <div v-for="(item, index) in commentList" :key="index" class="comment-content-list">
-        <CommentContent :commentInfo="item"></CommentContent>
+        <CommentContent :commentInfo="item" @deleteComment="handleDeleteComment"></CommentContent>
       </div>
       <div class="showMore">
         <el-button v-if="hasMore" type="text" @click="showMore">查看更多</el-button>
@@ -41,6 +41,14 @@ const commentList = ref([]);
 const total = ref(0);
 
 const inputText = ref("");
+
+
+const handleDeleteComment = (commentId) => {
+
+  const newCommentList = commentList.value.filter(item => item.id !== commentId)
+  commentList.value = newCommentList;
+
+}
 
 const publishComment = async () => {
   try {

@@ -8,9 +8,9 @@
       >
         <!-- 文章封面图片 -->
         <div class="left">
-          <div class="articleCoverImg">
+          <!-- <div class="articleCoverImg">
             <img :src="item.imageUrl" alt="coverImg" />
-          </div>
+          </div> -->
         </div>
         <div class="right">
           <div class="title">

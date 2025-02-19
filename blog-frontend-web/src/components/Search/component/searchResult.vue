@@ -1,20 +1,28 @@
 <template>
   <div class="search">
-    <el-input v-model="keywords" style="width: 90%" placeholder="输入关键字" :prefix-icon="Search"
-      @keyup.enter="handleSearch" ref="searchRef" />
+    <el-input
+      v-model="keywords"
+      style="width: 90%"
+      placeholder="输入关键字"
+      :prefix-icon="Search"
+      @keyup.enter="handleSearch"
+      ref="searchRef"
+    />
     <div class="articleList">
       <template v-if="searchResults.length == 0">
         <el-empty :image-size="200" />
       </template>
       <template v-else>
-
-
-        <div class="ArticleItem" v-for="(item, index) in searchResults" :key="index">
+        <div
+          class="ArticleItem"
+          v-for="(item, index) in searchResults"
+          :key="index"
+        >
           <!-- 文章封面图片 -->
           <div class="left">
-            <div class="articleCoverImg">
+            <!-- <div class="articleCoverImg">
               <img :src="item.imageUrl" alt="coverImg" />
-            </div>
+            </div> -->
           </div>
           <div class="right">
             <div class="title">
@@ -35,15 +43,24 @@
 
             <!-- 文章浏览消息包括点赞，评论，浏览量等 -->
             <div class="articleView">
-              <FeedBack :articleInfo="item" :activePosition="position"></FeedBack>
+              <FeedBack
+                :articleInfo="item"
+                :activePosition="position"
+              ></FeedBack>
             </div>
           </div>
         </div>
 
         <div class="loadmore">
           <!-- <el-button type="primary" size="medium" @click="loadMore" text>{{ loadInfo }}</el-button> -->
-          <el-pagination size="small" background layout="prev, pager, next" :total="total" class="mt-4"
-            :page-size="5" />
+          <el-pagination
+            size="small"
+            background
+            layout="prev, pager, next"
+            :total="total"
+            class="mt-4"
+            :page-size="5"
+          />
         </div>
       </template>
     </div>
@@ -51,19 +68,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import { Search } from '@element-plus/icons-vue'
-import { queryArticle } from '@/apis/articles'
+import { ref, onMounted, nextTick } from "vue";
+import { Search } from "@element-plus/icons-vue";
+import { queryArticle } from "@/apis/articles";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const page = ref(1)
-const pageSize = ref(100)
-const keywords = ref('')
-const searchResults = ref([])
+const page = ref(1);
+const pageSize = ref(100);
+const keywords = ref("");
+const searchResults = ref([]);
 
-const total = ref(0)
+const total = ref(0);
 
-const searchRef = ref(null)
+const searchRef = ref(null);
 
 const goArticleDetail = (articleId) => {
   router.push(`/article/${articleId}`);
@@ -72,23 +89,21 @@ const performSearch = async () => {
   const res = await queryArticle({
     keyword: keywords.value,
     page: page.value,
-    pageSize: pageSize.value
-  })
+    pageSize: pageSize.value,
+  });
 
-  searchResults.value = res.data.articleList
-  total.value = res.data.total
-
-
-}
+  searchResults.value = res.data.articleList;
+  total.value = res.data.total;
+};
 const handleSearch = async () => {
-  await performSearch()
-  console.log('Search results:', searchResults.value)
-}
+  await performSearch();
+  console.log("Search results:", searchResults.value);
+};
 
 onMounted(async () => {
-})
-
-
+  await nextTick();
+  searchRef.value.focus();
+});
 </script>
 
 <style scoped lang="scss">
@@ -107,19 +122,15 @@ onMounted(async () => {
   border-radius: 20px;
   overflow: auto;
 
-
   .el-input {
     margin: 15px;
     height: 50px;
     --el-border-radius-base: 50px;
-
   }
 
   :deep(.el-input__wrapper) {
     background-color: #ebecf0;
   }
-
-
 }
 
 .articleList {
@@ -127,8 +138,6 @@ onMounted(async () => {
   width: 100%;
   flex: 1;
   overflow: auto;
-
-
 
   .ArticleItem {
     display: flex;

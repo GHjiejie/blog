@@ -1,13 +1,30 @@
 -- 20231015_create_users_table.sql
 
+-- CREATE TABLE IF NOT EXISTS `users` (
+--     `id` int NOT NULL AUTO_INCREMENT,
+--     `username` varchar(128) NOT NULL comment '用户登录名',
+--     `password` varchar(128) NOT NULL comment '用户密码',
+--     `role` tinyint DEFAULT '1' comment '角色',
+--     `email` varchar(256) comment '用户邮箱',  -- 保留了这一行
+--     `phone` varchar(128) comment '用户手机号',
+--     `avatar` varchar(1024) comment '用户头像',
+--     `token` varchar(1024) comment '用户token',
+--     `created_at` datetime NOT NULL DEFAULT NOW() comment '创建时间',
+--     `updated_at` datetime NOT NULL DEFAULT NOW() ON UPDATE NOW() comment '更新时间',
+--     `status` TINYINT DEFAULT '1' COMMENT '账户状态',    --添加字段    
+--     PRIMARY KEY (`id`),
+--     UNIQUE KEY `uk_users_on_username` (`username`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `users` (
-    `id` int NOT NULL AUTO_INCREMENT,
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
     `username` varchar(128) NOT NULL comment '用户登录名',
     `password` varchar(128) NOT NULL comment '用户密码',
     `role` tinyint DEFAULT '1' comment '角色',
-    `email` varchar(128) comment '用户邮箱',
+    `email` varchar(256) comment '用户邮箱',
     `phone` varchar(128) comment '用户手机号',
     `avatar` varchar(1024) comment '用户头像',
+    `status` TINYINT DEFAULT '1' COMMENT '账户状态',
     `token` varchar(1024) comment '用户token',
     `created_at` datetime NOT NULL DEFAULT NOW() comment '创建时间',
     `updated_at` datetime NOT NULL DEFAULT NOW() ON UPDATE NOW() comment '更新时间',
@@ -15,10 +32,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     UNIQUE KEY `uk_users_on_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-ALTER TABLE `users`
-ADD COLUMN `email` VARCHAR(256) NOT NULL COMMENT '用户邮箱',
-ADD COLUMN `status` TINYINT DEFAULT '1' COMMENT '账户状态',
-ADD COLUMN `avatar` DATETIME COMMENT '用户头像';
+
 -- 其他索引、约束等可以在这里添加
 
 -- 创建文件表
