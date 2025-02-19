@@ -25,6 +25,21 @@ services:
       - app-network
     restart: always
 
+  blog-web-frontend:
+    image: ghjie/blog-web-frontend:v0.1
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    restart: always
+
+  blog-console-frontend:
+    image: ghjie/blog-console-frontend:v0.1
+    ports:
+      - "9000:9000"
+    networks:
+      - app-network
+    restart: always
 networks:
   app-network:
     driver: bridge
