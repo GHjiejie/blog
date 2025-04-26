@@ -4,7 +4,9 @@ Dev = true
 HTTPEndpoint = ":8080"
 GRPCEndpoint = ":8081"
 EngineEndpointFiles="http://blog-file-backend:8090"
+#EngineEndpointFiles="http://localhost:8090"
 EngineEndpointArticles="http://blog-article-backend:8070"
+#EngineEndpointArticles="http://localhost:8070"
 
 
 
@@ -47,7 +49,8 @@ Type = "mysql"
 DriverName = "mysql"
 User = "root:12345"
 NetMode = "tcp"
-Addr = "47.121.130.155:3306"
+#Addr = "47.121.130.155:3306"
+Addr = "host.docker.internal:3306"
 
 DBName = "blog"
 #表示解析时间和设置事务隔离级别。

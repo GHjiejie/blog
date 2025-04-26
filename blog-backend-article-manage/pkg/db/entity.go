@@ -86,3 +86,19 @@ type Tag struct {
 func (t *Tag) TableName() string {
 	return "tags"
 }
+
+// 创建Category模型
+type Category struct {
+	ID          int64      `gorm:"column:id;primaryKey" json:"id"`                      // 分类ID
+	Name        string     `gorm:"column:name;index" json:"name"`                       // 分类名称
+	Description string     `gorm:"column:description" json:"description"`               // 分类描述
+	CreatedAt   time.Time  `gorm:"column:created_at;autoCreateTime" json:"created_at"`  // 创建时间
+	UpdatedAt   time.Time  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`  // 更新时间
+	DeleteAt    *time.Time `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"` // 软删除时间
+	Articles    []Article  `gorm:"foreignKey:CategoryId" json:"articles"`               // 关联的文章
+	Tags        []Tag      `gorm:"foreignKey:CategoryId" json:"tags"`                   // 关联的标签
+}
+
+func (c *Category) TableName() string {
+	return "categories"
+}

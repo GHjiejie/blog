@@ -8,15 +8,16 @@
         v-model="userForm.password"
         placeholder="Password"
       />
+
+      <el-button @click="handleRegister" link>注册</el-button>
       <button @click="handleLogin">登录</button>
-      <!-- <el-button @click="handleRegister" link>注册</el-button> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import { reactive, defineEmits } from "vue";
-import { login } from "@/apis/user.js";
+import { registerUser } from "@/apis/user.js";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import cache from "@/utils/cache";
@@ -27,7 +28,7 @@ const userForm = reactive({
   password: "",
 });
 const router = useRouter();
-const handleLogin = async () => {
+const handleRegister = async () => {
   // 首先验证字段是否为空
   if (!userForm.username || !userForm.password) {
     ElMessage.error("用户名或密码不能为空");
@@ -35,25 +36,27 @@ const handleLogin = async () => {
   }
   try {
     // console.log("输出userForm", userForm);
-    const res = await login(userForm);
+    const res = await registerUser(userForm);
+    console.log("输出res", res);
+    ElMessage.success("注册成功，请登录");
     if (res.status == 200) {
-      const avatar = res.data.user.avatar;
-      cache.setToken(res.data.token);
-      cache.sessionSet("userId", res.data.user.userId);
-      cache.sessionSet("username", userForm.username);
-      cache.sessionSet("userRole", res.data.user.role);
-      cache.sessionSet("userAvatar", getFileUrl(avatar, "image/jpeg"));
-      cache.sessionSet("isLogin", true);
-      ElMessage.success("登录成功");
-      router.push("/");
-      emits("loginSuccess", res.data.user);
+      //   const avatar = res.data.user.avatar;
+      //   cache.setToken(res.data.token);
+      //   cache.sessionSet("userId", res.data.user.userId);
+      //   cache.sessionSet("username", userForm.username);
+      //   cache.sessionSet("userRole", res.data.user.role);
+      //   cache.sessionSet("userAvatar", getFileUrl(avatar, "image/jpeg"));
+      //   cache.sessionSet("isLogin", true);
+      //   ElMessage.success("登录成功");
+      //   emits("loginSuccess", res.data.user);
     } else {
       ElMessage.error("账号或者密码错误");
     }
   } catch (error) {}
 };
-const handleRegister = () => {
-  router.push("/register");
+
+const handleLogin = () => {
+  router.push("/login");
 };
 </script>
 <style scoped>

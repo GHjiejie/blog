@@ -2,9 +2,9 @@
   <div class="feedback">
     <div class="left">
       <div class="authorInfo">
-        <div class="avatar">
+        <!-- <div class="avatar">
           <el-avatar :src="src" alt="avatar" />
-        </div>
+        </div> -->
         <div class="authorName">
           <span>{{ userInfo.username }}</span>
         </div>
@@ -13,7 +13,11 @@
 
     <div class="right">
       <div class="feedbackInfo">
-        <FeedBack :articleInfo="props.articleInfo" :active-position="position" :is-like="isLike"></FeedBack>
+        <FeedBack
+          :articleInfo="props.articleInfo"
+          :active-position="position"
+          :is-like="isLike"
+        ></FeedBack>
       </div>
     </div>
   </div>
@@ -32,7 +36,7 @@ const route = useRoute();
 const props = defineProps({
   articleInfo: Object,
 });
-const src = ref('')
+const src = ref("");
 const isLike = ref(false);
 const userInfo = ref({});
 
@@ -40,13 +44,12 @@ const userId = cache.sessionGet("userId");
 
 onMounted(async () => {
   await getUser();
-})
+});
 const getUser = async () => {
   const res = await getUserById({ userId });
   userInfo.value = res.data.user;
-  src.value = getFileUrl(userInfo.value.avatar, 'image/jpeg')
-}
-
+  src.value = getFileUrl(userInfo.value.avatar, "image/jpeg");
+};
 
 watch(
   () => route.params.id,
@@ -95,6 +98,7 @@ const position = ref("articleDetail");
     .authorInfo {
       display: flex;
       align-items: center; // 垂直居中
+      padding: 10px;
 
       .avatar {
         margin-right: 10px; // 头像右边距

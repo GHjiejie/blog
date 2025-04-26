@@ -2,7 +2,7 @@
   <div class="comment-content">
     <div class="comment-content-left">
       <div class="avatar">
-        <img :src="src" alt="" />
+        <img src="../../assets/image/cat.jpg" alt="" />
       </div>
     </div>
     <div class="comment-content-right">
@@ -14,8 +14,11 @@
           <div class="comment-content-right-header-left-time">
             {{ dayjs(commentInfo.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
           </div>
-          <span v-if="commentInfo.userId == loginUserId" class="deleteBtn"
-            @click="deleteComment(commentInfo.id, commentInfo.articleId)">删除评论
+          <span
+            v-if="commentInfo.userId == loginUserId"
+            class="deleteBtn"
+            @click="deleteComment(commentInfo.id, commentInfo.articleId)"
+            >删除评论
           </span>
         </div>
         <!-- 进行回复的评论操作，暂时不做 -->
@@ -37,10 +40,18 @@
         </div>
 
         <!-- 根据溢出状态和展开状态显示按钮 -->
-        <el-button v-if="isOverflow && !isExpanded" type="text" @click="showMore">
+        <el-button
+          v-if="isOverflow && !isExpanded"
+          type="text"
+          @click="showMore"
+        >
           展开
         </el-button>
-        <el-button v-if="isOverflow && isExpanded" type="text" @click="showLess">
+        <el-button
+          v-if="isOverflow && isExpanded"
+          type="text"
+          @click="showLess"
+        >
           收起
         </el-button>
       </div>
@@ -54,14 +65,14 @@ import { getUserById } from "@/apis/user";
 import { getFileUrl } from "@/utils/fileFilter";
 import { dayjs } from "element-plus";
 import caches from "@/utils/cache";
-import { deleteArticleComment } from '@/apis/articles'
+import { deleteArticleComment } from "@/apis/articles";
 import { ElMessageBox, ElMessage } from "element-plus";
 
 const props = defineProps({
   commentInfo: Object,
 });
 
-const emits = defineEmits(['deleteComment'])
+const emits = defineEmits(["deleteComment"]);
 
 const loginUserId = ref("");
 
@@ -91,12 +102,13 @@ const deleteComment = async (commentId, articleId) => {
     .then(async () => {
       try {
         const res = await deleteArticleComment({
-          commentId: commentId, articleId: articleId
+          commentId: commentId,
+          articleId: articleId,
         });
         if (res.status === 200) {
           ElMessage.success("删除成功");
           // 删除成功后重新获取评论列表
-          emits('deleteComment', commentId)
+          emits("deleteComment", commentId);
         }
       } catch (error) {
         console.log(error);
@@ -225,7 +237,6 @@ watch(
 
           &:hover {
             color: red;
-
           }
         }
       }

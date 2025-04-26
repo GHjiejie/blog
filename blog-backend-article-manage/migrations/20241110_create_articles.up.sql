@@ -1,3 +1,4 @@
+-- Active: 1745598180270@@127.0.0.1@3306@blog
 CREATE TABLE IF NOT EXISTS `articles` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
@@ -78,3 +79,27 @@ CREATE TABLE IF NOT EXISTS `tags` (
     INDEX `idx_tag_name` (`name`(30))
     -- UNIQUE INDEX `idx_tag_name` (`name`)  Using both causes issues, and prefix lengths not supported on unique indexes
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- type Category struct {
+-- 	ID          int64      `gorm:"column:id;primaryKey" json:"id"`                      // 分类ID
+-- 	Name        string     `gorm:"column:name;index" json:"name"`                       // 分类名称
+-- 	Description string     `gorm:"column:description" json:"description"`               // 分类描述
+-- 	CreatedAt   time.Time  `gorm:"column:created_at;autoCreateTime" json:"created_at"`  // 创建时间
+-- 	UpdatedAt   time.Time  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`  // 更新时间
+-- 	DeleteAt    *time.Time `gorm:"column:deleted_at;index" json:"deleted_at,omitempty"` // 软删除时间
+-- 	Articles    []Article  `gorm:"foreignKey:CategoryId" json:"articles"`               // 关联的文章
+-- 	Tags        []Tag      `gorm:"foreignKey:CategoryId" json:"tags"`                   // 关联的标签
+-- }
+
+CREATE TABLE IF NOT EXISTS `categories` (
+    `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '分类ID',
+    `name` VARCHAR(255) NOT NULL COMMENT '分类名称',
+    `description` VARCHAR(255) DEFAULT NULL COMMENT '分类描述',
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` DATETIME DEFAULT NULL COMMENT '软删除时间',
+    PRIMARY KEY (`id`),
+    INDEX `idx_category_name` (`name`) COMMENT '分类名称索引',
+    INDEX `idx_category_deleted_at` (`deleted_at`) COMMENT '软删除索引'
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT='分类表';
+

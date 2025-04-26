@@ -69,7 +69,32 @@ export function publishArticleComment(data) {
   });
 }
 
-// 查询文章
+// 删除文章评论
+export function deleteArticleComment(params) {
+  return httpRequest({
+    url: `/v1/articles/deleteArticleComment/${params.commentId}?article_id=${params.articleId}`,
+    method: "delete",
+  });
+}
+
+// 发布文章
+export function publishArticle(data) {
+  return httpRequest({
+    url: "/v1/articles/publishArticle",
+    method: "post",
+    data,
+  });
+}
+
+// 删除文章
+export function deleteArticle(params) {
+  console.log(params);
+  return httpRequest({
+    url: `/v1/articles/deleteArticle/${params.articleId}`,
+    method: "delete",
+  });
+}
+
 export function queryArticle(params) {
   console.log(params);
   return httpRequest({
@@ -79,10 +104,36 @@ export function queryArticle(params) {
   });
 }
 
-// 删除文章评论
-export function deleteArticleComment(params) {
+//审核文章
+export function auditArticle(data) {
   return httpRequest({
-    url: `/v1/articles/deleteArticleComment/${params.commentId}?article_id=${params.articleId}`,
+    url: `/v1/articles/reviewArticle`,
+    method: "post",
+    data,
+  });
+}
+
+// 获取所有的Tag
+export function getTags(params) {
+  return httpRequest({
+    url: `/v1/articles/getArticleTagList?page=${params.page}&pageSize=${params.pageSize}`,
+    method: "get",
+  });
+}
+
+// 新增Tag
+export function addTag(data) {
+  return httpRequest({
+    url: `/v1/articles/addArticleTag`,
+    method: "post",
+    data,
+  });
+}
+
+// 删除Tag
+export function deleteTag(params) {
+  return httpRequest({
+    url: `/v1/articles/deleteArticleTag/${params.tagId}`,
     method: "delete",
   });
 }

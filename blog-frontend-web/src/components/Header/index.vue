@@ -18,21 +18,46 @@
         <SearchBlog></SearchBlog>
       </div>
       <div class="useravatar">
+        <span type="primary" @click="goConsole" class="goConsole">控制台</span>
         <template v-if="isLogin">
           <el-avatar :src="userAvatar" @click="shwoUserInfo" />
         </template>
         <template v-else>
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" @click="userLogin" />
+          <el-avatar
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            @click="userLogin"
+          />
         </template>
       </div>
     </div>
 
-    <el-dialog v-model="loginVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="loginVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <Login @loginSuccess="handleLogin"></Login>
     </el-dialog>
 
-    <el-dialog v-model="userInfoVisible" title="" width="500" center :show-close="false">
+    <el-dialog
+      v-model="userInfoVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
       <CurrentUserInfo @logout-success="handleLogout"></CurrentUserInfo>
+    </el-dialog>
+    <el-dialog
+      v-model="consoleVisible"
+      title=""
+      width="500"
+      center
+      :show-close="false"
+    >
+      <Console></Console>
     </el-dialog>
   </div>
 </template>
@@ -45,6 +70,10 @@ import Login from "@/pages/Login/index.vue";
 import cache from "@/utils/cache";
 import { logout, getUserById } from "@/apis/user.js";
 import { getFileUrl } from "@/utils/fileFilter";
+import { ElMessage } from "element-plus";
+import Console from "@/pages/Console/index.vue";
+
+const consoleVisible = ref(false);
 
 const loginVisible = ref(false);
 const userInfoVisible = ref(false);
@@ -56,6 +85,19 @@ const menuList = ref([
   // { name: "归档", path: "/archive" },
   // { name: "关于", path: "/about" },
 ]);
+
+const goConsole = async () => {
+  // 首先要判断用户是否登录，如果没有登录，提示用户登录
+  if (!cache.sessionGet("authorization")) {
+    ElMessage({
+      message: "请先登录哦",
+      type: "warning",
+    });
+    return;
+  } else {
+    consoleVisible.value = true;
+  }
+};
 
 onMounted(async () => {
   if (cache.sessionGet("userId")) {
@@ -106,10 +148,10 @@ watch(userAvatar, (newVal) => {
 </script>
 
 <style scoped lang="scss">
-:deep(.el-dialog) {
-  --el-dialog-bg-color: none;
-  --el-dialog-box-shadow: none;
-}
+// :deep(.el-dialog) {
+//   --el-dialog-bg-color: none;
+//   --el-dialog-box-shadow: none;
+// }
 
 .headerContainer {
   position: fixed; // 设置为固定定位
@@ -192,5 +234,19 @@ watch(userAvatar, (newVal) => {
 body {
   padding-top: 70px; // 根据 headerContainer 的高度调整
   background-color: red;
+}
+
+.goConsole {
+  color: #887e7e;
+  // background-color: #000000;
+  border-radius: 4px;
+  // padding: 0.5rem 1rem;
+  cursor: pointer;
+  padding-bottom: 20px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #66b1ff; // 悬停时的背景颜色
+  }
 }
 </style>

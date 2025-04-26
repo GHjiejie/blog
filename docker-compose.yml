@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   blog-file-backend:
-    image: ghjie/blog-file-backend:v0.1
+    image: blog-file-backend:v0.2
     ports:
       - "8090:8090"
     networks:
@@ -10,7 +10,7 @@ services:
     restart: always
 
   blog-article-backend:
-    image: ghjie/blog-article-backend:v0.1
+    image: blog-article-backend:v0.2
     ports:
       - "8070:8070"
     networks:
@@ -18,28 +18,13 @@ services:
     restart: always
 
   blog-backend-main:
-    image: ghjie/blog-backend-main:v0.1
+    image: blog-backend-main:v0.2
     ports:
       - "8080:8080"
     networks:
       - app-network
     restart: always
 
-  blog-web-frontend:
-    image: ghjie/blog-web-frontend:v0.1
-    ports:
-      - "80:80"
-    networks:
-      - app-network
-    restart: always
-
-  blog-console-frontend:
-    image: ghjie/blog-console-frontend:v0.1
-    ports:
-      - "9000:9000"
-    networks:
-      - app-network
-    restart: always
 networks:
   app-network:
     driver: bridge
