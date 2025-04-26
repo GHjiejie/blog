@@ -60,7 +60,7 @@
               审核
             </el-button>
             <el-button
-              :disabled="row.role === 'ADMIN'"
+              :disabled="computedDisabled(row)"
               link
               type="danger"
               size="small"
@@ -91,6 +91,7 @@ import { getArticleList, deleteArticle } from "@/apis/articles";
 import { ElMessageBox, ElMessage, dayjs } from "element-plus";
 import articleReview from "./articleReview.vue";
 import { getArticleStatus } from "@/utils/articles";
+import cache from "@/utils/cache";
 const page = ref(1);
 const pageSize = ref(10);
 const articleList = ref([]);
@@ -103,6 +104,15 @@ const articleReviewRef = ref(null);
 onMounted(async () => {
   await getArticleListData();
 });
+// 计算是否禁用删除按钮
+const computedDisabled = (row) => {
+  console.log(row.authorId == cache.sessionGet("userId"));
+  if (row.authorId === cache.sessionGet("userId")) {
+    return false;
+  } else {
+    return true;
+  }
+};
 
 const getStatusClass = (status) => {
   return {
