@@ -23,7 +23,7 @@ export const articleTags = [
 export const articleStatusMap = {
   DRAFT: "草稿",
   PUBLISHED: "已发布",
-  DELETED: "驳回",
+  DELETED: "取消发布",
   REVIEWING: "审核中",
   REVIEW_FAILED: "未通过",
   REVIEW_PASSED: "通过",

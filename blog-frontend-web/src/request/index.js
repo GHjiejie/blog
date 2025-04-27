@@ -38,18 +38,6 @@ service.interceptors.response.use(
     // Do something with response error
     // console.log("error", error);
     // 这里面是有问题的,就是token会使用上一次的缓存token,所以会导致token失效,但是我还没有找到解决办法,先这样处理吧
-    if (error.response.status == 401 || error.response.status == 403) {
-      ElMessage({
-        message: message,
-        type: "error",
-      });
-      // window.location.reload();
-    } else {
-      ElMessage({
-        message: message,
-        type: "error",
-      });
-    }
 
     return Promise.reject(error);
   }

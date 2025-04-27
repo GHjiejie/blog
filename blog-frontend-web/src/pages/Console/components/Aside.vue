@@ -1,7 +1,7 @@
 <template>
   <div class="aside-menu">
     <div class="menu-group">
-      <h3 class="menu-title">内容管理</h3>
+      <h3 class="menu-title">操作列表</h3>
       <div class="menu-item">
         <router-link to="/articleManage/articleList" class="menu-link">
           <i class="el-icon-document"></i>

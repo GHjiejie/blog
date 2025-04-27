@@ -154,7 +154,7 @@ const getFileContent = async (fileId) => {
 const handlePublish = async () => {
   try {
     await publishArticle(articleFrom);
-    ElMessage.success('发布成功，请等待审核');
+    ElMessage.success('初稿发布成功，请审核通过后发布');
   } catch (error) {
     console.log('发布失败', error)
   }

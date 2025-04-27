@@ -87,7 +87,7 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getArticleList, deleteArticle } from "@/apis/articles";
+import { getArticleListPb, deleteArticle } from "@/apis/articles";
 import { ElMessageBox, ElMessage, dayjs } from "element-plus";
 import articleReview from "./articleReview.vue";
 import { getArticleStatus } from "@/utils/articles";
@@ -160,7 +160,7 @@ const updateArticleStatus = (data) => {
 // 获取文章列表
 const getArticleListData = async () => {
   try {
-    const { data } = await getArticleList({
+    const { data } = await getArticleListPb({
       page: page.value,
       pageSize: pageSize.value,
     });
@@ -169,6 +169,10 @@ const getArticleListData = async () => {
       return;
     }
     articleList.value = [...articleList.value, ...data.articleList];
+    // 只显示当前用户的文章
+    articleList.value = articleList.value.filter(
+      (item) => item.authorId === cache.sessionGet("userId")
+    );
   } catch (error) {
     console.log(error);
   }

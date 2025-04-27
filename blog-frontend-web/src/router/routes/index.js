@@ -73,6 +73,16 @@ const routes = [
     name: "File",
     component: () => import("@/pages/File/index.vue"),
   },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("@/pages/Login/index.vue"),
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: () => import("@/pages/Register/index.vue"),
+  },
 ];
 
 export default routes;

@@ -1,3 +1,4 @@
+-- Active: 1745604060849@@47.121.130.155@3306@blog
 
 CREATE TABLE IF NOT EXISTS `casbin_rules` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -99,10 +100,16 @@ INSERT INTO `casbin_rules`(ptype,v0,v1,v2)
         ('g', 'user-normal-policy', 'articles-web-list', ''),
         ('g', 'user-normal-policy', 'article-like', ''),
         ('g', 'user-normal-policy', 'article-dislike',''),
+        ('g', 'user-normal-policy', 'article-review',''),
 
     
         ('g', 'user-admin-policy', 'admin-policy', ''),
         ('g', 'admin', 'user-admin-policy', '');
+
+
+INSERT INTO `casbin_rules`(ptype,v0,v1,v2) 
+    VALUES 
+        ('g', 'user-normal-policy', 'article-review','')
         
 
 
