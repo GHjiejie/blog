@@ -1,4 +1,5 @@
 <template>
+  <el-button type="pprimary" @click="goHome">回到首页</el-button>
   <div class="container">
     <div class="Top"></div>
     <div class="Center">
@@ -92,6 +93,8 @@ import { ElMessageBox, ElMessage, dayjs } from "element-plus";
 import articleReview from "./articleReview.vue";
 import { getArticleStatus } from "@/utils/articles";
 import cache from "@/utils/cache";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const page = ref(1);
 const pageSize = ref(10);
 const articleList = ref([]);
@@ -155,6 +158,13 @@ const updateArticleStatus = (data) => {
     (item) => item.articleId === articleId
   );
   articleList.value[index].status = status;
+};
+
+const goHome = () => {
+  console.log("goHome");
+  router.push({
+    name: "Article",
+  });
 };
 
 // 获取文章列表

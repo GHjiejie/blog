@@ -78,6 +78,7 @@ import { decodeBase64 } from "@/utils/fileFilter";
 import { getFileById } from '@/apis/file'
 import { publishArticle, getTags } from '@/apis/articles'
 import cache from '@/utils/cache'
+import router from '@/router';
 
 const articleFrom = reactive({
   title: '',
@@ -155,6 +156,9 @@ const handlePublish = async () => {
   try {
     await publishArticle(articleFrom);
     ElMessage.success('初稿发布成功，请审核通过后发布');
+    router.push({
+      name:'ArticleList'
+    })
   } catch (error) {
     console.log('发布失败', error)
   }

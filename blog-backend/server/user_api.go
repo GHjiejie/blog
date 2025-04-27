@@ -32,10 +32,10 @@ func (s *BlogServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 	username := req.GetUsername()
 	// log.Infof("输出获取的用户名: %s", username)
 	// 只允许admin用户去添加新用户
-	if err := s.auth.IsAdmin(ctx); err != nil {
-		logger.Errorf("failed to check user is admin with err(%s)", err.Error())
-		return nil, status.Errorf(codes.PermissionDenied, err.Error())
-	}
+	// if err := s.auth.IsAdmin(ctx); err != nil {
+	// 	logger.Errorf("failed to check user is admin with err(%s)", err.Error())
+	// 	return nil, status.Errorf(codes.PermissionDenied, err.Error())
+	// }
 	user := db.User{
 		Username: username,
 		Password: req.GetPassword(),

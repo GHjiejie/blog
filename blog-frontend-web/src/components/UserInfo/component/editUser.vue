@@ -46,6 +46,7 @@ import { ref, onMounted, defineEmits } from "vue";
 import { getUserById, updateUser } from "@/apis/user";
 import cache from "@/utils/cache";
 import { getFileUrl } from "@/utils/fileFilter";
+import { ElMessage } from "element-plus";
 const emits = defineEmits(["updateSuccess"]);
 const avatarRef = ref(null);
 const src = ref("");
@@ -88,6 +89,26 @@ onMounted(async () => {
 });
 
 const editUser = async () => {
+  // 判断用户名格式是否正确
+  if (!/^[a-zA-Z0-9]{3,16}$/.test(editUserForm.value.username)) {
+    ElMessage.error("用户名格式不正确，请输入3-16位字母或数字");
+    return;
+  }
+  // 判断邮箱格式是否正确
+  if (
+    !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+      editUserForm.value.email
+    )
+  ) {
+    ElMessage.error("邮箱格式不正确，请输入正确的邮箱格式");
+    return;
+  }
+  // 判断手机号格式是否正确
+  if (!/^1[3-9]\d{9}$/.test(editUserForm.value.phone)) {
+    ElMessage.error("手机号格式不正确，请输入11位数字的手机号");
+    return;
+  }
+
   try {
     // 创建formdata对象
     const formData = new FormData();

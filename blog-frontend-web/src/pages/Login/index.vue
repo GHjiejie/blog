@@ -9,7 +9,7 @@
         placeholder="Password"
       />
       <button @click="handleLogin">登录</button>
-      <!-- <el-button @click="handleRegister" link>注册</el-button> -->
+      <el-button @click="handleRegister" link>注册</el-button>
     </div>
   </div>
 </template>

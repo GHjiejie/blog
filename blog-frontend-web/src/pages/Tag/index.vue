@@ -1,4 +1,5 @@
 <template>
+  <el-button type="primary" @click="goHome">回到首页</el-button>
   <div class="tag-management">
     <el-collapse
       v-model="activeNames"
@@ -170,6 +171,14 @@ import { getTags } from "@/apis/articles";
 import { Plus } from "@element-plus/icons-vue";
 import { addTag, deleteTag } from "@/apis/articles";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const goHome = () => {
+  console.log("goHome");
+  router.push({
+    name: "Article",
+  });
+};
 
 const tagForm = ref({
   tagName: "",

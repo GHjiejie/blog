@@ -21,6 +21,11 @@ CREATE TABLE IF NOT EXISTS `articles` (
     INDEX `idx_article_author_id` (`author_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
+-- 将status默认值改为1，表示已发布
+ALTER TABLE `articles` 
+ALTER COLUMN `status` SET DEFAULT 1;
+
+
 
 CREATE TABLE IF NOT EXISTS `article_likes` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,

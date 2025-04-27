@@ -45,16 +45,16 @@ const routes = [
   //   name: "ArticlePublish",
   //   component: () => import("@/pages/Articles/components/articlePublish.vue"),
   // },
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("@/pages/Login/index.vue"),
-  },
-  {
-    path: "/register",
-    name: "Register",
-    component: () => import("@/pages/Register/index.vue"),
-  },
+  // {
+  //   path: "/login",
+  //   name: "Login",
+  //   component: () => import("@/pages/Login/index.vue"),
+  // },
+  // {
+  //   path: "/register",
+  //   name: "Register",
+  //   component: () => import("@/pages/Register/index.vue"),
+  // },
   // 评论管理
   {
     path: "/comment",

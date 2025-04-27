@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <h1>登录</h1>
+      <h1>注册</h1>
       <input type="text" v-model="userForm.username" placeholder="Username" />
       <input
         type="password"
@@ -10,7 +10,7 @@
       />
 
       <el-button @click="handleRegister" link>注册</el-button>
-      <button @click="handleLogin">登录</button>
+      <!-- <button @click="handleLogin">登录</button> -->
     </div>
   </div>
 </template>
@@ -22,13 +22,27 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import cache from "@/utils/cache";
 import { getFileUrl } from "@/utils/fileFilter";
+
 const emits = defineEmits(["loginSuccess"]);
 const userForm = reactive({
   username: "",
   password: "",
+  role: "USER",
 });
 const router = useRouter();
 const handleRegister = async () => {
+  // 判断username格式是否正确
+  if (!/^[a-zA-Z0-9]{3,16}$/.test(userForm.username)) {
+    ElMessage.error("用户名格式不正确，请输入3-16位字母或数字");
+    return;
+  }
+  // 判断password格式是否正确
+  if (!/^[a-zA-Z0-9]{6,16}$/.test(userForm.password)) {
+    ElMessage.error("密码格式不正确，请输入6-16位字母或数字");
+    return;
+  }
+  // ElMessage.success("注册成功，请登录");
+  // router.push("/");
   // 首先验证字段是否为空
   if (!userForm.username || !userForm.password) {
     ElMessage.error("用户名或密码不能为空");
@@ -39,6 +53,7 @@ const handleRegister = async () => {
     const res = await registerUser(userForm);
     console.log("输出res", res);
     ElMessage.success("注册成功，请登录");
+    router.push("/article");
     if (res.status == 200) {
       //   const avatar = res.data.user.avatar;
       //   cache.setToken(res.data.token);

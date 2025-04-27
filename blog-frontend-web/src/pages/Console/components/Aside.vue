@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="menu-group" v-if="cache.sessionGet('userRole') === 'ADMIN'">
+    <!-- <div class="menu-group" v-if="cache.sessionGet('userRole') === 'ADMIN'">
       <h3 class="menu-title">系统管理</h3>
       <div class="menu-item">
         <router-link to="/user" class="menu-link">
@@ -42,7 +42,7 @@
           <span>评论管理</span>
         </router-link>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
