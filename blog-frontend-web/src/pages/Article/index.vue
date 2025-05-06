@@ -44,22 +44,30 @@
       </div>
     </div>
     <el-backtop :right="50" :bottom="100" />
+    <div class="tagListMenu">
+      <el-tag v-for="(tag, index) in tagList" :key="index" type="info">
+        <span class="tagName" @click="goTagArticle(tag.tagName)">
+          {{ tag.tagName }}
+        </span>
+      </el-tag>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getArticleList } from "@/apis/articles";
+import { getArticleList, queryArticle, getTags } from "@/apis/articles";
 import { useRouter } from "vue-router";
 import { dayjs } from "element-plus";
 import FeedBack from "@/components/Feedback/index.vue";
 const router = useRouter();
 const page = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(100);
 const articleList = ref([]);
 const position = ref("articleList");
 const loadInfo = ref("加载更多");
 const articleContainerRef = ref(null);
+const tagList = ref([]);
 
 const goArticleDetail = (articleId) => {
   router.push(`/article/${articleId}`);
@@ -86,7 +94,45 @@ const loadMore = async () => {
   }
 };
 
+const goTagArticle = async (tagName) => {
+  if (tagName == "all") {
+    page.value = 1;
+    loadInfo.value = "加载更多";
+    const { data } = await getArticleList({
+      page: page.value,
+      pageSize: pageSize.value,
+    });
+    articleList.value = data.articleList;
+    return;
+  }
+  const params = {
+    page: 1,
+    pageSize: 100,
+    keyword: tagName,
+  };
+  const res = await queryArticle(params);
+  if (res.status == 200) {
+    articleList.value == [];
+    articleList.value = res.data.articleList;
+  }
+  console.log("res", res);
+};
+
+const getAllTagList = async () => {
+  const res = await getTags({
+    page: 1,
+    pageSize: 100,
+  });
+  tagList.value = res.data.tagList;
+  // 需要在最后加上一个恢复默认
+  tagList.value.push({
+    tagName: "all",
+    tagId: 0,
+  });
+};
+
 onMounted(async () => {
+  await getAllTagList();
   try {
     const { data } = await getArticleList({
       page: page.value,
@@ -107,11 +153,32 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.tagListMenu {
+  position: fixed;
+  top: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  left: 20px;
+  z-index: 1000;
+  .tagName {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    &:hover {
+      cursor: pointer;
+      color: var(--el-color-primary);
+    }
+  }
+}
+
 .articleContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  position: relative;
 
   .articleList {
     width: 100%;

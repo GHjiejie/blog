@@ -4,6 +4,8 @@
       <svg-icon iconClass="icon-blog-logo" className="icon"></svg-icon>
       <h2>Blog</h2>
     </div>
+    <!-- 下面会使用定位将元素固定在左侧 -->
+
     <div class="navbar">
       <div class="menuList">
         <!-- <ul class="menuItem">
@@ -69,6 +71,7 @@ import CurrentUserInfo from "@/components/UserInfo/index.vue";
 import Login from "@/pages/Login/index.vue";
 import cache from "@/utils/cache";
 import { logout, getUserById } from "@/apis/user.js";
+import { queryArticle, getTags } from "@/apis/articles";
 import { getFileUrl } from "@/utils/fileFilter";
 import { ElMessage } from "element-plus";
 import Console from "@/pages/Console/index.vue";
@@ -80,11 +83,7 @@ const userInfoVisible = ref(false);
 const userInfo = ref({});
 const userId = ref("");
 let userAvatar = ref("");
-const menuList = ref([
-  // { name: "首页", path: "/" },
-  // { name: "归档", path: "/archive" },
-  // { name: "关于", path: "/about" },
-]);
+const tagList = ref([]);
 
 const goConsole = async () => {
   // 首先要判断用户是否登录，如果没有登录，提示用户登录
@@ -99,7 +98,18 @@ const goConsole = async () => {
   }
 };
 
+const getAllTagList = async () => {
+  const res = await getTags({
+    page: 1,
+    pageSize: 100,
+  });
+  tagList.value = res.data.tagList;
+  console.log("tagListjksdhjjfb", tagList.value);
+  tagList.value = res.data;
+};
+
 onMounted(async () => {
+  // await getAllTagList();
   if (cache.sessionGet("userId")) {
     userId.value = cache.sessionGet("userId");
     await getUser(userId.value);
@@ -152,6 +162,13 @@ watch(userAvatar, (newVal) => {
 //   --el-dialog-bg-color: none;
 //   --el-dialog-box-shadow: none;
 // }
+
+.articletagList {
+  position: absolute; // 设置为固定定位
+  top: 100px; // 固定在顶部
+  left: 200px; // 从左边开始
+  background-color: red;
+}
 
 .headerContainer {
   position: fixed; // 设置为固定定位
